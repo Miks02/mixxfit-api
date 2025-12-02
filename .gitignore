@@ -48,7 +48,7 @@ appsettings.Staging.json
 appsettings.Production.json
 appsettings.json
 connectionstrings.json
-/Properties/launchSettings.json
+launchSettings.json
 
 # Test results
 TestResults/

@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using WorkoutTrackerApi.Data;
 using WorkoutTrackerApi.Models;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using WorkoutTrackerApi.Filters;
 using WorkoutTrackerApi.Services.Implementations;
 using WorkoutTrackerApi.Services.Interfaces;
 using WorkoutTrackerApi.Validators;
@@ -30,9 +32,14 @@ builder.Services
     .AddScoped<IUserService, UserService>()
     .AddScoped<IAuthService, AuthService>();
 
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
+
 builder.Services.AddControllers(options =>
 {
-    //options.ModelValidatorProviders.Clear();
+    options.Filters.Add<ValidationFilter>();
 });
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

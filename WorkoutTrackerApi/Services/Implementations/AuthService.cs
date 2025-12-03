@@ -1,5 +1,11 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
 using WorkoutTrackerApi.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WorkoutTrackerApi.DTO.Auth;
 using WorkoutTrackerApi.DTO.User;
 using WorkoutTrackerApi.Models;
@@ -13,6 +19,7 @@ public class AuthService : BaseService<AuthService>,IAuthService
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUserService _userService;
+    private readonly IConfiguration _configuration;
     
     public AuthService(
         SignInManager<User> signInManager, 
@@ -20,13 +27,15 @@ public class AuthService : BaseService<AuthService>,IAuthService
         RoleManager<IdentityRole> roleManager, 
         IUserService userService,
         IHttpContextAccessor http,
-        ILogger<AuthService> logger
+        ILogger<AuthService> logger,
+        IConfiguration configuration
         ) : base(http, logger)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _roleManager = roleManager;
         _userService = userService;
+        _configuration = configuration;
     }
     
     public async Task<ServiceResult<UserDto>> RegisterAsync(RegisterRequestDto request)
@@ -83,9 +92,46 @@ public class AuthService : BaseService<AuthService>,IAuthService
         return ServiceResult<UserDto>.Success(userDto);
     }
 
-    public async Task<string> LoginAsync(LoginRequestDto request)
+    public async Task<ServiceResult<string>> LoginAsync(LoginRequestDto request)
     {
-        throw new NotImplementedException();
+
+        SignInResult loginResult = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, request.RememberMe, false);
+
+        if (!loginResult.Succeeded)
+        {
+            LogError("Error happened while trying to sign in a user");
+            return ServiceResult<string>.Failure(Error.Auth.LoginFailed("Incorrect username or password"));
+        }
+
+        var token = await CreateAccessToken(request.UserName);
+        return ServiceResult<string>.Success(token);
+
+    }
+
+    private async Task<string> CreateAccessToken(string username)
+    {
+        var user = await _userService.GetUserWithRolesAsync(username);
+        var roles = string.Join(", ", user.Roles);
+        var claims = new List<Claim>()
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.UserId),
+            new Claim(ClaimTypes.Name, user.UserName!),
+            new Claim(ClaimTypes.Role, roles)
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JwtConfig:Token")!));
+
+        var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var tokenDescriptor = new JwtSecurityToken(
+            issuer: _configuration["JwtConfig:Issuer"],
+            audience: _configuration["JwtConfig:Audience"],
+            claims: claims,
+            expires: DateTime.Now.AddMinutes(10),
+            signingCredentials: signingCredentials);
+
+        return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+
     }
 
     private async Task<ServiceResult> AssignRoleAsync(User user)

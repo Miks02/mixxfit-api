@@ -4,8 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using WorkoutTrackerApi.Data;
 using WorkoutTrackerApi.Models;
 using FluentValidation;
+using WorkoutTrackerApi.Services.Implementations;
+using WorkoutTrackerApi.Services.Interfaces;
+using WorkoutTrackerApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -21,13 +26,17 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Password.RequireUppercase = false;
 }).AddEntityFrameworkStores<AppDbContext>();
 
+builder.Services
+    .AddScoped<IUserService, UserService>()
+    .AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddControllers(options =>
 {
-    options.ModelValidatorProviders.Clear();
+    //options.ModelValidatorProviders.Clear();
 });
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
 
 builder.Services.AddOpenApi();
 

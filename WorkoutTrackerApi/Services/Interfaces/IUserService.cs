@@ -11,8 +11,10 @@ public interface IUserService
     Task<User?> GetUserByUserNameAsync(string username);
 
     Task<User?> GetUserByEmailAsync(string email);
+    
+    Task<User?> GetUserByRefreshTokenAsync(string refreshToken);
 
-    Task<UserWithRolesDto> GetUserWithRolesAsync(string username);
+    Task<IList<string>> GetUserRolesAsync(User user);
 
     Task<ServiceResult> DeleteUserAsync(User user);
 

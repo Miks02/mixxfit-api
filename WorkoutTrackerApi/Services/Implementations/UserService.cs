@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using WorkoutTrackerApi.DTO.User;
 using WorkoutTrackerApi.Models;
 using WorkoutTrackerApi.Services.Interfaces;
@@ -30,27 +31,14 @@ public class UserService : IUserService
         return await _userManager.FindByEmailAsync(email);
     }
 
-    public async Task<UserWithRolesDto> GetUserWithRolesAsync(string username)
+    public async Task<User?> GetUserByRefreshTokenAsync(string refreshToken)
     {
-        var user = await GetUserByUserNameAsync(username);
+        return await _userManager.Users.Where(u => u.RefreshToken == refreshToken).FirstOrDefaultAsync();
+    }
 
-        if (user is null)
-            throw new ArgumentNullException(nameof(username), "User with provided username has not been found");
-
-        var roles = await _userManager.GetRolesAsync(user);
-
-        var dto = new UserWithRolesDto()
-        {
-            UserId = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            UserName = user.UserName!,
-            Email = user.Email!,
-            Roles = roles.AsReadOnly()
-        };
-
-        return dto;
-
+    public async Task<IList<string>> GetUserRolesAsync(User user)
+    {
+        return await _userManager.GetRolesAsync(user);
     }
 
     public async Task<ServiceResult> DeleteUserAsync(User user)

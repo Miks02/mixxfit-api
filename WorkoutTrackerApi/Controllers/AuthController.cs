@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.Build.Tasks;
 using WorkoutTrackerApi.DTO.Auth;
 using WorkoutTrackerApi.Services.Interfaces;
 
@@ -21,43 +19,58 @@ namespace WorkoutTrackerApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequestDto request)
         {
-            List<string> errors = new List<string>();
-            
-            if (!ModelState.IsValid)
-            {
-                var errorList = new List<string>();
-                foreach (var key in ModelState.Keys)
-                {
-                    var state = ModelState[key];
-
-                    if (state == null) continue;
-
-                    if (state.Errors.Any())
-                    {
-                        foreach (var error in state.Errors)
-                        {
-                            errorList.Add(error.ErrorMessage);
-                        }
-                    }
-                }
-
-                return BadRequest(new { message = "One or more validation errors occurred", errors = errorList });
-            }
 
             var result = await _authService.RegisterAsync(request);
 
             if (!result.IsSucceeded)
             {
-                foreach (var error in result.Errors)
-                {
-                    errors.Add(error.Description);
-                }
-
-                return BadRequest(new { errors = errors });
+                return BadRequest(new { errors = result.Errors.ToArray()});
             }
 
             return Ok(new { message = "Registration completed", data = result.Payload });
 
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginRequestDto request)
+        {
+            var result = await _authService.LoginAsync(request);
+            
+            if (!result.IsSucceeded)
+            {
+                return BadRequest(new { errors = result.Errors.ToArray()});
+            }
+
+            return Ok(new { message = "Login completed", data = result.Payload });
+            
+        }
+        
+        [Authorize]
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok(new { message = "You are authenticated", user = $"{User.Identity!.Name}" });
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RotateAuthTokens([FromBody] TokenRequestDto request)
+        {
+            var result = await _authService.RotateAuthTokens(request.RefreshToken);
+
+            if (!result.IsSucceeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    if (error.Code == "User.NotFound")
+                        return NotFound(error.Description + request.RefreshToken);
+                    if (error.Code == "Auth.JwtError")
+                        return BadRequest(error.Description);
+                }
+                return BadRequest();
+                
+            }
+
+            return Ok(result.Payload);
         }
         
     }

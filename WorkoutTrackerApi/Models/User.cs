@@ -19,6 +19,7 @@ public class User : IdentityUser
     public int Age { get; set; }
     public int? DailyCalorieGoal { get; set; }
 
-    public ICollection<Workout> Workouts = [];
+    public ICollection<Workout> Workouts { get; set; } = [];
+    public ICollection<CalorieEntry> CalorieEntries { get; set; } = [];
 
 }

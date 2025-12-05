@@ -17,6 +17,6 @@ public class ExerciseEntry
     public int? AvgHeartRate { get; set; }
     public double? CaloriesBurned { get; set; }
     
-    public ICollection<SetEntry> Sets = [];
+    public ICollection<SetEntry> Sets { get; set; } = [];
 
 }

@@ -35,7 +35,8 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 
 builder.Services
     .AddScoped<IUserService, UserService>()
-    .AddScoped<IAuthService, AuthService>();
+    .AddScoped<IAuthService, AuthService>()
+    .AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {

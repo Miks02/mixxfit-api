@@ -1,22 +1,19 @@
 using System.Security.Claims;
+using WorkoutTrackerApi.Services.Interfaces;
 using WorkoutTrackerApi.Services.Results;
 
 namespace WorkoutTrackerApi.Services;
 
 public class BaseService<T> where T : class
 {
-    private readonly IHttpContextAccessor _http;
+    protected readonly ICurrentUserService CurrentUser;
     private readonly ILogger<T> _logger;
 
-    public BaseService(IHttpContextAccessor http, ILogger<T> logger)
+    public BaseService(ICurrentUserService currentUser, ILogger<T> logger)
     {
-        _http = http;
+        CurrentUser = currentUser;
         _logger = logger;
     }
-
-    protected string? GetCurrentUserId => _http.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-    protected string? GetCurrentUserName => _http.HttpContext!.User.FindFirstValue(ClaimTypes.Name);
     
     protected void LogInformation(string message)
     {

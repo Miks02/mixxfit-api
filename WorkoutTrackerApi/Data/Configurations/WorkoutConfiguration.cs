@@ -9,7 +9,7 @@ public class WorkoutConfiguration : IEntityTypeConfiguration<Workout>
     public void Configure(EntityTypeBuilder<Workout> builder)
     {
         builder.Property(p => p.Name)
-            .HasMaxLength(20);
+            .HasMaxLength(100);
 
         builder.Property(p => p.Notes)
             .HasMaxLength(256)

@@ -9,7 +9,7 @@ public class ExerciseEntryConfiguration : IEntityTypeConfiguration<ExerciseEntry
     public void Configure(EntityTypeBuilder<ExerciseEntry> builder)
     {
         builder.Property(p => p.Name)
-            .HasMaxLength(20);
+            .HasMaxLength(100);
 
         builder.HasIndex(p => p.Name);
 

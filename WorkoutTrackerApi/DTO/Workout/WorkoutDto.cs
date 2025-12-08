@@ -14,6 +14,6 @@ public class WorkoutDto
     
     public DateTime CreatedAt { get; set; }
 
-    public List<ExerciseEntryDto> Exercises { get; set; } = [];
+    public IEnumerable<ExerciseEntryDto> Exercises { get; set; } = [];
 
 }

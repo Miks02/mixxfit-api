@@ -6,13 +6,11 @@ namespace WorkoutTrackerApi.Services;
 
 public class BaseService<T> where T : class
 {
-    protected readonly ICurrentUserService CurrentUser;
     private readonly ILogger<T> _logger;
 
-    public BaseService(ICurrentUserService currentUser, ILogger<T> logger)
+    public BaseService(ILogger<T> logger)
     {
-        CurrentUser = currentUser;
-        _logger = logger;
+        _logger = logger; 
     }
     
     protected void LogInformation(string message)

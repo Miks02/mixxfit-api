@@ -19,7 +19,7 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
         (   
             ICurrentUserService currentUser,
             ILogger<WorkoutService> logger,
-            AppDbContext context) : base(currentUser, logger
+            AppDbContext context) : base(logger
         )
     {
         _context = context;
@@ -93,7 +93,7 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
         catch (DbUpdateException ex)
         {
             LogCritical("CRITICAL: Error happened while trying to add workout to the database", ex);
-            return ServiceResult<WorkoutDto>.Failure(Error.Database.DatabaseError());
+            return ServiceResult<WorkoutDto>.Failure(Error.Database.SaveChangesFailed());
         }
         
 
@@ -122,7 +122,7 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
         catch (DbUpdateException ex)
         {
             LogCritical("CRITICAL: Error happened deleting workout from the database", ex);
-            return ServiceResult<WorkoutDto>.Failure(Error.Database.DatabaseError());
+            return ServiceResult<WorkoutDto>.Failure(Error.Database.SaveChangesFailed());
         }
         
         LogInformation("Workout deleted successfully");

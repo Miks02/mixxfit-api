@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WorkoutTrackerApi.DTO.Auth;
@@ -43,6 +44,18 @@ namespace WorkoutTrackerApi.Controllers
 
             return Ok(new { message = "Login completed", data = result.Payload });
             
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var result = await _authService.LogoutAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            if (!result.IsSucceeded)
+            {
+                return BadRequest(new { errors = result.Errors.ToArray()});
+            }
+            return Ok(new { message = "Logout completed" });
         }
         
         [Authorize]

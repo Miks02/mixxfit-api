@@ -11,5 +11,7 @@ public interface IAuthService
 
     Task<ServiceResult<AuthResponseDto>> RegisterAsync(RegisterRequestDto request);
 
+    Task<ServiceResult> LogoutAsync(string refreshToken);
+
     Task<ServiceResult<TokenResponseDto>> RotateAuthTokens(string refreshToken);
 }

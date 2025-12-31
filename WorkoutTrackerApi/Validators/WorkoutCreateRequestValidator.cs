@@ -15,6 +15,11 @@ public class WorkoutCreateRequestValidator : AbstractValidator<WorkoutCreateRequ
             .MaximumLength(500).WithMessage("Notes are too long (500 characters max)")
             .When(p => !string.IsNullOrEmpty(p.Notes));
 
+        RuleFor(p => p.ExerciseEntries)
+            .NotEmpty().WithMessage("Exercise entries are required")
+            .Must(entries => entries.Count <= 100).WithMessage("Maximum 100 exercise entries allowed");
+        
+
         RuleForEach(p => p.ExerciseEntries)
             .SetValidator(new ExerciseEntryDtoValidator());
 

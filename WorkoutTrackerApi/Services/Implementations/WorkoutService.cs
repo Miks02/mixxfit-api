@@ -169,7 +169,6 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
             Name = w.Name,
             Notes = w.Notes,
             UserId = w.UserId,
-            UserName = w.User.UserName,
             CreatedAt = w.CreatedAt,
             Exercises = w.ExerciseEntries.Select(e => new ExerciseEntryDto()
             {

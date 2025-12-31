@@ -22,9 +22,9 @@ public class AuthService : BaseService<AuthService>, IAuthService
     private readonly IConfiguration _configuration;
 
     public AuthService
-            (   
-            ILogger<AuthService> logger, 
-            UserManager<User> userManager, 
+            (
+            ILogger<AuthService> logger,
+            UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration configuration
             ) : base(logger)
@@ -33,11 +33,11 @@ public class AuthService : BaseService<AuthService>, IAuthService
         _roleManager = roleManager;
         _configuration = configuration;
     }
-    
-    
+
+
     public async Task<ServiceResult<AuthResponseDto>> RegisterAsync(RegisterRequestDto request)
     {
-        
+
         try
         {
             var user = new User()
@@ -59,7 +59,7 @@ public class AuthService : BaseService<AuthService>, IAuthService
                     LogError("ERROR: " + error.Description);
                     if (error.Code == "DuplicateEmail")
                         return ServiceResult<AuthResponseDto>.Failure(Error.User.EmailAlreadyExists());
-                    if(error.Code == "DuplicateUserName")
+                    if (error.Code == "DuplicateUserName")
                         return ServiceResult<AuthResponseDto>.Failure(Error.User.UsernameAlreadyExists());
                 }
             }
@@ -76,26 +76,29 @@ public class AuthService : BaseService<AuthService>, IAuthService
                 LogError("Failed to generate tokens for a newly registered user " + user.Id);
                 return ServiceResult<AuthResponseDto>.Failure(generateTokens.Errors.ToArray());
             }
+            
+            var userDto = new UserDto()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email!,
+                UserName = user.UserName!
+            };
 
             var responseDto = new AuthResponseDto()
             {
                 AccessToken = generateTokens.Payload!.AccessToken,
-                User = new UserDto()
-                {
-                    Email = user.Email,
-                    UserName = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName
-                }
+                RefreshToken = generateTokens.Payload!.RefreshToken,
+                User = userDto
             };
-            
+
             return ServiceResult<AuthResponseDto>.Success(responseDto);
         }
         catch (Exception ex)
         {
             LogError("Error happened while trying to create new user ", ex);
         }
-        
+
         return ServiceResult<AuthResponseDto>.Failure(Error.Database.OperationFailed());
     }
 
@@ -116,24 +119,28 @@ public class AuthService : BaseService<AuthService>, IAuthService
         }
 
         var newAccessToken = await GenerateAuthTokens(user);
-        
+
         if(!newAccessToken.IsSucceeded)
             return ServiceResult<AuthResponseDto>.Failure(newAccessToken.Errors.ToArray());
-        
+
         LogInformation($"Sign in successful for user {user.Email}");
-        
+
+        var userDto = new UserDto()
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email!,
+            UserName = user.UserName!
+        };
+
         var responseDto = new AuthResponseDto()
         {
             AccessToken = newAccessToken.Payload!.AccessToken,
-            User = new UserDto()
-            {
-                Email = user.Email!,
-                UserName = user.UserName!,
-                FirstName = user.FirstName,
-                LastName = user.LastName
-            }
+            RefreshToken = newAccessToken.Payload!.RefreshToken,
+            User = userDto
         };
         
+
         return ServiceResult<AuthResponseDto>.Success(responseDto);
     }
 
@@ -149,7 +156,7 @@ public class AuthService : BaseService<AuthService>, IAuthService
 
         user.RefreshToken = null;
         user.TokenExpDate = null;
-        
+
         var removeTokenResult = await _userManager.UpdateAsync(user);
 
         if (!removeTokenResult.Succeeded)
@@ -158,7 +165,7 @@ public class AuthService : BaseService<AuthService>, IAuthService
             LogResultErrors($"Failed to sign out | UserID: {userId} " + errors);
             return ServiceResult.Failure(errors.ToArray());
         }
-        
+
         LogInformation($"{user.UserName} signed out successfully!");
         return ServiceResult.Success();
 
@@ -175,7 +182,7 @@ public class AuthService : BaseService<AuthService>, IAuthService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.Id),
         };
-        
+
         foreach (var role in rolesList)
             claims.Add(new Claim(ClaimTypes.Role, role));
 
@@ -206,7 +213,7 @@ public class AuthService : BaseService<AuthService>, IAuthService
         return Convert.ToBase64String(randomBytes);
     }
 
-    private async Task<ServiceResult> AssignRefreshToken(User user)
+    private async Task<ServiceResult<string>> AssignRefreshToken(User user)
     {
         user.RefreshToken = CreateRefreshToken();
         user.TokenExpDate = DateTime.UtcNow.AddDays(7);
@@ -216,13 +223,13 @@ public class AuthService : BaseService<AuthService>, IAuthService
         if (!result.Succeeded)
         {
             LogError("Error happened while assigning refresh token to the user");
-            return ServiceResult.Failure(Error.Auth.JwtError());
+            return ServiceResult<string>.Failure(Error.Auth.JwtError());
         }
 
-        return ServiceResult.Success();
+        return ServiceResult<string>.Success(user.RefreshToken);
     }
 
-    public async Task<ServiceResult<TokenResponseDto>> RotateAuthTokens(string refreshToken)
+    public async Task<ServiceResult<AuthResponseDto>> RotateAuthTokens(string refreshToken)
     {
         var user = await _userManager.Users
             .Where(u => u.RefreshToken == refreshToken)
@@ -231,27 +238,32 @@ public class AuthService : BaseService<AuthService>, IAuthService
         if (user is null || user.RefreshToken is null)
         {
             LogError($"Failed to regenerate access and refresh tokens. User or refresh token is null");
-            return ServiceResult<TokenResponseDto>.Failure(Error.Auth.JwtError("Failed to regenerate auth tokens"));
+            return ServiceResult<AuthResponseDto>.Failure(Error.Auth.JwtError("Failed to regenerate auth tokens"));
         }
 
         if (user.TokenExpDate < DateTime.UtcNow)
         {
-            var expiredError = Error.Auth.JwtError("Refresh token has expired. Login required");
-            LogError("Failed to regenerate auth tokens. " + expiredError);
-            return ServiceResult<TokenResponseDto>.Failure(expiredError);
+            var error = Error.Auth.ExpiredToken();
+            LogError("Failed to regenerate auth tokens. " + error.Description);
+            return ServiceResult<AuthResponseDto>.Failure(error);
         }
-        
+
         var newAccessToken = await CreateAccessToken(user);
         var newRefreshToken = await AssignRefreshToken(user);
 
         if (!newRefreshToken.IsSucceeded)
         {
             LogResultErrors(newRefreshToken.Errors.ToArray());
-            return ServiceResult<TokenResponseDto>.Failure(newRefreshToken.Errors.ToArray());
+            return ServiceResult<AuthResponseDto>.Failure(newRefreshToken.Errors.ToArray());
         }
-        
-        
-        return ServiceResult<TokenResponseDto>.Success(new TokenResponseDto() {AccessToken = newAccessToken});
+
+        var authResponse = new AuthResponseDto()
+        {
+            RefreshToken = newAccessToken,
+            AccessToken = newAccessToken
+        };
+
+        return ServiceResult<AuthResponseDto>.Success(authResponse);
 
     }
 
@@ -263,16 +275,21 @@ public class AuthService : BaseService<AuthService>, IAuthService
         if (!assignRefreshToken.IsSucceeded)
             return ServiceResult<TokenResponseDto>.Failure(assignRefreshToken.Errors.ToArray());
 
-        var newAccessToken = await CreateAccessToken(user);
-        
+
+        var tokenResponse = new TokenResponseDto()
+        {
+            AccessToken = await CreateAccessToken(user),
+            RefreshToken = assignRefreshToken.Payload!
+        };
+
         LogInformation("Auth tokens generated successfully");
-        return ServiceResult<TokenResponseDto>.Success(new TokenResponseDto() {AccessToken = newAccessToken});
+        return ServiceResult<TokenResponseDto>.Success(tokenResponse);
 
     }
-    
+
     private async Task<ServiceResult> AssignRoleAsync(User user)
     {
-        
+
         if (!await _roleManager.RoleExistsAsync("User"))
         {
             IdentityResult createRoleResult = await _roleManager.CreateAsync(new IdentityRole("User"));
@@ -280,9 +297,9 @@ public class AuthService : BaseService<AuthService>, IAuthService
             if (!createRoleResult.Succeeded)
             {
                 var identityErrors = createRoleResult.Errors.Select(e => new Error(e.Code, e.Description));
-                
+
                 LogResultErrors("Unexpected error happened while creating a new role for the user", identityErrors.ToArray());
-                
+
                 return ServiceResult.Failure(Error.General.UnknownError("Unexpected error happened while creating a new role"));
             }
         }
@@ -293,7 +310,7 @@ public class AuthService : BaseService<AuthService>, IAuthService
             var identityErrors = addToRoleResult.Errors.Select(e => new Error(e.Code, e.Description));
 
             LogResultErrors("Unexpected error happened while assigning role to the user", identityErrors.ToArray());
-            
+
             return ServiceResult.Failure(Error.General.UnknownError("Unexpected error happened while assigning role to the user"));
         }
         LogInformation("User assigned to role successfully");

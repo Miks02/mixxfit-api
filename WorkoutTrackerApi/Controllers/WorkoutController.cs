@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WorkoutTrackerApi.DTO.Global;
 using WorkoutTrackerApi.DTO.Workout;
 using WorkoutTrackerApi.Services.Interfaces;
 using WorkoutTrackerApi.Services.Results;
@@ -23,10 +24,15 @@ namespace WorkoutTrackerApi.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetMyWorkouts([FromQuery] string sort, [FromQuery] string search, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var queryParams = new QueryParams(page, pageSize, search, sort);
 
-            var queryParams = new WorkoutQueryParams(page, pageSize, search, sort, User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new InvalidOperationException("An error occurred. User ID is null");
+            }
             
-            var getWorkoutsResult = await _workoutService.GetAllWorkoutsPagedAsync(queryParams);
+            var getWorkoutsResult = await _workoutService.GetUserWorkoutsPagedAsync(queryParams, userId);
 
             if (!getWorkoutsResult.IsSucceeded)
             {

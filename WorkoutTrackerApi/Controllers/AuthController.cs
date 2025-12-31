@@ -1,10 +1,12 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using WorkoutTrackerApi.DTO.Auth;
 using WorkoutTrackerApi.DTO.Global;
 using WorkoutTrackerApi.Services.Interfaces;
 using WorkoutTrackerApi.Extensions;
+using WorkoutTrackerApi.Services.Results;
 
 namespace WorkoutTrackerApi.Controllers
 {
@@ -25,7 +27,7 @@ namespace WorkoutTrackerApi.Controllers
 
             var result = await _authService.RegisterAsync(request);
 
-            return result.ToActionResult();
+            return HandleRefreshToken(result);
 
         }
 
@@ -34,8 +36,7 @@ namespace WorkoutTrackerApi.Controllers
         {
             var result = await _authService.LoginAsync(request);
 
-            return result.ToActionResult();
-
+            return HandleRefreshToken(result);
         }
 
         [Authorize]
@@ -43,10 +44,12 @@ namespace WorkoutTrackerApi.Controllers
         public async Task<IActionResult> Logout()
         {
             var result = await _authService.LogoutAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            
+            DeleteRefreshTokenCookie();
 
             return result.ToActionResult();
         }
-        
+
         [Authorize]
         [HttpGet("test")]
         public IActionResult Test()
@@ -58,9 +61,55 @@ namespace WorkoutTrackerApi.Controllers
         public async Task<IActionResult> RotateAuthTokens([FromBody] TokenRequestDto request)
         {
             var result = await _authService.RotateAuthTokens(request.RefreshToken);
-
-            return result.ToActionResult();
+            
+            return HandleRefreshToken(result);
         }
-        
+
+        private ActionResult HandleRefreshToken(ServiceResult<AuthResponseDto> result)
+        {
+            if(!result.IsSucceeded)
+            {
+                return new ObjectResult(ApiResponse.Failure("Failed to regenerate refresh token", result.Errors.First()));
+            }
+
+            var cookieOptions = new CookieOptions()
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7)
+
+            };
+
+            var accessToken = result.Payload!.AccessToken;
+            var refreshToken = result.Payload!.RefreshToken;
+            var user = result.Payload.User;
+            
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+
+
+            if (user is null)
+            {
+                return new OkObjectResult
+                    (ApiResponse<string>.Success("Tokens are regenerated successfully", accessToken));
+            }
+
+            return new OkObjectResult(ApiResponse<Object>.Success("Tokens are regenerated successfully", new {accessToken, user}));
+
+        }
+
+        private void DeleteRefreshTokenCookie()
+        {
+            var cookieOptions = new CookieOptions()
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(-1)
+            };
+            
+            Response.Cookies.Delete("refreshToken", cookieOptions);
+        }
+
     }
 }

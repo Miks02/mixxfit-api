@@ -6,49 +6,47 @@ public class ApiResponse
 {
     public bool IsSuccess { get;  }
     public string Message { get; }
-    public IReadOnlyList<Error> Errors { get; }
+    public Error? Error { get; }
 
-    protected ApiResponse(bool isSuccess, string message, IReadOnlyList<Error> errors)
+    protected ApiResponse(bool isSuccess, string message, Error? error)
     {
         IsSuccess = isSuccess;
         Message = message;
-        Errors = errors;
+        Error = error;
+    }
+    
+    protected ApiResponse(bool isSuccess, string message)
+    {
+        IsSuccess = isSuccess;
+        Message = message;
     }
 
-    public static ApiResponse Success(string message) => new(true, message, []);
+    public static ApiResponse Success(string message) => new(true, message, null);
 
-    public static ApiResponse Failure(string message, params Error[] errors)
+    public static ApiResponse Failure(string message, Error error)
     {
-        if (errors.Length == 0)
-            throw new ArgumentException("At least one error is required for failure response");
+        if (error is null)
+            throw new ArgumentException("Error is required for responses that has failed");
 
-        return new ApiResponse(false, message, errors);
+        return new ApiResponse(false, message, error);
     }
 
 }
 
 public class ApiResponse<T> : ApiResponse
 {
-    public T? Data { get; set; }
+    public T? Data { get; }
     
-    private ApiResponse(bool isSuccess, string message, IReadOnlyList<Error> errors) : base(isSuccess, message, errors)
+    private ApiResponse(bool isSuccess, string message, Error? error) : base(isSuccess, message, error)
     {
         Data = default;
     }
 
-    private ApiResponse(bool isSuccess, string message, IReadOnlyList<Error> errors, T data) : base(isSuccess, message, errors)
+    private ApiResponse(bool isSuccess, string message, Error? error, T data) : base(isSuccess, message, error)
     {
         Data = data;
     }
 
-    public static ApiResponse<T> Success(string message, T data) => new(true, message, [], data);
-    
-    public new static ApiResponse Failure(string message, params Error[] errors)
-    {
-        if (errors.Length == 0)
-            throw new ArgumentException("At least one error is required for failure response");
-
-        return new ApiResponse<T>(false, message, errors);
-    }
+    public static ApiResponse<T> Success(string message, T data) => new(true, message, null, data);
 
 }

@@ -9,7 +9,7 @@ public class ApiResponseTransformerFilter : IResultFilter
 {
     public void OnResultExecuting(ResultExecutingContext context)
     {
-        
+
         if (context.Result is not ObjectResult objectResult)
             return;
 
@@ -28,12 +28,12 @@ public class ApiResponseTransformerFilter : IResultFilter
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTime.UtcNow.AddDays(-1)
             };
-            
+
             context.HttpContext.Response.Cookies.Delete("refreshToken", cookieOptions);
         }
-        
+
         var problemDetails = CreateProblemDetails(apiResponse, context.HttpContext);
-        
+
         context.Result = new ObjectResult(problemDetails)
         {
             StatusCode = problemDetails.Status
@@ -43,13 +43,14 @@ public class ApiResponseTransformerFilter : IResultFilter
 
     public void OnResultExecuted(ResultExecutedContext context)
     {
-        
+
     }
 
     private int MapErrorCodeToStatusCode(string errorCode)
     {
         return errorCode switch
         {
+            var code when code.Contains("AlreadyExists") => 400,
             var code when code.Contains("Validation") => 400,
             var code when code.Contains("Auth") => 401,
             var code when code.Contains("Forbidden") => 403,

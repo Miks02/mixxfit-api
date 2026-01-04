@@ -51,9 +51,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowCors", policyBuilder =>
     {
+        policyBuilder.WithOrigins("http://localhost:4200");
         policyBuilder.AllowAnyHeader();
         policyBuilder.AllowAnyMethod();
-        policyBuilder.AllowAnyOrigin();
+        policyBuilder.AllowCredentials();
     });
 });
 

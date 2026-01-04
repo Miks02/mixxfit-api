@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Packaging;
 using WorkoutTrackerApi.DTO.Auth;
 using WorkoutTrackerApi.DTO.Global;
 using WorkoutTrackerApi.Services.Interfaces;
@@ -36,12 +37,12 @@ namespace WorkoutTrackerApi.Controllers
             return HandleRefreshToken(result);
         }
 
-        [Authorize]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            var result = await _authService.LogoutAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             
+            var result = await _authService.LogoutAsync(GetRefreshToken());
+
             DeleteRefreshTokenCookie();
 
             return result.ToActionResult();
@@ -51,21 +52,22 @@ namespace WorkoutTrackerApi.Controllers
         [HttpGet("test")]
         public IActionResult Test()
         {
-            
+
             return Ok(new { message = "You are authenticated", userId = $"{User.FindFirstValue(ClaimTypes.NameIdentifier)}"});
         }
 
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RotateAuthTokens()
         {
+            string refreshToken = GetRefreshToken();
 
-            if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+            if (string.IsNullOrEmpty(refreshToken))
             {
-                return BadRequest(ApiResponse.Failure(Error.Auth.JwtError("Refresh token cookie does not exist")));
+                return BadRequest(ApiResponse.Failure(Error.Auth.JwtError()));
             }
-            
-            var result = await _authService.RotateAuthTokens(refreshToken!);
-            
+
+            var result = await _authService.RotateAuthTokens(refreshToken);
+
             return HandleRefreshToken(result);
         }
 
@@ -80,22 +82,24 @@ namespace WorkoutTrackerApi.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddDays(7)
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7),
+                Path = "/"
             };
 
             var accessToken = result.Payload!.AccessToken;
             var refreshToken = result.Payload!.RefreshToken;
             var user = result.Payload.User;
-            
-            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
 
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+            
             if (user is null)
             {
                 return new OkObjectResult
                     (ApiResponse<string>.Success("Tokens are regenerated successfully", accessToken));
             }
-
+            
+            
             return new OkObjectResult(ApiResponse<AuthResponseDto>.Success("Tokens are regenerated successfully", result.Payload));
 
         }
@@ -106,12 +110,29 @@ namespace WorkoutTrackerApi.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddDays(-1)
+                SameSite = SameSiteMode.None,
+                Path = "/"
             };
             
             Response.Cookies.Delete("refreshToken", cookieOptions);
         }
+        
+        private string GetRefreshToken()
+        {
+            var allCookies = new Dictionary<string, string>();
+            allCookies.AddRange(Request.Cookies);
+
+            foreach (var cookie in allCookies)
+            {
+                Console.WriteLine("Cookie: " + cookie);
+
+            }
+            
+            return Request.Cookies["refreshToken"] ?? "";
+
+        }
 
     }
+    
+    
 }

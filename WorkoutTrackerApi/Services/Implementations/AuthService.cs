@@ -2,12 +2,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using WorkoutTrackerApi.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using WorkoutTrackerApi.Data;
 using WorkoutTrackerApi.DTO.Auth;
 using WorkoutTrackerApi.DTO.User;
 using WorkoutTrackerApi.Models;
@@ -81,8 +79,8 @@ public class AuthService : BaseService<AuthService>, IAuthService
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email!,
-                UserName = user.UserName!
+                Email = user.Email,
+                UserName = user.UserName
             };
 
             var responseDto = new AuthResponseDto()
@@ -144,14 +142,19 @@ public class AuthService : BaseService<AuthService>, IAuthService
         return ServiceResult<AuthResponseDto>.Success(responseDto);
     }
 
-    public async Task<ServiceResult> LogoutAsync(string userId)
+    public async Task<ServiceResult> LogoutAsync(string refreshToken)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        if (string.IsNullOrEmpty(refreshToken))
+        {
+            throw new InvalidOperationException("Refresh token is missing");
+        }
+        
+        var user = await _userManager.Users.Where(u => u.RefreshToken == refreshToken).FirstOrDefaultAsync();
 
         if (user is null)
         {
-            LogError($"User with id {userId} had not been found");
-            return ServiceResult.Failure(Error.User.NotFound(userId));
+            LogError($"User with refresh token {refreshToken} has not been found");
+            return ServiceResult.Failure(Error.User.NotFound());
         }
 
         user.RefreshToken = null;
@@ -161,8 +164,10 @@ public class AuthService : BaseService<AuthService>, IAuthService
 
         if (!removeTokenResult.Succeeded)
         {
-            var errors = removeTokenResult.Errors.Select(e => new Error(e.Code, e.Description));
-            LogResultErrors($"Failed to sign out | UserID: {userId} " + errors);
+
+            var errors = removeTokenResult.Errors.Select(e => new Error(e.Code, e.Description)).ToList();
+  
+            LogResultErrors($"Failed to sign out | UserID: {user.Id} ", errors.ToArray());
             return ServiceResult.Failure(errors.ToArray());
         }
 
@@ -234,6 +239,8 @@ public class AuthService : BaseService<AuthService>, IAuthService
         var user = await _userManager.Users
             .Where(u => u.RefreshToken == refreshToken)
             .FirstOrDefaultAsync();
+        
+        LogInformation("Refresh token value: " + refreshToken);
 
         if (user is null || user.RefreshToken is null)
         {
@@ -259,7 +266,7 @@ public class AuthService : BaseService<AuthService>, IAuthService
 
         var authResponse = new AuthResponseDto()
         {
-            RefreshToken = newAccessToken,
+            RefreshToken = newRefreshToken.Payload!,
             AccessToken = newAccessToken
         };
 
@@ -267,7 +274,7 @@ public class AuthService : BaseService<AuthService>, IAuthService
 
     }
 
-    public async Task<ServiceResult<TokenResponseDto>> GenerateAuthTokens(User user)
+    private async Task<ServiceResult<TokenResponseDto>> GenerateAuthTokens(User user)
     {
 
         var assignRefreshToken = await AssignRefreshToken(user);

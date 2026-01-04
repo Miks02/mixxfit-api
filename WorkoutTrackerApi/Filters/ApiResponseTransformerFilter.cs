@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
 using WorkoutTrackerApi.DTO.Global;
 
 namespace WorkoutTrackerApi.Filters;
@@ -18,19 +17,6 @@ public class ApiResponseTransformerFilter : IResultFilter
 
         if (apiResponse.IsSuccess)
             return;
-
-        if (apiResponse.Error!.Code == "Auth.ExpiredToken")
-        {
-            var cookieOptions = new CookieOptions()
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddDays(-1)
-            };
-
-            context.HttpContext.Response.Cookies.Delete("refreshToken", cookieOptions);
-        }
 
         var problemDetails = CreateProblemDetails(apiResponse, context.HttpContext);
 

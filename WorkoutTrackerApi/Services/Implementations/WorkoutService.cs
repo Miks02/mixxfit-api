@@ -148,7 +148,7 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
     private IQueryable<Workout> QueryBuilder(QueryParams queryParams, string userId)
     {
         var query = _context.Workouts
-            .OrderByDescending(w => w.CreatedAt)
+            .OrderByDescending(w => w.WorkoutDate)
             .AsNoTracking();
             
 
@@ -160,10 +160,10 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
             switch (queryParams.Sort)
             {
                 case "newest":
-                    query = query.OrderByDescending(w => w.CreatedAt);
+                    query = query.OrderByDescending(w => w.WorkoutDate);
                     break;
                 case "oldest":
-                    query = query.OrderBy(w => w.CreatedAt);
+                    query = query.OrderBy(w => w.WorkoutDate);
                     break;
             }
         }

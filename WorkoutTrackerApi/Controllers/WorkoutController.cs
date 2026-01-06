@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WorkoutTrackerApi.DTO.Global;
 using WorkoutTrackerApi.DTO.Workout;
+using WorkoutTrackerApi.Extensions;
 using WorkoutTrackerApi.Services.Interfaces;
-using WorkoutTrackerApi.Services.Results;
 
 namespace WorkoutTrackerApi.Controllers
 {
@@ -22,10 +22,10 @@ namespace WorkoutTrackerApi.Controllers
 
 
         [HttpGet("all")]
-        public async Task<IActionResult> GetMyWorkouts([FromQuery] string sort, [FromQuery] string search, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetMyWorkouts([FromQuery] string sortBy = "newest", [FromQuery] string search = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var queryParams = new QueryParams(page, pageSize, search, sort);
+            var queryParams = new QueryParams(page, pageSize, search, sortBy);
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -34,19 +34,7 @@ namespace WorkoutTrackerApi.Controllers
             
             var getWorkoutsResult = await _workoutService.GetUserWorkoutsPagedAsync(queryParams, userId);
 
-            if (!getWorkoutsResult.IsSucceeded)
-            {
-                List<Error> errors = [];
-                
-                foreach (var error in getWorkoutsResult.Errors)
-                {
-                    errors.Add(error);
-                }
-
-                return BadRequest(new { message = "Failed to fetch data", errors });
-            }
-
-            return Ok(getWorkoutsResult.Payload);
+            return getWorkoutsResult.ToActionResult();
         }
 
         [HttpGet("workout/{id:int}")]
@@ -54,62 +42,30 @@ namespace WorkoutTrackerApi.Controllers
         {
             var workouts = await _workoutService.GetWorkoutByIdAsync(id);
             
-            if (!workouts.IsSucceeded)
-            {
-                List<Error> errors = [];
-                
-                foreach (var error in workouts.Errors)
-                {
-                    errors.Add(error);
-                }
-
-                return BadRequest(new { message = "Failed to fetch data", errors });
-            }
-
-            return Ok(workouts.Payload);
+            return workouts.ToActionResult();
         }
 
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> DeleteWorkout([FromRoute] int id)
         {
-            var workouts = await _workoutService.DeleteWorkoutAsync(id, User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            
-            if (!workouts.IsSucceeded)
-            {
-                List<Error> errors = [];
-                
-                foreach (var error in workouts.Errors)
-                {
-                    errors.Add(error);
-                }
+            var workoutDeleteResult = await _workoutService.DeleteWorkoutAsync(id, User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-                return BadRequest(new { message = "Failed to fetch data", errors });
-            }
 
-            return NoContent();
-            
+
+            return workoutDeleteResult.ToActionResult();
+
         }
 
         [HttpPost]
         public async Task<IActionResult> AddWorkout([FromBody] WorkoutCreateRequest request)
         {
 
-            var addResult = await _workoutService.AddWorkoutAsync(request);
+            request.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             
-            if (!addResult.IsSucceeded)
-            {
-                List<Error> errors = [];
-                
-                foreach (var error in addResult.Errors)
-                {
-                    errors.Add(error);
-                }
+            var addResult = await _workoutService.AddWorkoutAsync(request);
 
-                return BadRequest(new { message = "Failed to fetch data", errors });
-            }
 
-            return Ok(addResult.Payload);
-
+            return addResult.ToActionResult();
         }
         
     }

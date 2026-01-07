@@ -31,15 +31,15 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
         var query = QueryBuilder(queryParams, userId);
         
         IQueryable<WorkoutListItemDto> finalQuery = query
-            .Skip((queryParams.Page - 1) * queryParams.PageSize)
-            .Take(queryParams.PageSize)
+            .Skip((queryParams.Page - 1) * 12)
+            .Take(12)
             .Select(ProjectToWorkoutListItemDto());
 
         int totalWorkouts = await query.CountAsync(cancellationToken);
         var pagedWorkouts = await finalQuery.ToListAsync(cancellationToken);
         var workoutSummary = await BuildWorkoutSummary(userId);
 
-        var pagedResult = new PagedResult<WorkoutListItemDto>(pagedWorkouts, queryParams.Page, queryParams.PageSize, totalWorkouts);
+        var pagedResult = new PagedResult<WorkoutListItemDto>(pagedWorkouts, queryParams.Page, 12, totalWorkouts);
 
         var workoutPage = new WorkoutPageDto
         {
@@ -57,12 +57,12 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
             throw new InvalidOperationException("CRITICAL ERROR: user id is null or empty");
 
         var paginatedWorkouts = await QueryBuilder(queryParams, userId)
-            .Skip((queryParams.Page - 1) * queryParams.PageSize)
-            .Take(queryParams.PageSize)
+            .Skip((queryParams.Page - 1) * 12)
+            .Take(12)
             .Select(ProjectToWorkoutListItemDto())
             .ToListAsync(cancellationToken);
 
-        var pagedResult = new PagedResult<WorkoutListItemDto>(paginatedWorkouts, queryParams.Page, queryParams.PageSize, 0);
+        var pagedResult = new PagedResult<WorkoutListItemDto>(paginatedWorkouts, queryParams.Page, 12, 0);
 
         return ServiceResult<PagedResult<WorkoutListItemDto>>.Success(pagedResult);
     }

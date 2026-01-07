@@ -26,11 +26,10 @@ namespace WorkoutTrackerApi.Controllers
             [FromQuery] string sortBy = "newest", 
             [FromQuery] string searchBy = "", 
             [FromQuery] DateTime? date = null, 
-            [FromQuery] int page = 1, 
-            [FromQuery] int pageSize = 10)
+            [FromQuery] int page = 1 )
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var queryParams = new QueryParams(page, pageSize, searchBy, sortBy, date);
+            var queryParams = new QueryParams(page, searchBy, sortBy, date);
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -47,10 +46,9 @@ namespace WorkoutTrackerApi.Controllers
             [FromQuery] string sortBy = "newest", 
             [FromQuery] string searchBy = "", 
             [FromQuery] DateTime? date = null, 
-            [FromQuery] int page = 1, 
-            [FromQuery] int pageSize = 10)
+            [FromQuery] int page = 1)
         {
-            var queryParams = new QueryParams(page, pageSize, searchBy, sortBy, date);
+            var queryParams = new QueryParams(page, searchBy, sortBy, date);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var getWorkoutsResult = await _workoutService.GetUserWorkoutsByQueryParams(queryParams, userId!);

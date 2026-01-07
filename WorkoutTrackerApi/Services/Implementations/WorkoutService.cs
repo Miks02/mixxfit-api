@@ -167,11 +167,8 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
     private IQueryable<WorkoutListItemDto> QueryBuilder(QueryParams queryParams, string? userId = "")
     {
         var query = _context.Workouts
-            .AsNoTracking()
-            .OrderByDescending(w => w.WorkoutDate)
-            .Skip((queryParams.Page - 1) * _pageSize)
-            .Take(_pageSize * queryParams.Page); 
-
+            .AsNoTracking();
+            
         if (!string.IsNullOrWhiteSpace(userId))
             query = query.Where(w => w.UserId == userId);
 
@@ -187,7 +184,11 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
                     break;
             }
         }
-        
+
+        query = query
+            .Skip((queryParams.Page - 1) * _pageSize)
+            .Take(_pageSize);
+
         if (!string.IsNullOrWhiteSpace(queryParams.Search))
         {
             string searchPattern = $"%{queryParams.Search}%";

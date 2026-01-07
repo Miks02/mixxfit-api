@@ -15,6 +15,7 @@ namespace WorkoutTrackerApi.Services.Implementations;
 public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
 {
     private readonly AppDbContext _context;
+    private readonly int _pageSize = 12;
 
     public WorkoutService
         (   
@@ -27,26 +28,24 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
 
     public async Task<ServiceResult<WorkoutPageDto>> GetUserWorkoutsPagedAsync(QueryParams queryParams, string userId, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrEmpty(userId))
+            throw new InvalidOperationException("CRITICAL ERROR: user id is null or empty");
 
         var query = QueryBuilder(queryParams, userId);
         
-        IQueryable<WorkoutListItemDto> finalQuery = query
-            .Skip((queryParams.Page - 1) * 12)
-            .Take(12)
-            .Select(ProjectToWorkoutListItemDto());
+        int totalPaginatedWorkouts = await query.CountAsync();
+        int totalWorkouts = await CountWorkouts(queryParams, userId);
 
-        int totalWorkouts = await query.CountAsync(cancellationToken);
-        var pagedWorkouts = await finalQuery.ToListAsync(cancellationToken);
+        var pagedWorkouts = await query.ToListAsync(cancellationToken);
         var workoutSummary = await BuildWorkoutSummary(userId);
 
-        var pagedResult = new PagedResult<WorkoutListItemDto>(pagedWorkouts, queryParams.Page, 12, totalWorkouts);
+        var pagedResult = new PagedResult<WorkoutListItemDto>(pagedWorkouts, queryParams.Page, _pageSize, totalPaginatedWorkouts, totalWorkouts);
 
         var workoutPage = new WorkoutPageDto
         {
             PagedWorkouts = pagedResult,
             WorkoutSummary = workoutSummary
         };
-
 
         return ServiceResult<WorkoutPageDto>.Success(workoutPage);
     }
@@ -56,13 +55,17 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
         if (string.IsNullOrEmpty(userId))
             throw new InvalidOperationException("CRITICAL ERROR: user id is null or empty");
 
-        var paginatedWorkouts = await QueryBuilder(queryParams, userId)
-            .Skip((queryParams.Page - 1) * 12)
-            .Take(12)
-            .Select(ProjectToWorkoutListItemDto())
-            .ToListAsync(cancellationToken);
+        var query = QueryBuilder(queryParams, userId);
 
-        var pagedResult = new PagedResult<WorkoutListItemDto>(paginatedWorkouts, queryParams.Page, 12, 0);
+        var paginatedWorkouts = await query.ToListAsync(cancellationToken);
+
+
+        var totalPaginatedWorkouts = await query.CountAsync();
+
+        var totalWorkouts = await CountWorkouts(queryParams, userId);
+
+        var pagedResult = new PagedResult<WorkoutListItemDto>(paginatedWorkouts, queryParams.Page, _pageSize, totalPaginatedWorkouts, totalWorkouts);
+
 
         return ServiceResult<PagedResult<WorkoutListItemDto>>.Success(pagedResult);
     }
@@ -161,12 +164,13 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
         return ServiceResult.Success();
     }
     
-    private IQueryable<Workout> QueryBuilder(QueryParams queryParams, string? userId = "")
+    private IQueryable<WorkoutListItemDto> QueryBuilder(QueryParams queryParams, string? userId = "")
     {
         var query = _context.Workouts
+            .AsNoTracking()
             .OrderByDescending(w => w.WorkoutDate)
-            .AsNoTracking();
-            
+            .Skip((queryParams.Page - 1) * _pageSize)
+            .Take(_pageSize * queryParams.Page); 
 
         if (!string.IsNullOrWhiteSpace(userId))
             query = query.Where(w => w.UserId == userId);
@@ -195,7 +199,57 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
             query = query.Where(w => w.WorkoutDate == queryParams.Date);
         }
 
-        return query;
+        return query.Select(ProjectToWorkoutListItemDto());
+
+    }
+
+    private async Task<int> CountWorkouts(QueryParams? queryParams = null, string userId = "")
+    {
+        var query = _context.Workouts
+            .AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(userId))
+            query = query.Where(w => w.UserId == userId);
+
+        if (queryParams is null)
+            return await query
+                .Select(w => w.Id)
+                .CountAsync();
+
+        if (!string.IsNullOrWhiteSpace(queryParams.Search))
+        {
+            string searchPattern = $"%{queryParams.Search}%";
+            query = query.Where(w => EF.Functions.Like(w.Name, searchPattern));
+        }
+
+        if (!string.IsNullOrWhiteSpace(userId))
+            query = query.Where(w => w.UserId == userId);
+
+        if (!string.IsNullOrWhiteSpace(queryParams.Sort))
+        {
+            switch (queryParams.Sort)
+            {
+                case "newest":
+                    query = query.OrderByDescending(w => w.WorkoutDate);
+                    break;
+                case "oldest":
+                    query = query.OrderBy(w => w.WorkoutDate);
+                    break;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(queryParams.Search))
+        {
+            string searchPattern = $"%{queryParams.Search}%";
+            query = query.Where(w => EF.Functions.Like(w.Name, searchPattern));
+        }
+
+        if (queryParams.Date is not null)
+        {
+            query = query.Where(w => w.WorkoutDate == queryParams.Date);
+        }
+
+        return await query.Select(ProjectToWorkoutListItemDto()).CountAsync();
 
     }
 
@@ -206,10 +260,17 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
             .Where(w => w.UserId == userId)
             .MaxAsync(w => (DateTime?)w.WorkoutDate);
 
+        var workoutCount = await _context.Workouts
+            .AsNoTracking()
+            .Where(w => w.UserId == userId)
+            .Select(w => w.Id)
+            .CountAsync();
+
         var exerciseCount = await _context.Workouts
             .AsNoTracking()
             .Where(w => w.UserId == userId)
             .SelectMany(w => w.ExerciseEntries)
+            .Select(e => e.Id)
             .CountAsync();
 
         var favoriteExerciseType = await _context.Workouts
@@ -224,6 +285,7 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
 
         return new WorkoutSummaryDto
         {
+            WorkoutCount = workoutCount,
             ExerciseCount = exerciseCount,
             LastWorkoutDate = lastWorkoutDate,
             FavoriteExerciseType = favoriteExerciseType

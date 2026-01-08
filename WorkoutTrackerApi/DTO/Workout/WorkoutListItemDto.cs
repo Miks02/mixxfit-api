@@ -9,6 +9,10 @@ public class WorkoutListItemDto
     public DateTime WorkoutDate { get; set; }
     
     public int ExerciseCount { get; set; }
-    
+     
     public int SetCount { get; set; }
+
+    public bool HasCardio { get; set; }
+    public bool HasWeights { get; set; }
+    public bool HasBodyWeight { get; set; }
 }

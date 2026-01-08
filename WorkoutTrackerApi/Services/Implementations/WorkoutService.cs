@@ -10,6 +10,7 @@ using WorkoutTrackerApi.Models;
 using WorkoutTrackerApi.Services.Interfaces;
 using WorkoutTrackerApi.Services.Results;
 using WorkoutTrackerApi.Extensions;
+using WorkoutTrackerApi.Enums;
 
 namespace WorkoutTrackerApi.Services.Implementations;
 
@@ -302,8 +303,11 @@ public class WorkoutService : BaseService<WorkoutService> , IWorkoutService
             Id = w.Id,
             Name = w.Name,
             ExerciseCount = w.ExerciseEntries.Count,
-            SetCount = w.ExerciseEntries.Select(e => e.Sets.Count()).Sum(),
-            WorkoutDate = w.WorkoutDate
+            SetCount = w.ExerciseEntries.Sum(e => e.Sets.Count),
+            WorkoutDate = w.WorkoutDate,
+            HasCardio = w.ExerciseEntries.Any(e => e.ExerciseType == ExerciseType.Cardio),
+            HasWeights = w.ExerciseEntries.Any(e => e.ExerciseType == ExerciseType.WeightLifting),
+            HasBodyWeight = w.ExerciseEntries.Any(e => e.ExerciseType == ExerciseType.BodyWeight)
         };
 
     }

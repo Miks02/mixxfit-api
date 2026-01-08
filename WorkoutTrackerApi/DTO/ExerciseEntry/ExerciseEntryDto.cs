@@ -12,7 +12,8 @@ public class ExerciseEntryDto
     public CardioType? CardioType { get; set; }
     
     public double? DistanceKm { get; set; }
-    public TimeSpan? Duration { get; set; }
+    public int? DurationMinutes { get; set; }
+    public int? DurationSeconds { get; set; }
     public int? AvgHeartRate { get; set; }
     public int? MaxHeartRate { get; set; }
 

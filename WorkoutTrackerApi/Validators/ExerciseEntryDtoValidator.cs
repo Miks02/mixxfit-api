@@ -21,13 +21,21 @@ public class ExerciseEntryDtoValidator : AbstractValidator<ExerciseEntryDto>
             .When(x => x.ExerciseType == ExerciseType.Cardio)
             .WithMessage("CardioType must be valid for cardio exercises");
 
-        RuleFor(x => x.Duration)
+        RuleFor(x => x.DurationMinutes)
             .NotNull()
             .When(x => x.ExerciseType == ExerciseType.Cardio)
             .WithMessage("Duration is required for cardio exercises")
-            .Must(duration => duration > TimeSpan.Zero)
-            .When(x => x.ExerciseType == ExerciseType.Cardio && x.Duration.HasValue)
-            .WithMessage("Duration must be greater than 0");
+            .Must((model, minutes) => (minutes ?? 0) + (model.DurationSeconds ?? 0) > 0)
+            .When(x => x.ExerciseType == ExerciseType.Cardio)
+            .WithMessage("Total duration (minutes + seconds) must be greater than 0");
+
+        RuleFor(x => x.DurationSeconds)
+            .NotNull()
+            .When(x => x.ExerciseType == ExerciseType.Cardio)
+            .WithMessage("Duration is required for cardio exercises")
+            .Must((model, seconds) => (model.DurationMinutes ?? 0) + (seconds ?? 0) > 0)
+            .When(x => x.ExerciseType == ExerciseType.Cardio)
+            .WithMessage("Total duration (minutes + seconds) must be greater than 0");
 
         RuleFor(x => x.DistanceKm)
             .GreaterThan(0)

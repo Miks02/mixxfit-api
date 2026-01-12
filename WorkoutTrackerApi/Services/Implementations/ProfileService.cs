@@ -41,6 +41,7 @@ namespace WorkoutTrackerApi.Services.Implementations
         private async Task<int?> GetDailyCalorieGoalAsync(string userId, CancellationToken cancellationToken = default)
         {
             return await _context.Users
+                .Where(u => u.Id == userId)
                 .Select(u => u.DailyCalorieGoal)
                 .FirstOrDefaultAsync(cancellationToken);
         }

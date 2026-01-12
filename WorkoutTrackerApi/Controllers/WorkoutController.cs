@@ -51,7 +51,7 @@ namespace WorkoutTrackerApi.Controllers
             var queryParams = new QueryParams(page, searchBy, sortBy, date);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var getWorkoutsResult = await _workoutService.GetUserWorkoutsByQueryParams(queryParams, userId!);
+            var getWorkoutsResult = await _workoutService.GetUserWorkoutsByQueryParamsAsync(queryParams, userId!);
 
             return getWorkoutsResult.ToActionResult();
         }

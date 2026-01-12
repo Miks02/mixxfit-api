@@ -39,7 +39,9 @@ builder.Services
     .AddScoped<IUserService, UserService>()
     .AddScoped<IAuthService, AuthService>()
     .AddScoped<ICurrentUserService, CurrentUserService>()
-    .AddScoped<IWorkoutService, WorkoutService>();
+    .AddScoped<IWorkoutService, WorkoutService>()
+    .AddScoped<IProfileService, ProfileService>();
+    
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {

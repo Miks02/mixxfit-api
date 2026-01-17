@@ -109,6 +109,18 @@ public class WorkoutService : IWorkoutService
         return ServiceResult<WorkoutDetailsDto>.Success(workoutDto);
     }
 
+    public async Task<DateTime?> GetLastUserWorkoutAsync(string userId, CancellationToken cancellationToken = default)
+    {
+        var lastWorkout = await _context.Workouts
+            .AsNoTracking()
+            .OrderByDescending(w => w.WorkoutDate)
+            .Where(w => w.UserId == userId)
+            .Select(w => w.WorkoutDate)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return lastWorkout;
+    }
+
     public async Task<int?> CalculateWorkoutStreakAsync(string userId, CancellationToken cancellationToken = default)
     {
 
@@ -129,7 +141,7 @@ public class WorkoutService : IWorkoutService
         foreach (var date in workoutDates)
         {
             if (date.Day != currentDate.Day)
-                break;
+                continue;
 
             streak++;
             currentDate = currentDate.AddDays(-1);

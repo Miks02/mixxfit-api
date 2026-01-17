@@ -10,5 +10,5 @@ public class AuthResponseDto
     [JsonIgnore]
     public string RefreshToken { get; set; } = null!;
     
-    public UserDto? User { get; set; }
+    public UserDetailsDto? User { get; set; }
 }

@@ -19,19 +19,22 @@ public class AuthService : IAuthService
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
+    private readonly IUserService _userService;
 
     public AuthService
             (
             ILogger<AuthService> logger,
             UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IUserService userService
             )
     {
         _logger = logger;
         _userManager = userManager;
         _roleManager = roleManager;
         _configuration = configuration;
+        _userService = userService;
     }
 
 
@@ -77,19 +80,13 @@ public class AuthService : IAuthService
                 return ServiceResult<AuthResponseDto>.Failure(generateTokens.Errors.ToArray());
             }
             
-            var userDto = new UserDto()
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                UserName = user.UserName
-            };
+            var userDetails = await _userService.GetUserDetailsAsync(user.Id);
 
             var responseDto = new AuthResponseDto()
             {
                 AccessToken = generateTokens.Payload!.AccessToken,
                 RefreshToken = generateTokens.Payload!.RefreshToken,
-                User = userDto
+                User = userDetails
             };
 
             return ServiceResult<AuthResponseDto>.Success(responseDto);
@@ -125,19 +122,13 @@ public class AuthService : IAuthService
 
         _logger.LogInformation($"Sign in successful for user {user.Email}");
 
-        var userDto = new UserDto()
-        {
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email!,
-            UserName = user.UserName!
-        };
+        var userDetails = await _userService.GetUserDetailsAsync(user.Id);
 
         var responseDto = new AuthResponseDto()
         {
             AccessToken = newAccessToken.Payload!.AccessToken,
             RefreshToken = newAccessToken.Payload!.RefreshToken,
-            User = userDto
+            User = userDetails
         };
         
 

@@ -2,8 +2,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Packaging;
+using NuGet.Protocol;
 using WorkoutTrackerApi.DTO.Auth;
-using WorkoutTrackerApi.DTO.Global;
 using WorkoutTrackerApi.Services.Interfaces;
 using WorkoutTrackerApi.Extensions;
 using WorkoutTrackerApi.Services.Results;
@@ -22,7 +22,7 @@ namespace WorkoutTrackerApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<ApiResponse<AuthResponseDto>>> Register(
+        public async Task<ActionResult<AuthResponseDto>> Register(
             RegisterRequestDto request,
             CancellationToken cancellationToken = default
             )
@@ -33,7 +33,7 @@ namespace WorkoutTrackerApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<ApiResponse<AuthResponseDto>>> Login(
+        public async Task<ActionResult<AuthResponseDto>> Login(
             LoginRequestDto request,
             CancellationToken cancellationToken = default
             )
@@ -63,13 +63,13 @@ namespace WorkoutTrackerApi.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<ApiResponse<AuthResponseDto>>> RotateAuthTokens(CancellationToken cancellationToken = default)
+        public async Task<ActionResult<AuthResponseDto>> RotateAuthTokens(CancellationToken cancellationToken = default)
         {
             string refreshToken = GetRefreshToken();
 
             if (string.IsNullOrEmpty(refreshToken))
             {
-                return BadRequest(ApiResponse.Failure(Error.Auth.JwtError()));
+                return BadRequest(Error.Auth.JwtError());
             }
 
             var result = await _authService.RotateAuthTokens(refreshToken, cancellationToken);
@@ -80,9 +80,7 @@ namespace WorkoutTrackerApi.Controllers
         private ActionResult HandleRefreshToken(ServiceResult<AuthResponseDto> result)
         {
             if(!result.IsSucceeded)
-            {
-                return new ObjectResult(ApiResponse.Failure(result.Errors[0]));
-            }
+                return new ObjectResult(result.Errors[0]);
 
             var cookieOptions = new CookieOptions()
             {
@@ -93,20 +91,14 @@ namespace WorkoutTrackerApi.Controllers
                 Path = "/"
             };
 
-            var accessToken = result.Payload!.AccessToken;
             var refreshToken = result.Payload!.RefreshToken;
-            var user = result.Payload.User;
 
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
-            
-            if (user is null)
-            {
-                return new OkObjectResult
-                    (ApiResponse<string>.Success("Tokens are regenerated successfully", accessToken));
-            }
-            
-            
-            return new OkObjectResult(ApiResponse<AuthResponseDto>.Success("Tokens are regenerated successfully", result.Payload));
+
+            if (result.Payload.User is null)
+                return Ok(result.Payload.AccessToken.ToJson());
+
+            return Ok(result.Payload);
 
         }
 

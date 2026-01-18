@@ -47,20 +47,20 @@ public static class ServiceResultExtensions
         return ServiceResult<T>.Failure(errors.ToArray());
     }
 
-    public static ActionResult ToActionResult(this ServiceResult result, string successMessage = "Success")
+    public static ActionResult ToActionResult(this ServiceResult result)
     {
         if (result.IsSucceeded)
-            return new OkObjectResult(ApiResponse.Success(successMessage));
+            return new NoContentResult();
         
-        return new ObjectResult(ApiResponse.Failure(result.Errors[0]));
+        return new ObjectResult(result.Errors[0]) {StatusCode = 400};
     }
 
-    public static ActionResult ToActionResult<T>(this ServiceResult<T> result, string successMessage = "Success")
+    public static ActionResult ToActionResult<T>(this ServiceResult<T> result)
     {
         if (result.IsSucceeded)
-            return new OkObjectResult(ApiResponse<T>.Success(successMessage, result.Payload!));
+            return new OkObjectResult(result.Payload);
 
-        return new ObjectResult(ApiResponse.Failure(result.Errors[0]));
+        return new ObjectResult(result.Errors[0]) { StatusCode = 400 };
     }
 
     private static void LogErrors(ILogger? logger, IReadOnlyList<Error> errors, string message = "Operation failed")

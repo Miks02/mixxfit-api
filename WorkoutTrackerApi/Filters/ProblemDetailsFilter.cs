@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WorkoutTrackerApi.DTO.Global;
+using Error = WorkoutTrackerApi.Services.Results.Error;
 
 namespace WorkoutTrackerApi.Filters;
 
-public class ApiResponseTransformerFilter : IResultFilter
+public class ProblemDetailsFilter : IResultFilter
 {
     public void OnResultExecuting(ResultExecutingContext context)
     {
@@ -12,13 +13,15 @@ public class ApiResponseTransformerFilter : IResultFilter
         if (context.Result is not ObjectResult objectResult)
             return;
 
-        if (objectResult.Value is not ApiResponse apiResponse)
+        if (objectResult.Value is not Error error)
             return;
 
-        if (apiResponse.IsSuccess)
+        if (objectResult.StatusCode == 200)
             return;
 
-        var problemDetails = CreateProblemDetails(apiResponse, context.HttpContext);
+        Console.WriteLine("Object result value: " + objectResult.Value);
+
+        var problemDetails = CreateProblemDetails(error, context.HttpContext);
 
         context.Result = new ObjectResult(problemDetails)
         {
@@ -59,20 +62,20 @@ public class ApiResponseTransformerFilter : IResultFilter
         };
     }
 
-    private ProblemDetails CreateProblemDetails(ApiResponse apiResponse, HttpContext context)
+    private ProblemDetails CreateProblemDetails(Error error, HttpContext context)
     {
-        var statusCode = MapErrorCodeToStatusCode(apiResponse.Error!.Code);
+        var statusCode = MapErrorCodeToStatusCode(error.Code);
         var title = GetTitleFromStatusCode(statusCode);
 
         return new ProblemDetails()
         {
             Status = statusCode,
             Title = title,
-            Detail = apiResponse.Message,
+            Detail = error.Description,
             Instance = context.Request.Path,
             Extensions =
             {
-                ["errorCode"] = apiResponse.Error.Code
+                ["errorCode"] = error.Code
             }
         };
 

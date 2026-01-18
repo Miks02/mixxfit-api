@@ -23,11 +23,11 @@ namespace WorkoutTrackerApi.Controllers
         }
 
         [HttpGet("me")]
-        public async Task<ActionResult<ApiResponse<UserDetailsDto>>> GetMe()
+        public async Task<ActionResult<UserDetailsDto>> GetMe()
         {
             var user = await _userService.GetUserDetailsAsync(GetUserId());
 
-            return ApiResponse<UserDetailsDto>.Success("User fetched successfully", user);
+            return user;
         }
              
         [HttpPatch("fullname")]

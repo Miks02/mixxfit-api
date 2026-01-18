@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WorkoutTrackerApi.DTO.Global;
 using WorkoutTrackerApi.DTO.Workout;
 using WorkoutTrackerApi.Extensions;
+using WorkoutTrackerApi.Models;
 using WorkoutTrackerApi.Services.Interfaces;
 
 namespace WorkoutTrackerApi.Controllers
@@ -22,7 +23,7 @@ namespace WorkoutTrackerApi.Controllers
 
 
         [HttpGet("overview")]
-        public async Task<ActionResult<ApiResponse<WorkoutPageDto>>> GetMyWorkoutsPage(
+        public async Task<ActionResult<WorkoutPageDto>> GetMyWorkoutsPage(
             [FromQuery] string sortBy = "newest", 
             [FromQuery] string searchBy = "", 
             [FromQuery] DateTime? date = null, 
@@ -33,11 +34,11 @@ namespace WorkoutTrackerApi.Controllers
             
             var getWorkoutsResult = await _workoutService.GetUserWorkoutsPagedAsync(queryParams, userId!);
 
-            return ApiResponse<WorkoutPageDto>.Success("", getWorkoutsResult);
+            return Ok(getWorkoutsResult);
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApiResponse<PagedResult<WorkoutListItemDto>>>> GetMyWorkoutsByQueryParams(
+        public async Task<ActionResult<PagedResult<WorkoutListItemDto>>> GetMyWorkoutsByQueryParams(
             [FromQuery] string sortBy = "newest", 
             [FromQuery] string searchBy = "", 
             [FromQuery] DateTime? date = null, 
@@ -48,15 +49,15 @@ namespace WorkoutTrackerApi.Controllers
 
             var workouts = await _workoutService.GetUserWorkoutsByQueryParamsAsync(queryParams, userId!);
 
-            return ApiResponse<PagedResult<WorkoutListItemDto>>.Success("Success", workouts);
+            return Ok(workouts);
         }
 
         [HttpGet("workout/{id:int}")]
         public async Task<ActionResult> GetWorkout([FromRoute] int id)
         {
-            var workouts = await _workoutService.GetWorkoutByIdAsync(id);
+            var workout = await _workoutService.GetWorkoutByIdAsync(id);
             
-            return workouts.ToActionResult();
+            return workout.ToActionResult();
         }
 
         [HttpDelete("delete/{id:int}")]

@@ -12,7 +12,6 @@ using Scalar.AspNetCore;
 using WorkoutTrackerApi.Filters;
 using WorkoutTrackerApi.Services.Implementations;
 using WorkoutTrackerApi.Services.Interfaces;
-using WorkoutTrackerApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -84,7 +83,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();
-    options.Filters.Add<ApiResponseTransformerFilter>();
+    options.Filters.Add<ProblemDetailsFilter>();
 });
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

@@ -11,7 +11,7 @@ using WorkoutTrackerApi.Services.Interfaces;
 namespace WorkoutTrackerApi.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class UserController : ControllerBase
     {

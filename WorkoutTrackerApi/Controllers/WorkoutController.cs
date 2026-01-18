@@ -10,7 +10,7 @@ using WorkoutTrackerApi.Services.Interfaces;
 namespace WorkoutTrackerApi.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/workouts")]
     [ApiController]
     public class WorkoutController : ControllerBase
     {
@@ -52,7 +52,7 @@ namespace WorkoutTrackerApi.Controllers
             return Ok(workouts);
         }
 
-        [HttpGet("workout/{id:int}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult> GetWorkout([FromRoute] int id)
         {
             var workout = await _workoutService.GetWorkoutByIdAsync(id);
@@ -60,7 +60,7 @@ namespace WorkoutTrackerApi.Controllers
             return workout.ToActionResult();
         }
 
-        [HttpDelete("delete/{id:int}")]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteWorkout([FromRoute] int id)
         {
             var workoutDeleteResult = await _workoutService.DeleteWorkoutAsync(id, User.FindFirstValue(ClaimTypes.NameIdentifier)!);

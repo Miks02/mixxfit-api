@@ -8,7 +8,7 @@ using WorkoutTrackerApi.Services.Interfaces;
 namespace WorkoutTrackerApi.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/profile")]
     [ApiController]
     public class ProfileController : ControllerBase
     {

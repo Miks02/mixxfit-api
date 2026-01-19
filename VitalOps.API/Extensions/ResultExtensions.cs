@@ -16,13 +16,13 @@ public static class ResultExtensions
         return Result.Failure(result.Errors.ToArray());
     }
 
-    public static Result HandleResult<T>(this Result<T> result, ILogger? logger)
+    public static Result<T> HandleResult<T>(this Result<T> result, ILogger? logger)
     {
         if (result.IsSucceeded)
             return result.Payload is null ? Result<T>.Success() : Result<T>.Success(result.Payload);
 
         LogErrors(logger, result.Errors);
-        return Result.Failure(result.Errors.ToArray());
+        return Result<T>.Failure(result.Errors.ToArray());
     }
 
     public static Result HandleIdentityResult(this IdentityResult result, ILogger? logger = null)
@@ -36,10 +36,10 @@ public static class ResultExtensions
         return Result.Failure(errors.ToArray());
     }
 
-    public static Result<T> HandleIdentityResult<T>(this IdentityResult result, T? data, ILogger? logger = null)
+    public static Result<T> HandleIdentityResult<T>(this IdentityResult result, T data, ILogger? logger = null)
     {
         if (result.Succeeded)
-            return data is null ? Result<T>.Success() : Result<T>.Success(data);
+            return Result<T>.Success(data);
 
         var errors = ConvertToErrorList(result.Errors);
 

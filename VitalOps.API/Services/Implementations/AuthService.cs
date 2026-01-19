@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using VitalOps.API.DTO.Auth;
+using VitalOps.API.Extensions;
 using VitalOps.API.Models;
 using VitalOps.API.Services.Interfaces;
 using VitalOps.API.Services.Results;
@@ -49,34 +50,21 @@ public class AuthService : IAuthService
             Email = request.Email,
         };
 
-        var createResult = await _userManager.CreateAsync(user, request.Password);
+        var createResult = (await _userManager.CreateAsync(user, request.Password)).HandleIdentityResult(_logger);
 
-        if (!createResult.Succeeded)
-        {
-            _logger.LogError("Error happened while trying to create a user");
-
-            foreach (var error in createResult.Errors)
-            {
-                _logger.LogError("ERROR: {error}", error.Description);
-                if (error.Code == "DuplicateEmail")
-                    return Result<AuthResponseDto>.Failure(Error.User.EmailAlreadyExists());
-                if (error.Code == "DuplicateUserName")
-                    return Result<AuthResponseDto>.Failure(Error.User.UsernameAlreadyExists());
-            }
-        }
-
+        if (!createResult.IsSucceeded)
+            return Result<AuthResponseDto>.Failure(createResult.Errors.ToArray());
+        
         var assignResult = await AssignRoleAsync(user);
 
         if (!assignResult.IsSucceeded)
             return Result<AuthResponseDto>.Failure(assignResult.Errors.ToArray());
 
-        var generateTokens = await GenerateAuthTokens(user);
+        var generateTokens = (await GenerateAuthTokens(user)).HandleResult(_logger);
 
         if (!generateTokens.IsSucceeded)
-        {
-            _logger.LogError("Failed to generate tokens for a newly registered user {id}", user.Id);
             return Result<AuthResponseDto>.Failure(generateTokens.Errors.ToArray());
-        }
+        
 
         var userDetails = await _userService.GetUserDetailsAsync(user.Id, cancellationToken);
 
@@ -100,27 +88,27 @@ public class AuthService : IAuthService
 
         if (user is null)
         {
-            _logger.LogError($"Failed sign in for user with email: {request.Email}. User not found");
+            _logger.LogError("Failed sign in for user with email: {email}. User not found", request.Email);
             return Result<AuthResponseDto>.Failure(Error.Auth.LoginFailed("Incorrect email or password"));
         }
 
         if (!await _userManager.CheckPasswordAsync(user, request.Password))
         {
-            _logger.LogError($"Failed sign in for user with email: {request.Email}. Incorrect password");
+            _logger.LogError("Failed sign in for user with email: {email}. Incorrect password", request.Email);
             return Result<AuthResponseDto>.Failure(Error.Auth.LoginFailed("Incorrect email or password"));
         }
 
-        var newAccessToken = await GenerateAuthTokens(user);
+        var generateTokensResult = await GenerateAuthTokens(user);
 
-        if(!newAccessToken.IsSucceeded)
-            return Result<AuthResponseDto>.Failure(newAccessToken.Errors.ToArray());
+        if(!generateTokensResult.IsSucceeded)
+            return Result<AuthResponseDto>.Failure(generateTokensResult.Errors.ToArray());
 
         var userDetails = await _userService.GetUserDetailsAsync(user.Id, cancellationToken);
 
         var responseDto = new AuthResponseDto()
         {
-            AccessToken = newAccessToken.Payload!.AccessToken,
-            RefreshToken = newAccessToken.Payload!.RefreshToken,
+            AccessToken = generateTokensResult.Payload!.AccessToken,
+            RefreshToken = generateTokensResult.Payload!.RefreshToken,
             User = userDetails
         };
         
@@ -153,30 +141,24 @@ public class AuthService : IAuthService
         if (user.TokenExpDate < DateTime.UtcNow)
         {
             var error = Error.Auth.ExpiredToken();
-            _logger.LogError("Failed to regenerate auth tokens. " + error.Description);
+            _logger.LogError("Failed to regenerate auth tokens. {error}", error.Description);
             return Result<AuthResponseDto>.Failure(error);
         }
 
-        var newAccessToken = await CreateAccessToken(user);
-        var newRefreshToken = await AssignRefreshToken(user);
+        var createAccessTokenResult = await CreateAccessToken(user);
+        var newRefreshToken = (await AssignRefreshToken(user)).HandleResult(_logger);
 
         if (!newRefreshToken.IsSucceeded)
-        {
-            foreach (var error in newRefreshToken.Errors)
-            {
-                _logger.LogError("Code: {code} Description: {description}", error.Code, error.Description);
-            }
             return Result<AuthResponseDto>.Failure(newRefreshToken.Errors.ToArray());
-        }
+        
 
         var authResponse = new AuthResponseDto()
         {
             RefreshToken = newRefreshToken.Payload!,
-            AccessToken = newAccessToken
+            AccessToken = createAccessTokenResult
         };
 
         return Result<AuthResponseDto>.Success(authResponse);
-
     }
 
     public async Task<Result> LogoutAsync(
@@ -184,9 +166,8 @@ public class AuthService : IAuthService
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(refreshToken))
-        {
-            throw new InvalidOperationException("Refresh token is missing");
-        }
+            return Result.Failure(Error.Auth.JwtError("Refresh token is missing"));
+        
         
         var user = await _userManager.Users
             .Where(u => u.RefreshToken == refreshToken)
@@ -201,20 +182,11 @@ public class AuthService : IAuthService
         user.RefreshToken = null;
         user.TokenExpDate = null;
 
-        var removeTokenResult = await _userManager.UpdateAsync(user);
+        var removeTokenResult = (await _userManager.UpdateAsync(user)).HandleIdentityResult(_logger);
 
-        if (!removeTokenResult.Succeeded)
-        {
-
-            var errors = removeTokenResult.Errors.Select(e => new Error(e.Code, e.Description)).ToList();
-  
-            _logger.LogError("Failed to sign out | UserID: {id}", user.Id);
-            foreach (var error in errors)
-            {
-                _logger.LogError("Code: {code} Description: {description}", error.Code, error.Description);
-            }
-            return Result.Failure(errors.ToArray());
-        }
+        if (!removeTokenResult.IsSucceeded)
+            return Result.Failure(removeTokenResult.Errors.ToArray());
+        
 
         return Result.Success();
     }
@@ -225,10 +197,10 @@ public class AuthService : IAuthService
 
         var claims = new List<Claim>()
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email!),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new (JwtRegisteredClaimNames.Sub, user.Id),
+            new (JwtRegisteredClaimNames.Email, user.Email!),
+            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new (ClaimTypes.NameIdentifier, user.Id),
         };
 
         claims.AddRange(rolesList.Select(role => new Claim(ClaimTypes.Role, role)));
@@ -265,15 +237,7 @@ public class AuthService : IAuthService
         user.RefreshToken = CreateRefreshToken();
         user.TokenExpDate = DateTime.UtcNow.AddDays(7);
 
-        var result = await _userManager.UpdateAsync(user);
-
-        if (!result.Succeeded)
-        {
-            _logger.LogError("Error happened while assigning refresh token to the user");
-            return Result<string>.Failure(Error.Auth.JwtError());
-        }
-
-        return Result<string>.Success(user.RefreshToken);
+        return (await _userManager.UpdateAsync(user)).HandleIdentityResult(user.RefreshToken, _logger);
     }
 
     private async Task<Result<TokenResponseDto>> GenerateAuthTokens(User user)
@@ -301,36 +265,16 @@ public class AuthService : IAuthService
 
         if (!await _roleManager.RoleExistsAsync("User"))
         {
-            IdentityResult createRoleResult = await _roleManager.CreateAsync(new IdentityRole("User"));
+            var createRoleResult = (await _roleManager.CreateAsync(new IdentityRole("User"))).HandleIdentityResult(_logger);
 
-            if (!createRoleResult.Succeeded)
-            {
-                var identityErrors = createRoleResult.Errors.Select(e => new Error(e.Code, e.Description));
-
-                _logger.LogError("Unexpected error happened while creating a new role for the user");
-                foreach (var error in identityErrors)
-                {
-                    _logger.LogError("Code: {code} Description: {description}", error.Code, error.Description);
-                }
-
-                return Result.Failure(Error.General.UnknownError("Unexpected error happened while creating a new role"));
-            }
+            if (!createRoleResult.IsSucceeded)
+                return createRoleResult;
         }
 
-        IdentityResult addToRoleResult = await _userManager.AddToRoleAsync(user, "User");
-        if (!addToRoleResult.Succeeded)
-        {
-            var identityErrors = addToRoleResult.Errors.Select(e => new Error(e.Code, e.Description));
+        var addToRoleResult = (await _userManager.AddToRoleAsync(user, "User")).HandleIdentityResult(_logger);
+        if (!addToRoleResult.IsSucceeded)
+            return addToRoleResult;
 
-            _logger.LogError("Unexpected error happened while assigning role to the user");
-            foreach (var error in identityErrors)
-            {
-                _logger.LogError("Code: {code} Description: {description}", error.Code, error.Description);
-            }
-
-            return Result.Failure(Error.General.UnknownError("Unexpected error happened while assigning role to the user"));
-        }
-        _logger.LogInformation("User assigned to role successfully");
         return Result.Success();
 
     }

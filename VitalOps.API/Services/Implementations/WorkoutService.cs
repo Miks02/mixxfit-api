@@ -91,7 +91,7 @@ public class WorkoutService : IWorkoutService
 
     }
 
-    public async Task<ServiceResult<WorkoutDetailsDto>> GetWorkoutByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Result<WorkoutDetailsDto>> GetWorkoutByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var workout = await _context.Workouts
             .Where(w => w.Id == id)
@@ -101,12 +101,12 @@ public class WorkoutService : IWorkoutService
         if (workout is null)
         {
             _logger.LogInformation($"Workout with id {id} not found");
-            return ServiceResult<WorkoutDetailsDto>.Failure(Error.Resource.NotFound("Workout"));
+            return Result<WorkoutDetailsDto>.Failure(Error.Resource.NotFound("Workout"));
         }
 
         var workoutDto = MapToWorkoutDetailsDto().Invoke(workout);
 
-        return ServiceResult<WorkoutDetailsDto>.Success(workoutDto);
+        return Result<WorkoutDetailsDto>.Success(workoutDto);
     }
 
     public async Task<DateTime?> GetLastUserWorkoutAsync(string userId, CancellationToken cancellationToken = default)
@@ -151,7 +151,7 @@ public class WorkoutService : IWorkoutService
 
     }
 
-    public async Task<ServiceResult<WorkoutDetailsDto>> AddWorkoutAsync(WorkoutCreateRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result<WorkoutDetailsDto>> AddWorkoutAsync(WorkoutCreateRequest request, CancellationToken cancellationToken = default)
     {
 
         var newWorkout = new Workout()
@@ -190,7 +190,7 @@ public class WorkoutService : IWorkoutService
         catch (DbUpdateException ex)
         {
             _logger.LogError("CRITICAL: Error happened while trying to add workout to the database" + ex.Message);
-            return ServiceResult<WorkoutDetailsDto>.Failure(Error.Database.SaveChangesFailed());
+            return Result<WorkoutDetailsDto>.Failure(Error.Database.SaveChangesFailed());
         }
 
 
@@ -198,10 +198,10 @@ public class WorkoutService : IWorkoutService
 
         var workoutDto = MapToWorkoutDetailsDto().Invoke(newWorkout);
 
-        return ServiceResult<WorkoutDetailsDto>.Success(workoutDto);
+        return Result<WorkoutDetailsDto>.Success(workoutDto);
     }
 
-    public async Task<ServiceResult> DeleteWorkoutAsync(int id, string userId, CancellationToken cancellationToken = default)
+    public async Task<Result> DeleteWorkoutAsync(int id, string userId, CancellationToken cancellationToken = default)
     {
         
         try
@@ -213,17 +213,17 @@ public class WorkoutService : IWorkoutService
             if (deleted == 0)
             {
                 _logger.LogInformation("Delete failed, workout not found");
-                return ServiceResult.Failure(Error.Resource.NotFound("Workout"));
+                return Result.Failure(Error.Resource.NotFound("Workout"));
             }
         }
         catch (DbUpdateException ex)
         {
             _logger.LogError("CRITICAL: Error happened deleting workout from the database \n {message}", ex.Message);
-            return ServiceResult<WorkoutDetailsDto>.Failure(Error.Database.SaveChangesFailed());
+            return Result<WorkoutDetailsDto>.Failure(Error.Database.SaveChangesFailed());
         }
         
         _logger.LogInformation("Workout deleted successfully");
-        return ServiceResult.Success();
+        return Result.Success();
     }
     
     private IQueryable<WorkoutListItemDto> QueryBuilder(QueryParams queryParams, string? userId = "")

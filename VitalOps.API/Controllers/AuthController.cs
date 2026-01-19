@@ -77,7 +77,7 @@ namespace VitalOps.API.Controllers
             return HandleRefreshToken(result);
         }
 
-        private ActionResult HandleRefreshToken(ServiceResult<AuthResponseDto> result)
+        private ActionResult HandleRefreshToken(Result<AuthResponseDto> result)
         {
             if(!result.IsSucceeded)
                 return new ObjectResult(result.Errors[0]);

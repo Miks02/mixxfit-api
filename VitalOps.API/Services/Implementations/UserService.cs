@@ -47,26 +47,26 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<ServiceResult> DeleteUserAsync(User user)
+    public async Task<Result> DeleteUserAsync(User user)
     {
         var result = await _userManager.DeleteAsync(user);
 
         return result.HandleIdentityResult(_logger);
     }
 
-    public async Task<ServiceResult> DeleteUserAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<Result> DeleteUserAsync(string id, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.Users
             .Where(u => u.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
 
         if(user is null)
-            return ServiceResult.Failure(Error.User.NotFound());
+            return Result.Failure(Error.User.NotFound());
 
         return await DeleteUserAsync(user);
     }
 
-    public async Task<ServiceResult<DateTime>> UpdateDateOfBirthAsync(UpdateDateOfBirthDto dto, string userId, CancellationToken cancellationToken = default)
+    public async Task<Result<DateTime>> UpdateDateOfBirthAsync(UpdateDateOfBirthDto dto, string userId, CancellationToken cancellationToken = default)
     {
         var user = await GetUserForUpdateAsync(userId);
 
@@ -77,7 +77,7 @@ public class UserService : IUserService
         return updateResult.HandleIdentityResult(dto.DateOfBirth, _logger);
     }
 
-    public async Task<ServiceResult<double>> UpdateWeightAsync(UpdateWeightDto dto, string userId, CancellationToken cancellationToken = default)
+    public async Task<Result<double>> UpdateWeightAsync(UpdateWeightDto dto, string userId, CancellationToken cancellationToken = default)
     {
         var user = await GetUserForUpdateAsync(userId);
 
@@ -89,7 +89,7 @@ public class UserService : IUserService
 
     }
 
-    public async Task<ServiceResult<double>> UpdateHeightAsync(UpdateHeightDto dto, string userId, CancellationToken cancellationToken = default)
+    public async Task<Result<double>> UpdateHeightAsync(UpdateHeightDto dto, string userId, CancellationToken cancellationToken = default)
     {
         var user = await GetUserForUpdateAsync(userId);
 
@@ -102,7 +102,7 @@ public class UserService : IUserService
 
     }
 
-    public async Task<ServiceResult<Gender>> UpdateGenderAsync(UpdateGenderDto dto, string userId, CancellationToken cancellationToken = default)
+    public async Task<Result<Gender>> UpdateGenderAsync(UpdateGenderDto dto, string userId, CancellationToken cancellationToken = default)
     {
         var user = await GetUserForUpdateAsync(userId);
 
@@ -113,7 +113,7 @@ public class UserService : IUserService
         return updateResult.HandleIdentityResult(dto.Gender, _logger);
     }
 
-    public async Task<ServiceResult<UpdateFullNameDto>> UpdateFullNameAsync(UpdateFullNameDto dto, string userId, CancellationToken cancellationToken = default)
+    public async Task<Result<UpdateFullNameDto>> UpdateFullNameAsync(UpdateFullNameDto dto, string userId, CancellationToken cancellationToken = default)
     {
         var user = await GetUserForUpdateAsync(userId);
 
@@ -125,7 +125,7 @@ public class UserService : IUserService
         return updateResult.HandleIdentityResult(dto, _logger);
     }
 
-    public async Task<ServiceResult<string>> UpdateEmailAsync(UpdateEmailDto dto, string userId, CancellationToken cancellationToken = default)
+    public async Task<Result<string>> UpdateEmailAsync(UpdateEmailDto dto, string userId, CancellationToken cancellationToken = default)
     {
         var user = await GetUserForUpdateAsync(userId);
 
@@ -136,7 +136,7 @@ public class UserService : IUserService
         return updateResult.HandleIdentityResult(dto.Email, _logger);
     }
 
-    public async Task<ServiceResult<string>> UpdateUserNameAsync(UpdateUserNameDto dto, string userId, CancellationToken cancellationToken = default)
+    public async Task<Result<string>> UpdateUserNameAsync(UpdateUserNameDto dto, string userId, CancellationToken cancellationToken = default)
     {
         var user = await GetUserForUpdateAsync(userId);
 

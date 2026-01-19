@@ -37,7 +37,7 @@ public class AuthService : IAuthService
     }
 
 
-    public async Task<ServiceResult<AuthResponseDto>> RegisterAsync(
+    public async Task<Result<AuthResponseDto>> RegisterAsync(
         RegisterRequestDto request,
         CancellationToken cancellationToken = default)
     {
@@ -59,23 +59,23 @@ public class AuthService : IAuthService
             {
                 _logger.LogError("ERROR: {error}", error.Description);
                 if (error.Code == "DuplicateEmail")
-                    return ServiceResult<AuthResponseDto>.Failure(Error.User.EmailAlreadyExists());
+                    return Result<AuthResponseDto>.Failure(Error.User.EmailAlreadyExists());
                 if (error.Code == "DuplicateUserName")
-                    return ServiceResult<AuthResponseDto>.Failure(Error.User.UsernameAlreadyExists());
+                    return Result<AuthResponseDto>.Failure(Error.User.UsernameAlreadyExists());
             }
         }
 
         var assignResult = await AssignRoleAsync(user);
 
         if (!assignResult.IsSucceeded)
-            return ServiceResult<AuthResponseDto>.Failure(assignResult.Errors.ToArray());
+            return Result<AuthResponseDto>.Failure(assignResult.Errors.ToArray());
 
         var generateTokens = await GenerateAuthTokens(user);
 
         if (!generateTokens.IsSucceeded)
         {
             _logger.LogError("Failed to generate tokens for a newly registered user {id}", user.Id);
-            return ServiceResult<AuthResponseDto>.Failure(generateTokens.Errors.ToArray());
+            return Result<AuthResponseDto>.Failure(generateTokens.Errors.ToArray());
         }
 
         var userDetails = await _userService.GetUserDetailsAsync(user.Id, cancellationToken);
@@ -87,12 +87,12 @@ public class AuthService : IAuthService
             User = userDetails
         };
 
-        return ServiceResult<AuthResponseDto>.Success(responseDto);
+        return Result<AuthResponseDto>.Success(responseDto);
 
 
     }
 
-    public async Task<ServiceResult<AuthResponseDto>> LoginAsync(
+    public async Task<Result<AuthResponseDto>> LoginAsync(
         LoginRequestDto request,
         CancellationToken cancellationToken = default)
     {
@@ -101,19 +101,19 @@ public class AuthService : IAuthService
         if (user is null)
         {
             _logger.LogError($"Failed sign in for user with email: {request.Email}. User not found");
-            return ServiceResult<AuthResponseDto>.Failure(Error.Auth.LoginFailed("Incorrect email or password"));
+            return Result<AuthResponseDto>.Failure(Error.Auth.LoginFailed("Incorrect email or password"));
         }
 
         if (!await _userManager.CheckPasswordAsync(user, request.Password))
         {
             _logger.LogError($"Failed sign in for user with email: {request.Email}. Incorrect password");
-            return ServiceResult<AuthResponseDto>.Failure(Error.Auth.LoginFailed("Incorrect email or password"));
+            return Result<AuthResponseDto>.Failure(Error.Auth.LoginFailed("Incorrect email or password"));
         }
 
         var newAccessToken = await GenerateAuthTokens(user);
 
         if(!newAccessToken.IsSucceeded)
-            return ServiceResult<AuthResponseDto>.Failure(newAccessToken.Errors.ToArray());
+            return Result<AuthResponseDto>.Failure(newAccessToken.Errors.ToArray());
 
         var userDetails = await _userService.GetUserDetailsAsync(user.Id, cancellationToken);
 
@@ -125,10 +125,10 @@ public class AuthService : IAuthService
         };
         
 
-        return ServiceResult<AuthResponseDto>.Success(responseDto);
+        return Result<AuthResponseDto>.Success(responseDto);
     }
 
-    public async Task<ServiceResult<AuthResponseDto>> RotateAuthTokens(
+    public async Task<Result<AuthResponseDto>> RotateAuthTokens(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -141,20 +141,20 @@ public class AuthService : IAuthService
         if (user is null)
         {
             _logger.LogError("Failed to regenerate access and refresh tokens. User is null");
-            return ServiceResult<AuthResponseDto>.Failure(Error.Auth.JwtError("Failed to regenerate auth tokens"));
+            return Result<AuthResponseDto>.Failure(Error.Auth.JwtError("Failed to regenerate auth tokens"));
         }
 
         if (user.RefreshToken is null)
         {
             _logger.LogError("Failed to regenerate access and refresh tokens. Refresh token is null");
-            return ServiceResult<AuthResponseDto>.Failure(Error.Auth.JwtError("Failed to regenerate auth tokens"));
+            return Result<AuthResponseDto>.Failure(Error.Auth.JwtError("Failed to regenerate auth tokens"));
         }
 
         if (user.TokenExpDate < DateTime.UtcNow)
         {
             var error = Error.Auth.ExpiredToken();
             _logger.LogError("Failed to regenerate auth tokens. " + error.Description);
-            return ServiceResult<AuthResponseDto>.Failure(error);
+            return Result<AuthResponseDto>.Failure(error);
         }
 
         var newAccessToken = await CreateAccessToken(user);
@@ -166,7 +166,7 @@ public class AuthService : IAuthService
             {
                 _logger.LogError("Code: {code} Description: {description}", error.Code, error.Description);
             }
-            return ServiceResult<AuthResponseDto>.Failure(newRefreshToken.Errors.ToArray());
+            return Result<AuthResponseDto>.Failure(newRefreshToken.Errors.ToArray());
         }
 
         var authResponse = new AuthResponseDto()
@@ -175,11 +175,11 @@ public class AuthService : IAuthService
             AccessToken = newAccessToken
         };
 
-        return ServiceResult<AuthResponseDto>.Success(authResponse);
+        return Result<AuthResponseDto>.Success(authResponse);
 
     }
 
-    public async Task<ServiceResult> LogoutAsync(
+    public async Task<Result> LogoutAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -195,7 +195,7 @@ public class AuthService : IAuthService
         if (user is null)
         {
             _logger.LogError("User with refresh token {refreshToken} has not been found", refreshToken);
-            return ServiceResult.Failure(Error.User.NotFound());
+            return Result.Failure(Error.User.NotFound());
         }
 
         user.RefreshToken = null;
@@ -213,10 +213,10 @@ public class AuthService : IAuthService
             {
                 _logger.LogError("Code: {code} Description: {description}", error.Code, error.Description);
             }
-            return ServiceResult.Failure(errors.ToArray());
+            return Result.Failure(errors.ToArray());
         }
 
-        return ServiceResult.Success();
+        return Result.Success();
     }
 
     private async Task<string> CreateAccessToken(User user)
@@ -260,7 +260,7 @@ public class AuthService : IAuthService
         return Convert.ToBase64String(randomBytes);
     }
 
-    private async Task<ServiceResult<string>> AssignRefreshToken(User user)
+    private async Task<Result<string>> AssignRefreshToken(User user)
     {
         user.RefreshToken = CreateRefreshToken();
         user.TokenExpDate = DateTime.UtcNow.AddDays(7);
@@ -270,19 +270,19 @@ public class AuthService : IAuthService
         if (!result.Succeeded)
         {
             _logger.LogError("Error happened while assigning refresh token to the user");
-            return ServiceResult<string>.Failure(Error.Auth.JwtError());
+            return Result<string>.Failure(Error.Auth.JwtError());
         }
 
-        return ServiceResult<string>.Success(user.RefreshToken);
+        return Result<string>.Success(user.RefreshToken);
     }
 
-    private async Task<ServiceResult<TokenResponseDto>> GenerateAuthTokens(User user)
+    private async Task<Result<TokenResponseDto>> GenerateAuthTokens(User user)
     {
 
         var assignRefreshToken = await AssignRefreshToken(user);
 
         if (!assignRefreshToken.IsSucceeded)
-            return ServiceResult<TokenResponseDto>.Failure(assignRefreshToken.Errors.ToArray());
+            return Result<TokenResponseDto>.Failure(assignRefreshToken.Errors.ToArray());
 
 
         var tokenResponse = new TokenResponseDto()
@@ -292,11 +292,11 @@ public class AuthService : IAuthService
         };
 
         _logger.LogInformation("Auth tokens generated successfully");
-        return ServiceResult<TokenResponseDto>.Success(tokenResponse);
+        return Result<TokenResponseDto>.Success(tokenResponse);
 
     }
 
-    private async Task<ServiceResult> AssignRoleAsync(User user)
+    private async Task<Result> AssignRoleAsync(User user)
     {
 
         if (!await _roleManager.RoleExistsAsync("User"))
@@ -313,7 +313,7 @@ public class AuthService : IAuthService
                     _logger.LogError("Code: {code} Description: {description}", error.Code, error.Description);
                 }
 
-                return ServiceResult.Failure(Error.General.UnknownError("Unexpected error happened while creating a new role"));
+                return Result.Failure(Error.General.UnknownError("Unexpected error happened while creating a new role"));
             }
         }
 
@@ -328,10 +328,10 @@ public class AuthService : IAuthService
                 _logger.LogError("Code: {code} Description: {description}", error.Code, error.Description);
             }
 
-            return ServiceResult.Failure(Error.General.UnknownError("Unexpected error happened while assigning role to the user"));
+            return Result.Failure(Error.General.UnknownError("Unexpected error happened while assigning role to the user"));
         }
         _logger.LogInformation("User assigned to role successfully");
-        return ServiceResult.Success();
+        return Result.Success();
 
     }
 }

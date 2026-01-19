@@ -5,49 +5,49 @@ using VitalOps.API.DTO.Global;
 
 namespace VitalOps.API.Extensions;
 
-public static class ServiceResultExtensions
+public static class ResultExtensions
 {
-    public static ServiceResult HandleResult(this ServiceResult result, ILogger? logger)
+    public static Result HandleResult(this Result result, ILogger? logger)
     {
         if (result.IsSucceeded)
-            return ServiceResult.Success();
+            return Result.Success();
 
         LogErrors(logger, result.Errors);
-        return ServiceResult.Failure(result.Errors.ToArray());
+        return Result.Failure(result.Errors.ToArray());
     }
 
-    public static ServiceResult HandleResult<T>(this ServiceResult<T> result, ILogger? logger)
+    public static Result HandleResult<T>(this Result<T> result, ILogger? logger)
     {
         if (result.IsSucceeded)
-            return result.Payload is null ? ServiceResult<T>.Success() : ServiceResult<T>.Success(result.Payload);
+            return result.Payload is null ? Result<T>.Success() : Result<T>.Success(result.Payload);
 
         LogErrors(logger, result.Errors);
-        return ServiceResult.Failure(result.Errors.ToArray());
+        return Result.Failure(result.Errors.ToArray());
     }
 
-    public static ServiceResult HandleIdentityResult(this IdentityResult result, ILogger? logger = null)
+    public static Result HandleIdentityResult(this IdentityResult result, ILogger? logger = null)
     {
         if (result.Succeeded)
-            return ServiceResult.Success();
+            return Result.Success();
 
         var errors = ConvertToErrorList(result.Errors);
 
         LogErrors(logger, errors, "Identity operation failed");
-        return ServiceResult.Failure(errors.ToArray());
+        return Result.Failure(errors.ToArray());
     }
 
-    public static ServiceResult<T> HandleIdentityResult<T>(this IdentityResult result, T? data, ILogger? logger = null)
+    public static Result<T> HandleIdentityResult<T>(this IdentityResult result, T? data, ILogger? logger = null)
     {
         if (result.Succeeded)
-            return data is null ? ServiceResult<T>.Success() : ServiceResult<T>.Success(data);
+            return data is null ? Result<T>.Success() : Result<T>.Success(data);
 
         var errors = ConvertToErrorList(result.Errors);
 
         LogErrors(logger, errors, "Identity operation failed");
-        return ServiceResult<T>.Failure(errors.ToArray());
+        return Result<T>.Failure(errors.ToArray());
     }
 
-    public static ActionResult ToActionResult(this ServiceResult result)
+    public static ActionResult ToActionResult(this Result result)
     {
         if (result.IsSucceeded)
             return new NoContentResult();
@@ -55,7 +55,7 @@ public static class ServiceResultExtensions
         return new ObjectResult(result.Errors[0]) {StatusCode = 400};
     }
 
-    public static ActionResult ToActionResult<T>(this ServiceResult<T> result)
+    public static ActionResult ToActionResult<T>(this Result<T> result)
     {
         if (result.IsSucceeded)
             return new OkObjectResult(result.Payload);

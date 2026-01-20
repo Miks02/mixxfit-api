@@ -5,7 +5,6 @@ using VitalOps.API.Enums;
 using VitalOps.API.Extensions;
 using VitalOps.API.Helpers;
 using VitalOps.API.Models;
-using static VitalOps.API.Services.Results.Error;
 
 namespace VitalOps.API.Mappers
 {

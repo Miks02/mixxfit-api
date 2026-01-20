@@ -102,7 +102,7 @@ public class WorkoutService : IWorkoutService
             .AsNoTracking()
             .OrderByDescending(w => w.WorkoutDate)
             .Where(w => w.UserId == userId)
-            .Select(w => w.WorkoutDate)
+            .Select(w => (DateTime?)w.WorkoutDate)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

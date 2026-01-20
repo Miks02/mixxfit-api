@@ -5,7 +5,6 @@ using VitalOps.API.DTO.Global;
 using VitalOps.API.DTO.Workout;
 using VitalOps.API.Services.Interfaces;
 using VitalOps.API.Extensions;
-using VitalOps.API.Models;
 
 namespace VitalOps.API.Controllers
 {
@@ -60,6 +59,14 @@ namespace VitalOps.API.Controllers
             var workout = await _workoutService.GetWorkoutByIdAsync(id, userId);
             
             return workout.ToActionResult();
+        }
+
+        [HttpGet("workouts-per-month")]
+        public async Task<ActionResult<WorkoutsPerMonthDto>> GetWorkoutsPerMonth([FromQuery] int? year)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return await _workoutService.GetUserWorkoutCountsByMonthAsync(userId!, year);
         }
 
         [HttpDelete("{id:int}")]

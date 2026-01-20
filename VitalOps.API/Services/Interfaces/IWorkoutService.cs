@@ -11,6 +11,7 @@ public interface IWorkoutService
     Task<IReadOnlyList<WorkoutListItemDto>> GetRecentWorkoutsAsync(string userId, int itemsToTake, CancellationToken cancellationToken = default);
     Task<Result<WorkoutDetailsDto>> GetWorkoutByIdAsync(int id, string? userId, CancellationToken cancellationToken = default);
     Task<DateTime?> GetLastUserWorkoutAsync(string userId, CancellationToken cancellationToken = default);
+    Task<WorkoutsPerMonthDto> GetUserWorkoutCountsByMonthAsync(string userId, int? year);
 
     Task<int?> CalculateWorkoutStreakAsync(string userId, CancellationToken cancellationToken = default);
    

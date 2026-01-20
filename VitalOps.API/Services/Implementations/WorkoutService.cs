@@ -1,3 +1,4 @@
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using VitalOps.API.Data;
 using VitalOps.API.DTO.Global;
@@ -67,6 +68,7 @@ public class WorkoutService : IWorkoutService
 
         return await _context.Workouts
             .AsNoTracking()
+            .Include(w => w.ExerciseEntries)
             .Where(w => w.UserId == userId)
             .OrderByDescending(w => w.WorkoutDate)
             .Take(itemsToTake)
@@ -102,6 +104,44 @@ public class WorkoutService : IWorkoutService
             .Where(w => w.UserId == userId)
             .Select(w => w.WorkoutDate)
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<WorkoutsPerMonthDto> GetUserWorkoutCountsByMonthAsync(string userId, int? year)
+    {
+        var years = await _context.Workouts
+            .AsNoTracking()
+            .OrderByDescending(w => w.WorkoutDate.Year)
+            .Where(w => w.UserId == userId)
+            .Select(w => w.WorkoutDate.Year)
+            .Distinct()
+            .ToListAsync();
+
+        var selectedYear = year ?? DateTime.UtcNow.Year;
+
+        var stats = await _context.Workouts
+            .AsNoTracking()
+            .Where(w => w.UserId == userId && w.WorkoutDate.Year == selectedYear)
+            .GroupBy(w => w.WorkoutDate.Month)
+            .Select(g => new { Month = g.Key, Count = g.Count() })
+            .ToListAsync();
+
+        return new WorkoutsPerMonthDto()
+        {
+            Years = years,
+            JanuaryWorkouts = stats.FirstOrDefault(x => x.Month == 1)?.Count ?? 0,
+            FebruaryWorkouts =  stats.FirstOrDefault(x => x.Month == 2)?.Count ?? 0,
+            MarchWorkouts =  stats.FirstOrDefault(x => x.Month == 3)?.Count ?? 0,
+            AprilWorkouts =  stats.FirstOrDefault(x => x.Month == 4)?.Count ?? 0,
+            MayWorkouts =  stats.FirstOrDefault(x => x.Month == 5)?.Count ?? 0,
+            JuneWorkouts =  stats.FirstOrDefault(x => x.Month == 6)?.Count ?? 0,
+            JulyWorkouts =  stats.FirstOrDefault(x => x.Month == 7)?.Count ?? 0,
+            AugustWorkouts =  stats.FirstOrDefault(x => x.Month == 8)?.Count ?? 0,
+            SeptemberWorkouts =  stats.FirstOrDefault(x => x.Month == 9)?.Count ?? 0,
+            OctoberWorkouts =  stats.FirstOrDefault(x => x.Month == 10)?.Count ?? 0,
+            NovemberWorkouts =  stats.FirstOrDefault(x => x.Month == 11)?.Count ?? 0,
+            DecemberWorkouts =  stats.FirstOrDefault(x => x.Month == 12)?.Count ?? 0
+        };
+
     }
 
     public async Task<int?> CalculateWorkoutStreakAsync(string userId, CancellationToken cancellationToken = default)

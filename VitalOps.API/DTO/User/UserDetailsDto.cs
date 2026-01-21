@@ -10,7 +10,7 @@ namespace VitalOps.API.DTO.User
         public string? ImagePath { get; set; }
 
         public Gender? Gender { get; set; }
-        public double? Weight { get; set; }
+        public double? CurrentWeight { get; set; }
         public double? Height { get; set; }
 
         public AccountStatus AccountStatus { get; set; }

@@ -93,18 +93,6 @@ namespace VitalOps.API.Controllers
 
         }
 
-        [HttpPatch("weight")]
-        public async Task<ActionResult<double>> UpdateWeight(
-            [FromBody] UpdateWeightDto weight,
-            CancellationToken cancellationToken = default
-            )
-        {
-
-            var updateResult = await _userService.UpdateWeightAsync(weight, GetUserId(), cancellationToken);
-
-            return updateResult.ToActionResult();
-
-        }
 
         [HttpPatch("height")]
         public async Task<ActionResult<double>> UpdateHeight(

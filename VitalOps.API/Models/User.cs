@@ -14,8 +14,7 @@ public class User : IdentityUser
     public DateTime? TokenExpDate { get; set; }
     
     public Gender? Gender { get; set; }
-    
-    public double? TargetWeight { get; set; }
+    public double? CurrentWeight { get; set; }
     public double? HeightCm { get; set; }
     public int? DailyCalorieGoal { get; set; }
 

@@ -53,6 +53,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .WithOne(c => c.User)
             .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany(w => w.WeightEntries)
+            .WithOne(w => w.User)
+            .HasForeignKey(w => w.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         
     }

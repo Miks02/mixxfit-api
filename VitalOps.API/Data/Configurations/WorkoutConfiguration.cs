@@ -12,7 +12,7 @@ public class WorkoutConfiguration : IEntityTypeConfiguration<Workout>
             .HasMaxLength(100);
 
         builder.Property(p => p.Notes)
-            .HasMaxLength(256)
+            .HasMaxLength(150)
             .IsRequired(false);
 
         builder.HasIndex(p => p.Name);

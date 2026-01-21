@@ -8,6 +8,13 @@ namespace VitalOps.API.Filters;
 
 public class ProblemDetailsFilter : IResultFilter
 {
+    private readonly ILogger<ProblemDetailsFilter> _logger;
+
+    public ProblemDetailsFilter(ILogger<ProblemDetailsFilter> logger)
+    {
+        _logger = logger;
+    }
+
     public void OnResultExecuting(ResultExecutingContext context)
     {
 
@@ -20,7 +27,7 @@ public class ProblemDetailsFilter : IResultFilter
         if (objectResult.StatusCode == 200)
             return;
 
-        Console.WriteLine("Object result value: " + objectResult.Value);
+        _logger.LogWarning("Processed error: {code} | {description}", error.Code, error.Description);
 
         var problemDetails = CreateProblemDetails(error, context.HttpContext);
 
@@ -42,6 +49,7 @@ public class ProblemDetailsFilter : IResultFilter
         {
             var code when code.Contains("AlreadyExists") => 409,
             var code when code.Contains("Validation") => 400,
+            var code when code.Contains("LimitReached") => 400,
             var code when code.Contains("Auth") => 401,
             var code when code.Contains("Forbidden") => 403,
             var code when code.Contains("NotFound") => 404,

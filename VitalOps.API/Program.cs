@@ -9,13 +9,25 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using VitalOps.API.Exceptions.Handlers;
 using VitalOps.API.Filters;
 using VitalOps.API.Services.Implementations;
 using VitalOps.API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpContextAccessor();
+builder.Services.AddProblemDetails(configure =>
+{
+    configure.CustomizeProblemDetails = context =>
+    {
+        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+    };
+});
+
+
+
+builder.Services.AddExceptionHandler<CancellationExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -97,6 +109,20 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
     app.UseCors("AllowCors");
 }
+
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (OperationCanceledException)
+    {
+        context.Response.StatusCode = 499;
+    }
+});
+
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

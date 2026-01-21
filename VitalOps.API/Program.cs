@@ -52,7 +52,8 @@ builder.Services
     .AddScoped<ICurrentUserService, CurrentUserService>()
     .AddScoped<IWorkoutService, WorkoutService>()
     .AddScoped<IProfileService, ProfileService>()
-    .AddScoped<IDashboardService, DashboardService>();
+    .AddScoped<IDashboardService, DashboardService>()
+    .AddScoped<IWeightEntryService, WeightEntryService>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {

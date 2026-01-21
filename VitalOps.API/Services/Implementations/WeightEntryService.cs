@@ -1,0 +1,107 @@
+﻿using Microsoft.EntityFrameworkCore;
+using VitalOps.API.Data;
+using VitalOps.API.DTO.Weight;
+using VitalOps.API.Models;
+using VitalOps.API.Services.Interfaces;
+using VitalOps.API.Services.Results;
+
+namespace VitalOps.API.Services.Implementations
+{
+    public class WeightEntryService : IWeightEntryService
+    {
+        private readonly AppDbContext _context;
+        private readonly ILogger<WeightEntryService> _logger;
+
+        public WeightEntryService(
+            AppDbContext context, 
+            ILogger<WeightEntryService> logger)
+        {
+            _context = context;
+            _logger = logger;
+        }
+
+        public async Task<WeightSummaryDto?> GetUserWeightSummaryAsync(string userId, CancellationToken cancellationToken)
+        {
+            var entries = await _context.WeightEntries
+                .AsNoTracking()
+                .OrderByDescending(w => w.CreatedAt)
+                .Where(w => w.UserId == userId)
+                .Select(w => new WeightEntryDetailsDto()
+                {
+                    Id = w.Id,
+                    Weight = w.Weight,
+                    Time = w.Time,
+                    Notes = w.Notes
+                })
+                .ToListAsync(cancellationToken);
+
+            if (entries.Count == 0)
+                return null;
+
+            var firstWeightEntry = await _context.WeightEntries
+                .AsNoTracking()
+                .OrderBy(w => w.CreatedAt)
+                .Where(w => w.UserId == userId)
+                .Select(w => w.Weight)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            var lastWeightEntry = await _context.WeightEntries
+                .AsNoTracking()
+                .OrderByDescending(w => w.CreatedAt)
+                .Where(w => w.UserId == userId)
+                .Select(w => w.Weight)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            var progress = lastWeightEntry - firstWeightEntry;
+
+            return new WeightSummaryDto()
+            {
+                CurrentWeight = lastWeightEntry,
+                Progress = progress,
+                WeightEntries = entries
+            };
+                
+;
+        }
+
+        public async Task<Result<WeightEntryDetailsDto>> AddWeightEntryAsync(
+            WeightCreateRequestDto request,
+            string userId,
+            CancellationToken cancellationToken)
+        {
+            var weightEntriesToday = await _context.WeightEntries
+                .AsNoTracking()
+                .Where(w => w.UserId == userId && w.CreatedAt.Date == DateTime.UtcNow.Date)
+                .Select(w => w.Id)
+                .CountAsync(cancellationToken);
+
+            if (weightEntriesToday == 1)
+                return Result<WeightEntryDetailsDto>.Failure(Error.General.LimitReached());
+
+            var newWeightEntry = new WeightEntry()
+            {
+                Weight = request.Weight,
+                Time = request.Time,
+                UserId = userId,
+                Notes = request.Notes
+            };
+
+            await _context.AddAsync(newWeightEntry, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            _logger.LogInformation("Weight logged successfully");
+
+            var createdWeightEntry = new WeightEntryDetailsDto()
+            {
+                Id = newWeightEntry.Id,
+                Weight = newWeightEntry.Weight,
+                Time = newWeightEntry.Time,
+                Notes = newWeightEntry.Notes,
+                CreatedAt = newWeightEntry.CreatedAt
+            };
+
+            return Result<WeightEntryDetailsDto>.Success(createdWeightEntry);
+
+        }
+    }
+}

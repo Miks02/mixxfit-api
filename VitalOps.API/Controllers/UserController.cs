@@ -93,7 +93,6 @@ namespace VitalOps.API.Controllers
 
         }
 
-
         [HttpPatch("height")]
         public async Task<ActionResult<double>> UpdateHeight(
             [FromBody] UpdateHeightDto height,
@@ -106,9 +105,25 @@ namespace VitalOps.API.Controllers
             return updateResult.ToActionResult();
 
         }
+
+        [HttpPatch("target-weight")]
+        public async Task<ActionResult<double>> UpdateTargetWeight(
+            [FromBody] UpdateTargetWeightDto targetWeight,
+            CancellationToken cancellationToken = default
+        )
+        {
+
+            var updateResult = await _userService.UpdateTargetWeightAsync(targetWeight, GetUserId(), cancellationToken);
+
+            return updateResult.ToActionResult();
+
+        }
+
         private string GetUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
     }
 
+    
 
-}
+
+    }

@@ -22,11 +22,21 @@ namespace VitalOps.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<WeightSummaryDto?>> GetMyWeightSummary(CancellationToken cancellationToken = default)
+        public async Task<ActionResult<WeightSummaryDto?>> GetMyWeightSummary(int? year = null, int? month = null, CancellationToken cancellationToken = default)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            return await _weightService.GetUserWeightSummaryAsync(userId, cancellationToken);
+            return await _weightService.GetUserWeightSummaryAsync(userId, year, month, cancellationToken);
+        }
+
+        [HttpGet("logs")]
+        public async Task<ActionResult> GetMyWeightLogs(int? month = null, int? year = null, CancellationToken cancellationToken = default)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+                             
+            var logs = await _weightService.GetUserWeightLogsAsync(userId, month, year, cancellationToken);
+
+            return Ok(logs);
         }
 
         [HttpPost]

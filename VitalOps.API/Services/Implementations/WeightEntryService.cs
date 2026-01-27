@@ -78,6 +78,22 @@ namespace VitalOps.API.Services.Implementations
             return await BuildWeightEntriesQuery(userId, month, year).ToListAsync(cancellationToken);
         }
 
+        public async Task<WeightEntryDetailsDto?> GetUserWeightEntryByIdAsync(string userId, int id)
+        {
+            return await _context.WeightEntries
+                .AsNoTracking()
+                .Where(w => w.Id == id && w.UserId == userId)
+                .Select(w => new WeightEntryDetailsDto()
+                {
+                    Id = w.Id,
+                    Weight = w.Weight,
+                    Notes = w.Notes,
+                    Time = w.Time,
+                    CreatedAt = w.CreatedAt
+                })
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<Result<WeightEntryDetailsDto>> AddWeightEntryAsync(
             WeightCreateRequestDto request,
             string userId,

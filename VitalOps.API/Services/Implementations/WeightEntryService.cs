@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using VitalOps.API.Data;
 using VitalOps.API.DTO.Weight;
 using VitalOps.API.Models;
@@ -82,9 +81,8 @@ namespace VitalOps.API.Services.Implementations
 
             return new WeightListDetails()
             {
-                WeightLogs = await BuildWeightEntriesQuery(userId, month, year).ToListAsync(cancellationToken),
-                Months = await GetUserWeightEntryMonthsByYearAsync(userId, year ?? DateTime.UtcNow.Year,
-                    cancellationToken)
+                WeightLogs = await (await BuildWeightEntriesQuery(userId, month, year, cancellationToken)).ToListAsync(cancellationToken),
+                Months = await GetUserWeightEntryMonthsByYearAsync(userId, year ?? DateTime.UtcNow.Year, cancellationToken)
             };
         }
 
@@ -123,7 +121,7 @@ namespace VitalOps.API.Services.Implementations
                 Weight = request.Weight,
                 Time = request.Time,
                 UserId = userId,
-                Notes = request.Notes
+                Notes = request.Notes,
             };
 
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -208,10 +206,11 @@ namespace VitalOps.API.Services.Implementations
             return Result.Success();
         }
 
-        private IQueryable<WeightRecordDto> BuildWeightEntriesQuery(
+        private async Task<IQueryable<WeightRecordDto>> BuildWeightEntriesQuery(
             string userId, 
             int? month = null, 
-            int? year = null)
+            int? year = null,
+            CancellationToken cancellationToken = default)
         {
             var query = _context.WeightEntries
                 .AsNoTracking()
@@ -225,9 +224,9 @@ namespace VitalOps.API.Services.Implementations
                     CreatedAt = w.CreatedAt
                 });
 
-            month ??= DateTime.UtcNow.Month;
-
             year ??= DateTime.UtcNow.Year;
+
+            month ??= await GetLastAvailableMonthByYear(userId, (int) year, cancellationToken);
 
             query = query.Where(w => w.CreatedAt.Year == year && w.CreatedAt.Month == month);
             
@@ -237,6 +236,7 @@ namespace VitalOps.API.Services.Implementations
         private async Task<double?> GetLastWeightFromUser(string userId, CancellationToken cancellationToken)
         {
             var lastWeight = await _context.WeightEntries
+                .AsNoTracking()
                 .OrderByDescending(w => w.CreatedAt)
                 .Where(w => w.UserId == userId)
                 .Select(w => w.Weight)
@@ -257,6 +257,7 @@ namespace VitalOps.API.Services.Implementations
                 .Where(w => w.UserId == userId)
                 .Select(w => w.CreatedAt.Year)
                 .Distinct()
+                .OrderByDescending(w => w)
                 .ToListAsync(cancellationToken);
         }
 
@@ -266,10 +267,19 @@ namespace VitalOps.API.Services.Implementations
             CancellationToken cancellationToken)
         {
             return await _context.WeightEntries
+                .AsNoTracking()
                 .Where(w => w.UserId == userId && w.CreatedAt.Year == year)
                 .Select(w => w.CreatedAt.Month)
                 .Distinct()
                 .ToListAsync(cancellationToken);
+        }
+
+        private async Task<int?> GetLastAvailableMonthByYear(string userId, int year, CancellationToken cancellationToken)
+        {
+            return await _context.WeightEntries
+                .AsNoTracking()
+                .Where(w => w.UserId == userId && w.CreatedAt.Year == year)
+                .MaxAsync(w => (int?)w.CreatedAt.Month, cancellationToken);
         }
 
     }

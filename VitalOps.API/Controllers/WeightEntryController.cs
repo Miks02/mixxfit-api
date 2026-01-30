@@ -39,7 +39,7 @@ namespace VitalOps.API.Controllers
         }
 
         [HttpGet("weight-chart")]
-        public async Task<ActionResult<WeightChartDto>> GetMyWeightChart([FromRoute] double? targetWeight, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<WeightChartDto>> GetMyWeightChart([FromQuery] double? targetWeight, CancellationToken cancellationToken = default)
         {
             return await _weightService.GetUserWeightChartAsync(CurrentUserId, targetWeight, cancellationToken);
         }

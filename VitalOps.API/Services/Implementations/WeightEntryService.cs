@@ -24,6 +24,7 @@ namespace VitalOps.API.Services.Implementations
             string userId, 
             int? month = null, 
             int? year = null,
+            double? targetWeight = null,
             CancellationToken cancellationToken = default)
         {
             var hasEntries = await _context.WeightEntries
@@ -62,13 +63,16 @@ namespace VitalOps.API.Services.Implementations
 
             var progress = lastWeightEntry!.Weight - firstWeightEntry!.Weight;
 
+            var weightChart = await GetUserWeightChartAsync(userId, targetWeight, cancellationToken);
+
             return new WeightSummaryDto()
             {
                 FirstEntry = firstWeightEntry,
                 CurrentWeight = lastWeightEntry,
                 Progress = progress,
                 Years = weightEntryYears,
-                WeightListDetails = weightListDetails
+                WeightListDetails = weightListDetails,
+                WeightChart = weightChart
             };
         }
 
@@ -100,6 +104,34 @@ namespace VitalOps.API.Services.Implementations
                     CreatedAt = w.CreatedAt
                 })
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<WeightChartDto> GetUserWeightChartAsync(
+            string userId,
+            double? targetWeight,
+            CancellationToken cancellationToken = default)
+        {
+
+            var entries = await _context.WeightEntries
+                .AsNoTracking()
+                .Where(w => w.UserId == userId)
+                .OrderByDescending(w => w.CreatedAt)
+                .Select(w => new WeightRecordDto()
+                {
+                    Id = w.Id,
+                    Weight = w.Weight,
+                    TimeLogged = w.Time,
+                    CreatedAt = w.CreatedAt
+                })
+                .ToListAsync(cancellationToken);
+
+
+            return new WeightChartDto()
+            {
+                Entries = entries,
+                TargetWeight = targetWeight
+            };
+
         }
 
         public async Task<Result<WeightEntryDetailsDto>> AddWeightEntryAsync(

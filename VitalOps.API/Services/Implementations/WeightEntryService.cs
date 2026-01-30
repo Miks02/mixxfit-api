@@ -153,7 +153,7 @@ namespace VitalOps.API.Services.Implementations
                 Weight = request.Weight,
                 Time = request.Time,
                 UserId = userId,
-                Notes = request.Notes,
+                Notes = request.Notes
             };
 
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -303,6 +303,7 @@ namespace VitalOps.API.Services.Implementations
                 .Where(w => w.UserId == userId && w.CreatedAt.Year == year)
                 .Select(w => w.CreatedAt.Month)
                 .Distinct()
+                .OrderByDescending(w => w)
                 .ToListAsync(cancellationToken);
         }
 

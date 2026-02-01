@@ -37,12 +37,7 @@ namespace VitalOps.API.Services.Implementations
                 {
                     FirstEntry = new WeightRecordDto(),
                     CurrentWeight = new CurrentWeightDto(),
-                    Years = [],
-                    WeightListDetails = new WeightListDetails()
-                    {
-                        WeightLogs = [],
-                        Months = []
-                    },
+                    WeightListDetails = new WeightListDetails(),
                     WeightChart = new WeightChartDto()
                 };
 

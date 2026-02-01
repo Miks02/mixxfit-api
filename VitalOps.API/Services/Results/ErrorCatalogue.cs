@@ -124,6 +124,32 @@ public sealed class Error
             return new Error("User.NotFound", message);
         }
     }
+
+    public static class File
+    {
+        public static Error StorageFailed(string message = "Failed to store the uploaded file")
+            => new("File.StorageFailed", message);
+
+        public static Error Empty(string message = "Uploaded file is empty")
+            => new("File.Empty", message);
+
+        public static Error TooLarge(long maxBytes)
+        {
+            string message = $"Uploaded file exceeds maximum allowed size of {maxBytes} bytes";
+            return new Error("File.TooLarge", message);
+        }
+
+        public static Error UnsupportedExtension(string extension = "")
+        {
+            string message = string.IsNullOrWhiteSpace(extension)
+                ? "Uploaded file extension is not supported"
+                : $"Uploaded file extension '{extension}' is not supported";
+            return new Error("File.UnsupportedExtension", message);
+        }
+
+        public static Error ValidationFailed(string message = "Uploaded file failed validation")
+            => new("File.ValidationFailed", message);
+    }
     public static class Database
     {
         public static Error ConnectionFailed(string message = "Failed to connect to the database")

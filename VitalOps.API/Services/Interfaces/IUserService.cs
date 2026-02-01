@@ -19,5 +19,7 @@ public interface IUserService
     Task<Result<string>> UpdateEmailAsync(UpdateEmailDto dto, string userId, CancellationToken cancellationToken = default);
     Task<Result<string>> UpdateUserNameAsync(UpdateUserNameDto dto, string userId, CancellationToken cancellationToken = default);
     Task<Result<double>> UpdateTargetWeightAsync(UpdateTargetWeightDto dto, string userId, CancellationToken cancellationToken = default);
+    Task<Result<string>> UpdateProfilePictureAsync(IFormFile imageFile, string userId,
+        CancellationToken cancellationToken);
 
 }

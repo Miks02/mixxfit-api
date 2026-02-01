@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
@@ -13,11 +14,16 @@ namespace VitalOps.API.Services.Implementations;
 public class UserService : IUserService
 {
     private readonly UserManager<User> _userManager;
+    private readonly IFileService _fileService;
     private readonly ILogger<UserService> _logger;
 
-    public UserService(UserManager<User> userManager, ILogger<UserService> logger)
+    public UserService(
+        UserManager<User> userManager, 
+        IFileService fileService, 
+        ILogger<UserService> logger)
     {
         _userManager = userManager;
+        _fileService = fileService;
         _logger = logger;
     }
 
@@ -170,6 +176,27 @@ public class UserService : IUserService
 
         return updateResult.HandleIdentityResult(dto.TargetWeight, _logger);
 
+    }
+
+    public async Task<Result<string>> UpdateProfilePictureAsync(
+        IFormFile imageFile,
+        string userId,
+        CancellationToken cancellationToken)
+    {
+        var user = await GetUserForUpdateAsync(userId, cancellationToken);
+
+        var fileUploadResult = await _fileService.UploadFile(imageFile, user.ImagePath, "user_avatars");
+
+        if (!fileUploadResult.IsSucceeded)
+        {
+            _logger.LogInformation("Uploading the file has failed");
+            return Result<string>.Failure(fileUploadResult.Errors.ToArray());
+        }
+
+        user.ImagePath = fileUploadResult.Payload;
+        var updateResult = await _userManager.UpdateAsync(user);
+
+        return updateResult.HandleIdentityResult(fileUploadResult.Payload!, _logger);
     }
 
     private async Task<User> GetUserForUpdateAsync(string userId, CancellationToken cancellationToken)

@@ -1,8 +1,6 @@
-using System.Globalization;
-using System.Reflection;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using VitalOps.API.DTO.User;
 using VitalOps.API.Enums;
 using VitalOps.API.Models;
@@ -196,7 +194,6 @@ public class UserService : IUserService
         var updateResult = await _userManager.UpdateAsync(user);
 
         return updateResult.HandleIdentityResult(dto.TargetWeight, _logger);
-
     }
 
     public async Task<Result<string>> UpdateProfilePictureAsync(

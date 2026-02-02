@@ -53,13 +53,16 @@ namespace VitalOps.API.Services.Implementations
 
         }
 
-        public void DeleteFile(string filePath)
+        public Result DeleteFile(string filePath)
         {
             var oldFilePath = Path.Combine(_web.WebRootPath,
                 filePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
 
             if (!File.Exists(oldFilePath))
-                _logger.LogInformation("No file to delete");
+            {
+                _logger.LogWarning("File does not exist");
+                Result.Failure(Error.Resource.NotFound("File does not exist"));
+            }
 
             try
             {
@@ -71,6 +74,7 @@ namespace VitalOps.API.Services.Implementations
                 throw;
             }
 
+            return Result.Success();
         }
 
         private Result IsFileValid(IFormFile file)

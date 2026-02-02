@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -74,6 +75,26 @@ public class UserService : IUserService
 
         return await DeleteUserAsync(user);
     }
+
+    public async Task<Result> DeleteProfilePicture(string userId, CancellationToken cancellationToken = default)
+    {
+        var user = await GetUserForUpdateAsync(userId, cancellationToken);
+
+        if (string.IsNullOrEmpty(user.ImagePath))
+            return Result.Failure(Error.Resource.NotFound("Profile image"));
+
+        var fileRemovalResult = _fileService.DeleteFile(user.ImagePath);
+
+        if (!fileRemovalResult.IsSucceeded)
+            return Result.Failure(fileRemovalResult.Errors.ToArray());
+
+        user.ImagePath = null;
+
+        var updateResult = await _userManager.UpdateAsync(user);
+
+        return updateResult.HandleIdentityResult(_logger);
+    }
+
 
     public async Task<Result<DateTime>> UpdateDateOfBirthAsync(
         UpdateDateOfBirthDto dto,
@@ -183,7 +204,7 @@ public class UserService : IUserService
         string userId,
         CancellationToken cancellationToken)
     {
-        var user = await GetUserForUpdateAsync(userId, cancellationToken);
+        var user = await GetUserForUpdateAsync(userId, cancellationToken); 
 
         var fileUploadResult = await _fileService.UploadFile(imageFile, user.ImagePath, "user_avatars");
 

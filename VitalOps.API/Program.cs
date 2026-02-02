@@ -7,6 +7,7 @@ using VitalOps.API.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using VitalOps.API.Exceptions.Handlers;
@@ -24,15 +25,15 @@ builder.Services.AddProblemDetails(configure =>
     };
 });
 
-
-
 builder.Services.AddExceptionHandler<CancellationExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"));
+    
 });
+
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
         options.Password.RequireDigit = false;

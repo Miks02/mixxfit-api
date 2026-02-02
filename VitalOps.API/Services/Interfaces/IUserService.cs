@@ -11,6 +11,7 @@ public interface IUserService
 
     Task<Result> DeleteUserAsync(User user);
     Task<Result> DeleteUserAsync(string id, CancellationToken cancellation = default);
+    Task<Result> DeleteProfilePictureAsync(string userId, CancellationToken cancellationToken = default);
 
     Task<Result<DateTime>> UpdateDateOfBirthAsync(UpdateDateOfBirthDto dto, string userId, CancellationToken cancellationToken = default);
     Task<Result<double>> UpdateHeightAsync(UpdateHeightDto dto, string userId, CancellationToken cancellationToken = default);
@@ -19,5 +20,6 @@ public interface IUserService
     Task<Result<string>> UpdateEmailAsync(UpdateEmailDto dto, string userId, CancellationToken cancellationToken = default);
     Task<Result<string>> UpdateUserNameAsync(UpdateUserNameDto dto, string userId, CancellationToken cancellationToken = default);
     Task<Result<double>> UpdateTargetWeightAsync(UpdateTargetWeightDto dto, string userId, CancellationToken cancellationToken = default);
+    Task<Result<string>> UpdateProfilePictureAsync(IFormFile imageFile, string userId, CancellationToken cancellationToken);
 
 }

@@ -34,11 +34,8 @@ namespace VitalOps.API.Controllers
             CancellationToken cancellationToken = default
         )
         {
-
             var updateResult = await _userService.UpdateFullNameAsync(fullName, CurrentUserId, cancellationToken);
-
             return updateResult.ToActionResult();
-
         }
 
         [HttpPatch("username")]
@@ -46,9 +43,7 @@ namespace VitalOps.API.Controllers
             [FromBody] UpdateUserNameDto userName,
             CancellationToken cancellationToken = default)
         {
-
             var updateResult = await _userService.UpdateUserNameAsync(userName, CurrentUserId, cancellationToken);
-
             return updateResult.ToActionResult();
         }
 
@@ -58,11 +53,8 @@ namespace VitalOps.API.Controllers
             CancellationToken cancellationToken = default
         )
         {
-
             var updateResult = await _userService.UpdateEmailAsync(email, CurrentUserId, cancellationToken);
-
             return updateResult.ToActionResult();
-
         }
 
         [HttpPatch("date-of-birth")]
@@ -71,11 +63,8 @@ namespace VitalOps.API.Controllers
             CancellationToken cancellationToken = default
         )
         {
-
             var updateResult = await _userService.UpdateDateOfBirthAsync(dateOfBirth, CurrentUserId, cancellationToken);
-
             return updateResult.ToActionResult();
-
         }
 
         [HttpPatch("gender")]
@@ -84,11 +73,8 @@ namespace VitalOps.API.Controllers
             CancellationToken cancellationToken = default
         )
         {
-
             var updateResult = await _userService.UpdateGenderAsync(gender, CurrentUserId, cancellationToken);
-
             return updateResult.ToActionResult();
-
         }
 
         [HttpPatch("height")]
@@ -97,11 +83,8 @@ namespace VitalOps.API.Controllers
             CancellationToken cancellationToken = default
         )
         {
-
             var updateResult = await _userService.UpdateHeightAsync(height, CurrentUserId, cancellationToken);
-
             return updateResult.ToActionResult();
-
         }
 
         [HttpPatch("target-weight")]
@@ -111,13 +94,32 @@ namespace VitalOps.API.Controllers
         )
         {
 
-            var updateResult =
-                await _userService.UpdateTargetWeightAsync(targetWeight, CurrentUserId, cancellationToken);
-
+            var updateResult = await _userService.UpdateTargetWeightAsync(targetWeight, CurrentUserId, cancellationToken);
             return updateResult.ToActionResult();
-
         }
 
+        [HttpPatch("profile-picture")]
+        public async Task<ActionResult<string>> UpdateProfilePicture(
+            [FromForm] IFormFile imageFile,
+            CancellationToken cancellationToken)
+        {
+            var updateResult = await _userService.UpdateProfilePictureAsync(imageFile, CurrentUserId, cancellationToken);
+            return updateResult.ToActionResult();
+        }
+
+        [HttpDelete("profile-picture")]
+        public async Task<ActionResult> RemoveProfilePicture(CancellationToken cancellationToken = default)
+        {
+            var deleteResult = await _userService.DeleteProfilePictureAsync(CurrentUserId, cancellationToken);
+            return deleteResult.ToActionResult();
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteAccount(CancellationToken cancellationToken = default)
+        {
+            var deleteResult = await _userService.DeleteUserAsync(CurrentUserId, cancellationToken);
+            return deleteResult.ToActionResult();
+        }
     }
 
 

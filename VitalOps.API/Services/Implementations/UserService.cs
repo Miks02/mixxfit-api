@@ -1,6 +1,6 @@
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using VitalOps.API.DTO.User;
 using VitalOps.API.Enums;
 using VitalOps.API.Models;
@@ -13,11 +13,16 @@ namespace VitalOps.API.Services.Implementations;
 public class UserService : IUserService
 {
     private readonly UserManager<User> _userManager;
+    private readonly IFileService _fileService;
     private readonly ILogger<UserService> _logger;
 
-    public UserService(UserManager<User> userManager, ILogger<UserService> logger)
+    public UserService(
+        UserManager<User> userManager, 
+        IFileService fileService, 
+        ILogger<UserService> logger)
     {
         _userManager = userManager;
+        _fileService = fileService;
         _logger = logger;
     }
 
@@ -66,8 +71,36 @@ public class UserService : IUserService
         if(user is null)
             return Result.Failure(Error.User.NotFound());
 
+        if (string.IsNullOrWhiteSpace(user.ImagePath)) 
+            return await DeleteUserAsync(user);
+        
+        var fileRemovalResult = _fileService.DeleteFile(user.ImagePath);
+
+        if (!fileRemovalResult.IsSucceeded)
+            return Result.Failure(fileRemovalResult.Errors.ToArray());
+
         return await DeleteUserAsync(user);
     }
+
+    public async Task<Result> DeleteProfilePictureAsync(string userId, CancellationToken cancellationToken = default)
+    {
+        var user = await GetUserForUpdateAsync(userId, cancellationToken);
+
+        if (string.IsNullOrEmpty(user.ImagePath))
+            return Result.Failure(Error.Resource.NotFound("Profile image"));
+
+        var fileRemovalResult = _fileService.DeleteFile(user.ImagePath);
+
+        if (!fileRemovalResult.IsSucceeded)
+            return Result.Failure(fileRemovalResult.Errors.ToArray());
+
+        user.ImagePath = null;
+
+        var updateResult = await _userManager.UpdateAsync(user);
+
+        return updateResult.HandleIdentityResult(_logger);
+    }
+
 
     public async Task<Result<DateTime>> UpdateDateOfBirthAsync(
         UpdateDateOfBirthDto dto,
@@ -169,7 +202,27 @@ public class UserService : IUserService
         var updateResult = await _userManager.UpdateAsync(user);
 
         return updateResult.HandleIdentityResult(dto.TargetWeight, _logger);
+    }
 
+    public async Task<Result<string>> UpdateProfilePictureAsync(
+        IFormFile imageFile,
+        string userId,
+        CancellationToken cancellationToken)
+    {
+        var user = await GetUserForUpdateAsync(userId, cancellationToken); 
+
+        var fileUploadResult = await _fileService.UploadFile(imageFile, user.ImagePath, "user_avatars");
+
+        if (!fileUploadResult.IsSucceeded)
+        {
+            _logger.LogInformation("Uploading the file has failed");
+            return Result<string>.Failure(fileUploadResult.Errors.ToArray());
+        }
+
+        user.ImagePath = fileUploadResult.Payload;
+        var updateResult = await _userManager.UpdateAsync(user);
+
+        return updateResult.HandleIdentityResult(fileUploadResult.Payload!, _logger);
     }
 
     private async Task<User> GetUserForUpdateAsync(string userId, CancellationToken cancellationToken)

@@ -53,7 +53,8 @@ builder.Services
     .AddScoped<IWorkoutService, WorkoutService>()
     .AddScoped<IProfileService, ProfileService>()
     .AddScoped<IDashboardService, DashboardService>()
-    .AddScoped<IWeightEntryService, WeightEntryService>();
+    .AddScoped<IWeightEntryService, WeightEntryService>()
+    .AddScoped<IFileService, FileService>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -110,6 +111,8 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
     app.UseCors("AllowCors");
 }
+
+app.UseStaticFiles();
 
 app.Use(async (context, next) =>
 {

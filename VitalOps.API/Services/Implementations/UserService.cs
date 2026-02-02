@@ -109,7 +109,7 @@ public class UserService : IUserService
     {
         var user = await GetUserForUpdateAsync(userId, cancellationToken);
 
-        user.DateOfBirth = dto.DateOfBirth;
+        user.DateOfBirth = dto.DateOfBirth.ToUniversalTime();
 
         var updateResult = await _userManager.UpdateAsync(user);
 

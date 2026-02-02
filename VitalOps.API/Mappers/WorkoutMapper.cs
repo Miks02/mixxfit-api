@@ -62,7 +62,7 @@ namespace VitalOps.API.Mappers
                 Name = request.Name,
                 Notes = request.Notes,
                 UserId = userId,
-                WorkoutDate = request.WorkoutDate,
+                WorkoutDate = request.WorkoutDate.ToUniversalTime(),
                 ExerciseEntries = request.ExerciseEntries.Select(e => new ExerciseEntry()
                 {
                     Name = e.Name,

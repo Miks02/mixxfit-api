@@ -80,7 +80,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("ProdCors", policyBuilder =>
     {
         policyBuilder
-            .WithOrigins("link")
+            .WithOrigins("https://vitalops-web.onrender.com")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();

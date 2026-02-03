@@ -2,17 +2,19 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 8080
 
+USER root
+RUN apt-get update && apt-get install -y \
+    libgssapi-krb5-2 \
+    && rm -rf /var/lib/apt/lists/*
+
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 COPY ["VitalOps.API/VitalOps.API.csproj", "VitalOps.API/"]
-
 RUN dotnet restore "VitalOps.API/VitalOps.API.csproj"
 
 COPY . .
-
 WORKDIR "/src/VitalOps.API"
-
 RUN dotnet build "VitalOps.API.csproj" -c Release -o /app/build
 
 FROM build AS publish

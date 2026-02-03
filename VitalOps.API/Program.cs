@@ -76,6 +76,16 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials();
     });
+
+    options.AddPolicy("ProdCors", policyBuilder =>
+    {
+        policyBuilder
+            .WithOrigins("link")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+
 });
 
 builder.Services.AddAuthentication(options =>
@@ -170,10 +180,14 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
+    app.UseCors("AllowCors");
+}
+else
+{
+    app.UseCors("ProdCors");
 }
 
 app.UseForwardedHeaders();
-app.UseCors("AllowCors");
 
 using (var scope = app.Services.CreateScope())
 {

@@ -170,9 +170,10 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
-    app.UseCors("AllowCors");
 }
 
+app.UseForwardedHeaders();
+app.UseCors("AllowCors");
 
 using (var scope = app.Services.CreateScope())
 {
@@ -185,7 +186,6 @@ using (var scope = app.Services.CreateScope())
     Console.WriteLine("Database migrated successfully");
 }
 
-app.UseForwardedHeaders();
 
 app.UseStaticFiles();
 

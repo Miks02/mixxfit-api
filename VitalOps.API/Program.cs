@@ -1,19 +1,20 @@
+using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Utilities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using VitalOps.API.Data;
-using VitalOps.API.Models;
-using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Build.Utilities;
-using Microsoft.IdentityModel.Tokens;
-using Scalar.AspNetCore;
 using VitalOps.API.Exceptions.Handlers;
 using VitalOps.API.Filters;
+using VitalOps.API.Models;
 using VitalOps.API.Services.Implementations;
 using VitalOps.API.Services.Interfaces;
 
@@ -75,6 +76,16 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials();
     });
+
+    options.AddPolicy("ProdCors", policyBuilder =>
+    {
+        policyBuilder
+            .WithOrigins("https://vitalops-web.onrender.com")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+
 });
 
 builder.Services.AddAuthentication(options =>
@@ -153,6 +164,13 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<ProblemDetailsFilter>();
 });
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 builder.Services.AddOpenApi("v1");
@@ -164,7 +182,12 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
     app.UseCors("AllowCors");
 }
+else
+{
+    app.UseCors("ProdCors");
+}
 
+app.UseForwardedHeaders();
 
 using (var scope = app.Services.CreateScope())
 {
@@ -176,6 +199,7 @@ using (var scope = app.Services.CreateScope())
 
     Console.WriteLine("Database migrated successfully");
 }
+
 
 app.UseStaticFiles();
 
@@ -192,7 +216,6 @@ app.Use(async (context, next) =>
 });
 
 app.UseExceptionHandler();
-app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

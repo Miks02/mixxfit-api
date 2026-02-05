@@ -116,7 +116,7 @@ public class WorkoutService : IWorkoutService
             .OrderByDescending(w => w)
             .ToListAsync();
 
-        var selectedYear = year ?? DateTime.UtcNow.Year;
+        var selectedYear = year ?? await GetLastWorkoutYear(userId);
 
         var stats = await _context.Workouts
             .AsNoTracking()
@@ -290,6 +290,15 @@ public class WorkoutService : IWorkoutService
         return await baseQuery
             .Select(w => w.Id)
             .CountAsync(cancellationToken);
+    }
+
+    private async Task<int?> GetLastWorkoutYear(string userId)
+    {
+        return await _context.Workouts
+            .Where(w => w.UserId == userId)
+            .Select(w => (int?)w.WorkoutDate.Year) 
+            .MaxAsync();
+
     }
 
     private async Task<WorkoutSummaryDto> BuildWorkoutSummary(string userId)

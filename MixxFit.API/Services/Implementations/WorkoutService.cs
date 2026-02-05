@@ -26,7 +26,7 @@ public class WorkoutService : IWorkoutService
         _context = context;
     }
 
-    public async Task<WorkoutPageDto> GetUserWorkoutsPagedAsync(QueryParams queryParams, string userId, CancellationToken cancellationToken = default)
+    public async Task<WorkoutPageDto> GetWorkoutsPagedAsync(QueryParams queryParams, string userId, CancellationToken cancellationToken = default)
     {
         var pagedQuery = BuildPagedWorkoutQuery(queryParams, userId);
 
@@ -34,7 +34,7 @@ public class WorkoutService : IWorkoutService
         int totalWorkouts = await CountWorkoutsAsync(queryParams, userId, cancellationToken);
 
         var pagedWorkouts = await pagedQuery.ToListAsync(cancellationToken);
-        var workoutSummary = await BuildWorkoutSummary(userId);
+        var workoutSummary = await BuildWorkoutSummaryAsync(userId);
 
         var pagedResult = new PagedResult<WorkoutListItemDto>(pagedWorkouts, queryParams.Page, _pageSize, totalPaginatedWorkouts, totalWorkouts);
 
@@ -45,7 +45,7 @@ public class WorkoutService : IWorkoutService
         };
     }
 
-    public async Task<PagedResult<WorkoutListItemDto>> GetUserWorkoutsByQueryParamsAsync(QueryParams queryParams, string userId, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<WorkoutListItemDto>> GetWorkoutsByQueryParamsAsync(QueryParams queryParams, string userId, CancellationToken cancellationToken = default)
     {
         var pagedQuery = BuildPagedWorkoutQuery(queryParams, userId);
 
@@ -96,7 +96,7 @@ public class WorkoutService : IWorkoutService
         return Result<WorkoutDetailsDto>.Success(workoutDto);
     }
 
-    public async Task<DateTime?> GetLastUserWorkoutAsync(string userId, CancellationToken cancellationToken = default)
+    public async Task<DateTime?> GetLastWorkoutAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Workouts
             .AsNoTracking()
@@ -106,7 +106,7 @@ public class WorkoutService : IWorkoutService
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<WorkoutsPerMonthDto> GetUserWorkoutCountsByMonthAsync(string userId, int? year)
+    public async Task<WorkoutsPerMonthDto> GetWorkoutCountsByMonthAsync(string userId, int? year)
     {
         var years = await _context.Workouts
             .AsNoTracking()
@@ -116,7 +116,7 @@ public class WorkoutService : IWorkoutService
             .OrderByDescending(w => w)
             .ToListAsync();
 
-        var selectedYear = year ?? await GetLastWorkoutYear(userId);
+        var selectedYear = year ?? await GetLastWorkoutYearAsync(userId);
 
         var stats = await _context.Workouts
             .AsNoTracking()
@@ -298,7 +298,7 @@ public class WorkoutService : IWorkoutService
             .CountAsync(cancellationToken);
     }
 
-    private async Task<int?> GetLastWorkoutYear(string userId)
+    private async Task<int?> GetLastWorkoutYearAsync(string userId)
     {
         return await _context.Workouts
             .Where(w => w.UserId == userId)
@@ -307,7 +307,7 @@ public class WorkoutService : IWorkoutService
 
     }
 
-    private async Task<WorkoutSummaryDto> BuildWorkoutSummary(string userId)
+    private async Task<WorkoutSummaryDto> BuildWorkoutSummaryAsync(string userId)
     {
         DateTime? lastWorkoutDate = await _context.Workouts
             .AsNoTracking()

@@ -30,7 +30,7 @@ namespace MixxFit.API.Controllers
         {
             var queryParams = new QueryParams(page, searchBy, sortBy, date);
             
-            var getWorkoutsResult = await _workoutService.GetUserWorkoutsPagedAsync(queryParams, CurrentUserId);
+            var getWorkoutsResult = await _workoutService.GetWorkoutsPagedAsync(queryParams, CurrentUserId);
 
             return Ok(getWorkoutsResult);
         }
@@ -44,7 +44,7 @@ namespace MixxFit.API.Controllers
         {
             var queryParams = new QueryParams(page, searchBy, sortBy, date);
 
-            var workouts = await _workoutService.GetUserWorkoutsByQueryParamsAsync(queryParams, CurrentUserId);
+            var workouts = await _workoutService.GetWorkoutsByQueryParamsAsync(queryParams, CurrentUserId);
 
             return Ok(workouts);
         }
@@ -60,7 +60,7 @@ namespace MixxFit.API.Controllers
         [HttpGet("workouts-per-month")]
         public async Task<ActionResult<WorkoutsPerMonthDto>> GetWorkoutsPerMonth([FromQuery] int? year)
         {
-            return await _workoutService.GetUserWorkoutCountsByMonthAsync(CurrentUserId, year);
+            return await _workoutService.GetWorkoutCountsByMonthAsync(CurrentUserId, year);
         }
 
         [HttpDelete("{id:int}")]

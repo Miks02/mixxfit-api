@@ -16,7 +16,7 @@ namespace MixxFit.API.Services.Implementations
         public async Task<DashboardDto> LoadDashboardAsync(string userId, CancellationToken cancellationToken = default)
         {
 
-            var lastWorkoutDate = await _workoutService.GetLastUserWorkoutAsync(userId, cancellationToken);
+            var lastWorkoutDate = await _workoutService.GetLastWorkoutAsync(userId, cancellationToken);
             var recentWorkouts = await _workoutService.GetRecentWorkoutsAsync(userId, 10, cancellationToken);
 
 

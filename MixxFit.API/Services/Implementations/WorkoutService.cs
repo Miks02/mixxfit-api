@@ -197,7 +197,7 @@ public class WorkoutService : IWorkoutService
         }
         catch (DbUpdateException ex)
         {
-            _logger.LogError("CRITICAL: Error happened while trying to add workout to the database" + ex.Message);
+            _logger.LogError(ex, "CRITICAL: Error happened while trying to add workout to the database");
             return Result<WorkoutDetailsDto>.Failure(Error.Database.SaveChangesFailed());
         }
 
@@ -224,7 +224,7 @@ public class WorkoutService : IWorkoutService
         }
         catch (DbUpdateException ex)
         {
-            _logger.LogError("CRITICAL: Error happened while deleting workout from the database \n {message}", ex.Message);
+            _logger.LogError(ex, "CRITICAL: Error happened while deleting workout from the database");
             return Result.Failure(Error.Database.SaveChangesFailed());
         }
 
@@ -252,7 +252,13 @@ public class WorkoutService : IWorkoutService
 
             if (queryParams.Date is not null)
             {
-                query = query.Where(w => w.WorkoutDate == queryParams.Date);
+                var startDate = queryParams.Date.Value.Date;
+                var endDate = startDate.AddDays(1);
+
+                var utcStart = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
+                var utcEnd = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
+
+                query = query.Where(w => w.WorkoutDate >= utcStart && w.WorkoutDate < utcEnd);
             }
 
             if (!string.IsNullOrWhiteSpace(queryParams.Sort))

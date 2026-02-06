@@ -148,17 +148,12 @@ public class AuthService : IAuthService
             .FirstOrDefaultAsync(cancellationToken);
 
         _logger.LogInformation("Refresh token value: {refreshToken}", refreshToken);
+        
 
-        if (user is null)
-        {
-            _logger.LogError("Failed to regenerate access and refresh tokens. User is null");
-            return Result<AuthResponseDto>.Failure(Error.Auth.JwtError("Failed to regenerate auth tokens"));
-        }
-
-        if (user.RefreshToken is null)
+        if (user is null || user.RefreshToken is null)
         {
             _logger.LogError("Failed to regenerate access and refresh tokens. Refresh token is null");
-            return Result<AuthResponseDto>.Failure(Error.Auth.JwtError("Failed to regenerate auth tokens"));
+            return Result<AuthResponseDto>.Failure(Error.Auth.ExpiredToken());
         }
 
         if (user.TokenExpDate < DateTime.UtcNow)
@@ -199,7 +194,7 @@ public class AuthService : IAuthService
         if (user is null)
         {
             _logger.LogError("User with refresh token {refreshToken} has not been found", refreshToken);
-            return Result.Failure(Error.User.NotFound());
+            return Result.Failure(Error.Auth.ExpiredToken());
         }
 
         user.RefreshToken = null;

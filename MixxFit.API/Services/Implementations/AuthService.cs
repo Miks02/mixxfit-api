@@ -193,8 +193,8 @@ public class AuthService : IAuthService
 
         if (user is null)
         {
-            _logger.LogError("User with refresh token {refreshToken} has not been found", refreshToken);
-            return Result.Failure(Error.Auth.ExpiredToken());
+            _logger.LogError("Logout attempted with non-existing refresh token: {token}.", refreshToken);
+            return Result.Success();
         }
 
         user.RefreshToken = null;

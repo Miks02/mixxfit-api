@@ -230,7 +230,7 @@ app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/api/health", () => new { Status = "Healthy", Date = DateTime.UtcNow });
+app.MapMethods("/api/health", ["GET", "HEAD"], () => new { Status = "Healthy", Date = DateTime.UtcNow });
 
 app.UseRateLimiter();
 

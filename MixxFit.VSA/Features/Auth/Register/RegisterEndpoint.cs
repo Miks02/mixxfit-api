@@ -20,6 +20,7 @@ public class RegisterEndpoint : IEndpoint
             cookieProvider.SetRefreshTokenCookie(result.Payload!.RefreshToken);
             return Results.Ok(result.Payload);
         })
+        .WithTags("Auth")
         .Produces<RegisterResponse>(StatusCodes.Status201Created)
         .Produces<ProblemDetails>(StatusCodes.Status409Conflict)
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);

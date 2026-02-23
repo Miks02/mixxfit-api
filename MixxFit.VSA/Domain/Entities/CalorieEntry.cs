@@ -1,6 +1,4 @@
-using MixxFit.API.Models;
-
-namespace MixxFit.API.Models;
+namespace MixxFit.VSA.Domain.Entities;
 
 public class CalorieEntry
 {

@@ -18,7 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"));
-    
 });
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
@@ -52,13 +51,14 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ICookieProvider, CookieProvider>();
 
 builder.Services.InjectHandlers();
 

@@ -57,6 +57,8 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
 
+builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICookieProvider, CookieProvider>();
 
@@ -65,7 +67,7 @@ builder.Services.InjectHandlers();
 var app = builder.Build();
 
 app.UseAuthentication();
-app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseExceptionHandler();
 

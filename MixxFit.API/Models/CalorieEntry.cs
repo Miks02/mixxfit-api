@@ -1,3 +1,5 @@
+using MixxFit.API.Models;
+
 namespace MixxFit.API.Models;
 
 public class CalorieEntry

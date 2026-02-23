@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MixxFit.VSA.Domain.Entities;
+using MixxFit.VSA.Infrastructure.Exceptions;
 using MixxFit.VSA.Infrastructure.Persistence;
 using Scalar.AspNetCore;
 
@@ -23,10 +24,17 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddProblemDetails();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthentication();
+
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
@@ -34,7 +42,10 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () =>
+{
+    throw new Exception("Test");
+});
 
 app.UseHttpsRedirection();
 

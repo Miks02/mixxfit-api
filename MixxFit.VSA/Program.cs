@@ -1,3 +1,5 @@
+using System.Reflection;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MixxFit.VSA.Domain.Entities;
@@ -26,7 +28,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     .AddDefaultTokenProviders();
 
 builder.Services.AddProblemDetails();
-
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
 
@@ -38,6 +40,7 @@ app.UseAuthentication();
 app.UseAuthentication();
 
 app.UseExceptionHandler();
+
 
 if (app.Environment.IsDevelopment())
 {

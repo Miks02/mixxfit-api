@@ -8,7 +8,8 @@ public static class EndpointExtensions
     public static void MapEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("api/")
-            .AddEndpointFilter<ProblemDetailsFilter>();
+            .AddEndpointFilter<ProblemDetailsFilter>()
+            .AddEndpointFilter<ValidationFilter>();
 
         var endpoints = typeof(Program).Assembly
             .GetTypes()

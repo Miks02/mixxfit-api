@@ -19,19 +19,55 @@ public class ProblemDetailsFilter(ILogger<ProblemDetailsFilter> logger) : IEndpo
 
         var error = errorResult.Value;
 
+        if (error is null)
+            return result;
+        
+        var status = MapErrorCodeToStatusCode(error.Code);
+        var title = GetTitleFromStatusCode(status);
+
         var problemDetails = new ProblemDetails()
         {
-            Title = "Error",
+            Title = title,
+            Detail = "An error occurred while processing your request.",
             Instance = context.HttpContext.Request.Path,
-            Status = StatusCodes.Status400BadRequest,
+            Status = status,
             Extensions =
             {
-                ["errorCode"] = error!.Code
+                ["errorCode"] = error.Code
             }
         };
 
         logger.LogWarning("Problem details: {problemDetails}", problemDetails);
 
         return TypedResults.Problem(problemDetails);
+    }
+
+    private static int MapErrorCodeToStatusCode(string errorCode)
+    {
+        return errorCode switch
+        {
+            _ when errorCode.Contains("AlreadyExists") => StatusCodes.Status409Conflict,
+            _ when errorCode.Contains("Validation") => StatusCodes.Status400BadRequest,
+            _ when errorCode.Contains("LimitReached") => StatusCodes.Status429TooManyRequests,
+            _ when errorCode.Contains("Auth") => StatusCodes.Status401Unauthorized,
+            _ when errorCode.Contains("Forbidden") => StatusCodes.Status403Forbidden,
+            _ when errorCode.Contains("NotFound") => StatusCodes.Status404NotFound,
+            _ when errorCode.Contains("Conflict") => StatusCodes.Status409Conflict,
+            _ => 500
+        };
+    }
+
+    private static string GetTitleFromStatusCode(int statusCode)
+    {
+        return statusCode switch
+        {
+            400 => "Validation",
+            401 => "Unauthorized",
+            403 => "Forbidden",
+            404 => "Not Found",
+            409 => "Conflict",
+            429 => "Too Many Requests",
+            _ => "Server error occurred"
+        };
     }
 }

@@ -10,9 +10,9 @@ public class RegisterEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("auth/register", async (RegisterRequest request, RegisterHandler handler, CancellationToken cancellationToken = default) =>
+        app.MapPost("auth/register", async (RegisterRequest request, RegisterHandler handler) =>
         {
-            var result = await handler.Handle(request, cancellationToken);
+            var result = await handler.Handle(request);
 
             return result.ToTypedResult(null, HttpStatusCode.Created);
         })

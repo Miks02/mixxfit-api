@@ -35,7 +35,7 @@ public class LoginHandler(UserManager<User> userManager, ITokenService tokenServ
             Gender: user.Gender
         );
         
-        var response =  new LoginResponse(tokenResult.Payload!.AccessToken, tokenResult.Payload.RefreshToken, userDetails);
+        var response = new LoginResponse(tokenResult.Payload!.AccessToken, tokenResult.Payload.RefreshToken, userDetails);
         
         return Result<LoginResponse>.Success(response);
     }

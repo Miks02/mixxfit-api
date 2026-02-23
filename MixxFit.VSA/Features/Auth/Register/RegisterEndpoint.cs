@@ -10,14 +10,18 @@ public class RegisterEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("auth/register", async (RegisterRequest request, RegisterHandler handler) =>
+        app.MapPost("auth/register", async (RegisterRequest request, RegisterHandler handler, ICookieProvider cookieProvider) =>
         {
             var result = await handler.Handle(request);
 
-            return result.ToTypedResult(null, HttpStatusCode.Created);
+            if(!result.IsSuccess)
+                return Results.BadRequest(result.Errors[0]);
+            
+            cookieProvider.SetRefreshTokenCookie(result.Payload!.RefreshToken);
+            return Results.Ok(result.Payload);
         })
         .Produces<RegisterResponse>(StatusCodes.Status201Created)
         .Produces<ProblemDetails>(StatusCodes.Status409Conflict)
-        .Produces<Error>(StatusCodes.Status400BadRequest);
+        .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
     }
 }

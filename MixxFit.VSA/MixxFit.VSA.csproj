@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\" />
+      <ProjectReference Include="..\MixxFit.API\MixxFit.API.csproj" />
     </ItemGroup>
 
 </Project>

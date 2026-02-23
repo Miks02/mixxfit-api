@@ -33,7 +33,7 @@ namespace MixxFit.VSA.Infrastructure.Exceptions
                 {
                     Type = exception.GetType().Name,
                     Title = "Server error occured",
-                    Detail = "An internal server error occurred while trying to process the request kuracc."
+                    Detail = "An internal server error occurred while trying to process the request."
                 }
             });
 

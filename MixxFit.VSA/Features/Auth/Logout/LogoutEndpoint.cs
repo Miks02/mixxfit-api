@@ -19,6 +19,7 @@ public class LogoutEndpoint : IEndpoint
                     cookieProvider.DeleteRefreshTokenCookie();
                     return result.ToTypedResult();
                 })
+            .WithTags("Auth")
             .RequireAuthorization()
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized);

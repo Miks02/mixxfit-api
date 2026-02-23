@@ -18,6 +18,7 @@ public class LoginEndpoint : IEndpoint
             cookieProvider.SetRefreshTokenCookie(result.Payload!.RefreshToken);
             return Results.Ok(result.Payload);
         })
+        .WithTags("Auth")
         .Produces<LoginResponse>()
         .Produces(StatusCodes.Status401Unauthorized)
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);

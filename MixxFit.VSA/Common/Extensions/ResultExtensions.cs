@@ -31,7 +31,7 @@ public static class ResultExtensions
         IResult successResult = statusCode switch
         {
             HttpStatusCode.Created => TypedResults.Created(location, result.Payload),
-            HttpStatusCode.OK => TypedResults.Ok(new {value = result.Payload}),
+            HttpStatusCode.OK => TypedResults.Ok(result.Payload),
             HttpStatusCode.NoContent => TypedResults.NoContent(),
             _ => TypedResults.Ok(new {value = result.Payload}),
         };

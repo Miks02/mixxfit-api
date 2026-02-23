@@ -12,8 +12,7 @@ public class RegisterHandler(
     RoleManager<IdentityRole> roleManager,
     ITokenService tokenService) : IHandler
 {
-    public async Task<Result<RegisterResponse>> Handle(RegisterRequest request,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<RegisterResponse>> Handle(RegisterRequest request)
     {
         var user = new User()
         {
@@ -38,35 +37,21 @@ public class RegisterHandler(
         if(!tokenResult.IsSuccess)
             return Result<RegisterResponse>.Failure(tokenResult.Errors.ToArray());
         
-        var userDetails = await GetUserDetailsAsync(user.Id, cancellationToken);
+        var userDetails = new UserDetailsDto(
+            FullName: user.FirstName + " " + user.LastName,
+            Email: user.Email!,
+            ImagePath: user.ImagePath,
+            CurrentWeight: user.CurrentWeight,
+            TargetWeight: user.TargetWeight,
+            Height: user.HeightCm,
+            DateOfBirth: user.DateOfBirth,
+            AccountStatus: user.AccountStatus,
+            Gender: user.Gender
+        );
 
         var response = new RegisterResponse(tokenResult.Payload!.AccessToken, tokenResult.Payload.RefreshToken, userDetails);
         
         return Result<RegisterResponse>.Success(response);
-    }
-    
-    private async Task<UserDetailsDto> GetUserDetailsAsync(string id, CancellationToken cancellationToken)
-    {
-        var user = await userManager.Users
-            .AsNoTracking()
-            .Where(u => u.Id == id)
-            .Select(u => new UserDetailsDto(
-                FullName: u.FirstName + " " + u.LastName,
-                Email: u.Email!,
-                ImagePath: u.ImagePath,
-                CurrentWeight: u.CurrentWeight,
-                TargetWeight: u.TargetWeight,
-                Height: u.HeightCm,
-                DateOfBirth: u.DateOfBirth,
-                AccountStatus: u.AccountStatus,
-                Gender: u.Gender
-            ))
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (user is null)
-            throw new InvalidOperationException("User not found");
-
-        return user;
     }
     
     private async Task<Result> AssignRoleAsync(User user)

@@ -1,0 +1,27 @@
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using MixxFit.VSA.Common.Extensions;
+using MixxFit.VSA.Common.Interfaces;
+
+namespace MixxFit.VSA.Features.Workouts.CreateWorkout;
+
+public class CreateWorkoutEndpoint : IEndpoint
+{
+    public void MapEndpoint(IEndpointRouteBuilder app)
+    {
+        app.MapPost("workouts", async (
+                CreateWorkoutRequest request,
+                ICurrentUserProvider userProvider,
+                CreateWorkoutHandler handler,
+                CancellationToken cancellationToken) =>
+            {
+                var result = await handler.Handle(userProvider.GetCurrentUserId(), request, cancellationToken);
+                result.ToTypedResult(HttpStatusCode.Created);
+            })
+            .WithTags("Workouts")
+            .RequireAuthorization()
+            .Produces<CreateWorkoutResponse>(StatusCodes.Status201Created)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status429TooManyRequests);
+    }
+}

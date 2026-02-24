@@ -27,4 +27,8 @@
       <ProjectReference Include="..\MixxFit.API\MixxFit.API.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\GetPagedWorkouts\" />
+    </ItemGroup>
+
 </Project>

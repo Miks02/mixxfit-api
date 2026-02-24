@@ -1,6 +1,6 @@
 using MixxFit.VSA.Domain.Enums;
 
-namespace MixxFit.VSA.Features.Auth.Register;
+namespace MixxFit.VSA.Features.Common;
 
 public record UserDetailsDto(
     string FullName, 

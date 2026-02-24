@@ -3,6 +3,7 @@ using MixxFit.VSA.Common.Interfaces;
 using MixxFit.VSA.Common.Results;
 using MixxFit.VSA.Domain.Entities;
 using MixxFit.VSA.Domain.ErrorCatalog;
+using MixxFit.VSA.Features.Common;
 
 namespace MixxFit.VSA.Features.Auth.Login;
 

@@ -11,6 +11,7 @@ using MixxFit.VSA.Infrastructure.Exceptions;
 using MixxFit.VSA.Infrastructure.Extensions;
 using MixxFit.VSA.Infrastructure.Persistence;
 using MixxFit.VSA.Infrastructure.Security;
+using MixxFit.VSA.Infrastructure.Storage;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,6 +63,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICookieProvider, CookieProvider>();
 builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+builder.Services.AddScoped<IFileService, LocalFileStorage>();
 
 builder.Services.InjectHandlers();
 

@@ -181,7 +181,7 @@ else
 
 app.MapEndpoints();
 
-app.MapGet("/health", () => new { Status = "Healthy", Date = DateTime.UtcNow });
+app.MapMethods("/health", ["GET", "HEAD"], () => new { Status = "Healthy", Date = DateTime.UtcNow });
 
 app.UseHttpsRedirection();
 

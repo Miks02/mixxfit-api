@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MixxFit.VSA.Common.Interfaces;
+using MixxFit.VSA.Features.WeightEntries.Shared;
 using MixxFit.VSA.Infrastructure.Persistence;
 
 namespace MixxFit.VSA.Features.WeightEntries.GetWeightLogs;

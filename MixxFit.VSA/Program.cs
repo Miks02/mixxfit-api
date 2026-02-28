@@ -181,6 +181,8 @@ else
 
 app.MapEndpoints();
 
+app.MapGet("/health", () => new { Status = "Healthy", Date = DateTime.UtcNow });
+
 app.UseHttpsRedirection();
 
 app.Run();

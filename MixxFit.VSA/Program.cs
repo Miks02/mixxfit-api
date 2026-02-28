@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
+using CloudinaryDotNet;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MixxFit.VSA.Common.Interfaces;
 using MixxFit.VSA.Domain.Entities;
+using MixxFit.VSA.Infrastructure.Configuration;
 using MixxFit.VSA.Infrastructure.Exceptions;
 using MixxFit.VSA.Infrastructure.Extensions;
 using MixxFit.VSA.Infrastructure.Persistence;
@@ -70,6 +72,16 @@ builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 builder.Services.AddScoped<IFileService, LocalFileStorage>();
 
 builder.Services.InjectHandlers();
+
+var cloudinarySettings = builder.Configuration.GetSection("CloudinarySettings").Get<CloudinaryOptions>();
+var account = new Account(
+    cloudinarySettings!.CloudName,
+    cloudinarySettings.ApiKey,
+    cloudinarySettings.ApiSecret
+);
+var cloudinary = new Cloudinary(account);
+
+builder.Services.AddSingleton(cloudinary);
 
 builder.Services.AddCors(options =>
 {
@@ -168,11 +180,6 @@ else
 }
 
 app.MapEndpoints();
-
-app.MapGet("/", () =>
-{
-    throw new Exception("Test");
-});
 
 app.UseHttpsRedirection();
 

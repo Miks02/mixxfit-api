@@ -1,8 +1,12 @@
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
+using System.Threading.RateLimiting;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MixxFit.VSA.Common.Interfaces;
@@ -69,11 +73,66 @@ builder.Services.InjectHandlers();
 
 var app = builder.Build();
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+
+        var hasMetadata = context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter);
+
+        var detailMessage = hasMetadata
+            ? $"Request limit reached, try again after {retryAfter.TotalSeconds} seconds"
+            : "Request limit reached, please try again later.";
+
+        var problem = new ProblemDetails()
+        {
+            Title = "Too many requests",
+            Detail = detailMessage,
+            Status = options.RejectionStatusCode,
+            Instance = context.HttpContext.Request.Path
+        };
+
+        if (hasMetadata)
+        {
+            context.HttpContext.Response.Headers.RetryAfter = ((int)retryAfter.TotalSeconds).ToString();
+            problem.Extensions["RetryAfter"] = retryAfter.TotalSeconds;
+        }
+
+        await context.HttpContext.Response.WriteAsJsonAsync(problem, token);
+    };
+    
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+    {
+        var partitionKey = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(partitionKey))
+            partitionKey = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        
+        return RateLimitPartition.GetFixedWindowLimiter(partitionKey, _ => new FixedWindowRateLimiterOptions()
+        {
+            PermitLimit = 100,
+            Window = TimeSpan.FromSeconds(45)
+        });
+
+    });
+
+});
+
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
+app.UseForwardedHeaders();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseExceptionHandler();
-
 
 if (app.Environment.IsDevelopment())
 {

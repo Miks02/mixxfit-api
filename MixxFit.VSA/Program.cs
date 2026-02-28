@@ -71,7 +71,27 @@ builder.Services.AddScoped<IFileService, LocalFileStorage>();
 
 builder.Services.InjectHandlers();
 
-var app = builder.Build();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowCors", policyBuilder =>
+    {
+        policyBuilder
+            .WithOrigins("https://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+
+    options.AddPolicy("ProdCors", policyBuilder =>
+    {
+        policyBuilder
+            .WithOrigins("https://vitalops-web.onrender.com")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+
+});
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -128,6 +148,8 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Clear();
 });
 
+var app = builder.Build();
+
 app.UseForwardedHeaders();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -138,6 +160,11 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
+    app.UseCors("AllowCors");
+}
+else
+{
+    app.UseCors("ProdCors");
 }
 
 app.MapEndpoints();

@@ -162,12 +162,13 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 var app = builder.Build();
 
+app.UseStaticFiles();
+
 app.UseForwardedHeaders();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseExceptionHandler();
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -182,6 +183,8 @@ else
 app.MapEndpoints();
 
 app.MapMethods("/health", ["GET", "HEAD"], () => new { Status = "Healthy", Date = DateTime.UtcNow });
+
+app.UseRateLimiter();
 
 app.UseHttpsRedirection();
 

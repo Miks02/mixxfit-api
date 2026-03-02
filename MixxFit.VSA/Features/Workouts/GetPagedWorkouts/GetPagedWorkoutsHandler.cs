@@ -32,6 +32,8 @@ public class GetPagedWorkoutsHandler(AppDbContext context) : IHandler
             .Where(w => w.UserId == userId)
             .AsQueryable();
 
+        Console.WriteLine("Sort: " + request.Sort);
+
         if (!string.IsNullOrWhiteSpace(request.Search))
             query = query.Where(w => w.Name.Contains(request.Search));
 

@@ -165,8 +165,7 @@ var app = builder.Build();
 app.UseStaticFiles();
 
 app.UseForwardedHeaders();
-app.UseAuthentication();
-app.UseAuthorization();
+
 
 app.UseExceptionHandler();
 if (app.Environment.IsDevelopment())
@@ -179,6 +178,9 @@ else
 {
     app.UseCors("ProdCors");
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapEndpoints();
 

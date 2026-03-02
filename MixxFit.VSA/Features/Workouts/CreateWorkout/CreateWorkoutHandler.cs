@@ -31,7 +31,7 @@ public class CreateWorkoutHandler(AppDbContext context) : IHandler
     private async Task<bool> IsWorkoutLimitReached(string userId, CancellationToken cancellationToken)
     {
         var workoutsToday = await context.Workouts
-            .Where(w => w.UserId == userId && w.WorkoutDate.Date == DateTime.Today)
+            .Where(w => w.UserId == userId && w.WorkoutDate.Date == DateTime.Today.ToUniversalTime())
             .Select(w => w.Id)
             .CountAsync(cancellationToken);
         

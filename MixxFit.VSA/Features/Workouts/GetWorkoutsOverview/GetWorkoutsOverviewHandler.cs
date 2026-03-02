@@ -21,7 +21,7 @@ public class GetWorkoutsOverviewHandler(AppDbContext context) : IHandler
         var totalWorkouts = await CountWorkoutsAsync(userId, request, cancellationToken);
         
         var workoutSummary = await BuildWorkoutSummaryAsync(userId);
-        var pagedResult = new PagedResult<WorkoutListItemDto>(paginatedWorkouts, request.Page, request.PageSize, totalPaginatedWorkouts, totalWorkouts);
+        var pagedResult = new PagedResult<WorkoutListItemDto>(paginatedWorkouts, request.Page, request.PageSize, totalWorkouts, totalPaginatedWorkouts);
         
         return new GetWorkoutsOverviewResponse(pagedResult, workoutSummary);
     }

@@ -38,6 +38,7 @@ public class GetWorkoutByIdHandler(AppDbContext context) : IHandler
             Exercises = w.ExerciseEntries.Select(e => new ExerciseEntryDto()
             {
                 Id = e.Id,
+                Name = e.Name,
                 AvgHeartRate = e.AvgHeartRate,
                 MaxHeartRate = e.MaxHeartRate,
                 ExerciseType = e.ExerciseType,

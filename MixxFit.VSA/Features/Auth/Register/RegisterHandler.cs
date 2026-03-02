@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using MixxFit.VSA.Common.Extensions;
 using MixxFit.VSA.Common.Interfaces;
 using MixxFit.VSA.Common.Results;
@@ -40,7 +39,8 @@ public class RegisterHandler(
         
         var userDetails = new UserDetailsDto(
             FullName: user.FirstName + " " + user.LastName,
-            Email: user.Email!,
+            UserName: user.UserName,
+            Email: user.Email,
             ImagePath: user.ImagePath,
             CurrentWeight: user.CurrentWeight,
             TargetWeight: user.TargetWeight,

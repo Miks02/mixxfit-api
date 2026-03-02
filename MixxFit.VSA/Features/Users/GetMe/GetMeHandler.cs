@@ -16,6 +16,7 @@ public class GetMeHandler(UserManager<User> userManager) : IHandler
             .Where(u => u.Id == userId)
             .Select(u => new UserDetailsDto(
                 FullName: u.FirstName + " " + u.LastName,
+                UserName: u.UserName!,
                 Email: u.Email!,
                 ImagePath: u.ImagePath,
                 CurrentWeight: u.CurrentWeight,

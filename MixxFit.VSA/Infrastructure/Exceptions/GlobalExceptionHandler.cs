@@ -21,7 +21,7 @@ namespace MixxFit.VSA.Infrastructure.Exceptions
             Exception exception, 
             CancellationToken cancellationToken)
         {
-            _logger.LogError("An unhandled exception occurred: {message}", exception.Message);
+            _logger.LogError(exception, "An unhandled exception occurred");
 
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 

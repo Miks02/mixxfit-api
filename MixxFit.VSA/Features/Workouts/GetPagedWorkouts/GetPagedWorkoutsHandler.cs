@@ -21,7 +21,7 @@ public class GetPagedWorkoutsHandler(AppDbContext context) : IHandler
         var totalPaginatedWorkouts = await pagedQuery.CountAsync(cancellationToken);
         var totalWorkouts = await CountWorkoutsAsync(userId, request, cancellationToken);
         
-        return new PagedResult<GetPagedWorkoutsResponse>(paginatedWorkouts, request.Page, request.PageSize, totalPaginatedWorkouts, totalWorkouts);
+        return new PagedResult<GetPagedWorkoutsResponse>(paginatedWorkouts, request.Page, request.PageSize, totalWorkouts, totalPaginatedWorkouts);
     }
     
     private IQueryable<Workout> BuildWorkoutQuery(string userId, GetPagedWorkoutsRequest request)
@@ -31,7 +31,7 @@ public class GetPagedWorkoutsHandler(AppDbContext context) : IHandler
             .Include(w => w.ExerciseEntries)
             .Where(w => w.UserId == userId)
             .AsQueryable();
-
+        
         if (!string.IsNullOrWhiteSpace(request.Search))
             query = query.Where(w => w.Name.Contains(request.Search));
 

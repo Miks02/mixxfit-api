@@ -1,5 +1,4 @@
 using MixxFit.VSA.Common.Interfaces;
-using NuGet.Packaging;
 
 namespace MixxFit.VSA.Infrastructure.Security;
 

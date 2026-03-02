@@ -26,6 +26,7 @@ public class LoginHandler(UserManager<User> userManager, ITokenService tokenServ
 
         var userDetails = new UserDetailsDto(
             FullName: user.FirstName + " " + user.LastName,
+            UserName: user.UserName!,
             Email: user.Email!,
             ImagePath: user.ImagePath,
             CurrentWeight: user.CurrentWeight,

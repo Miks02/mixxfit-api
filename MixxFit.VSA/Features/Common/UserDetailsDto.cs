@@ -4,6 +4,7 @@ namespace MixxFit.VSA.Features.Common;
 
 public record UserDetailsDto(
     string FullName, 
+    string UserName,
     string Email, 
     string? ImagePath, 
     double? CurrentWeight,

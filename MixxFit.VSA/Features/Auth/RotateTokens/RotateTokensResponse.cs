@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace MixxFit.VSA.Features.Auth.RotateTokens;
 
-public record RotateTokensResponse(string AccessToken, string RefreshToken);
+public record RotateTokensResponse(string AccessToken, [property: JsonIgnore]string RefreshToken);

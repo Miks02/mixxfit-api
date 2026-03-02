@@ -16,6 +16,10 @@ public class WorkoutConfiguration : IEntityTypeConfiguration<Workout>
             .IsRequired(false);
 
         builder.HasIndex(p => p.Name);
+
+        builder.HasIndex(p => p.WorkoutDate);
+        builder.HasIndex(p => p.UserId);
+        builder.HasIndex(p => p.CreatedAt);
         
         builder.Property(p => p.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");

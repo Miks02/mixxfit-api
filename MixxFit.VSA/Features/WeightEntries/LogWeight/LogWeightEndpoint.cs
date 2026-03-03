@@ -11,7 +11,7 @@ public class LogWeightEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("weight-entries", async (
-                [AsParameters] LogWeightRequest request,
+                [FromBody] LogWeightRequest request,
                 LogWeightHandler handler,
                 ICurrentUserProvider userProvider,
                 CancellationToken cancellationToken = default) =>

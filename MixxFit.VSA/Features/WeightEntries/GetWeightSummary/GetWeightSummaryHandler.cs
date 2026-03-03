@@ -18,7 +18,19 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
             .AnyAsync(cancellationToken);
 
         if (!hasEntries)
-            return new GetWeightSummaryResponse();
+        {
+            return new GetWeightSummaryResponse
+            {
+                WeightListDetails = new WeightListDetails
+                {
+                    WeightLogs = []
+                },
+                WeightChart = new WeightChartDto
+                {
+                    Entries = []
+                }
+            };
+        }
 
         var firstWeightEntry = await context.WeightEntries
             .Where(w => w.UserId == userId)

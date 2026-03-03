@@ -29,7 +29,7 @@ public class CalculateCaloriesHandler : IHandler
 
         return new CalculateCaloriesResponse
         {
-            Bmr = bmr,
+            Bmr = Math.Round(bmr),
             Maintenance = maintenance,
             MildGain = maintenance + 250,
             MildLoss = maintenance - 250,

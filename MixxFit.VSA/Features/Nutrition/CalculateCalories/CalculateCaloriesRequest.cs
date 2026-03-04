@@ -1,6 +1,6 @@
 using MixxFit.VSA.Domain.Enums;
 
-namespace MixxFit.VSA.Features.Calories.CalculateCalories;
+namespace MixxFit.VSA.Features.Nutrition.CalculateCalories;
 
 public record CalculateCaloriesRequest
 {

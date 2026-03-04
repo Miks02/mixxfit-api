@@ -1,7 +1,7 @@
 using MixxFit.VSA.Common.Interfaces;
 using MixxFit.VSA.Domain.Enums;
 
-namespace MixxFit.VSA.Features.Calories.CalculateCalories;
+namespace MixxFit.VSA.Features.Nutrition.CalculateCalories;
 
 public class CalculateCaloriesHandler : IHandler
 {

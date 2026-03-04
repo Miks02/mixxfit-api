@@ -17,7 +17,7 @@ public class User : IdentityUser
     public double? CurrentWeight { get; set; }
     public double? TargetWeight { get; set; }
     public double? HeightCm { get; set; }
-    public int? DailyCalorieGoal { get; set; }
+    public double? DailyCalorieGoal { get; set; }
 
     public AccountStatus AccountStatus { get; set; } = AccountStatus.Active;
 

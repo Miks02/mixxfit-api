@@ -16,7 +16,7 @@ public class CreateWorkoutEndpoint : IEndpoint
                 CancellationToken cancellationToken) =>
             {
                 var result = await handler.Handle(userProvider.GetCurrentUserId(), request, cancellationToken);
-                result.ToTypedResult(HttpStatusCode.Created);
+                return result.ToTypedResult(HttpStatusCode.Created);
             })
             .WithTags("Workouts")
             .RequireAuthorization()

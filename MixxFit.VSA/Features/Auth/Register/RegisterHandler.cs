@@ -44,6 +44,7 @@ public class RegisterHandler(
             ImagePath: user.ImagePath,
             CurrentWeight: user.CurrentWeight,
             TargetWeight: user.TargetWeight,
+            DailyCalorieGoal: user.DailyCalorieGoal,
             Height: user.HeightCm,
             DateOfBirth: user.DateOfBirth,
             AccountStatus: user.AccountStatus,

@@ -23,7 +23,7 @@ public static class ResultExtensions
         return successResult;
     }
     
-    public static IResult ToTypedResult<T>(this Result<T> result, string? location = "" , HttpStatusCode statusCode = HttpStatusCode.OK)
+    public static IResult ToTypedResult<T>(this Result<T> result, HttpStatusCode statusCode = HttpStatusCode.OK, string? location = "" )
     {
         if (!result.IsSuccess)
             return TypedResults.BadRequest(result.Errors[0]);

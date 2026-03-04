@@ -32,6 +32,7 @@ public class LoginHandler(UserManager<User> userManager, ITokenService tokenServ
             CurrentWeight: user.CurrentWeight,
             TargetWeight: user.TargetWeight,
             Height: user.HeightCm,
+            DailyCalorieGoal: user.DailyCalorieGoal,
             DateOfBirth: user.DateOfBirth,
             AccountStatus: user.AccountStatus,
             Gender: user.Gender

@@ -135,14 +135,14 @@ builder.Services.AddRateLimiter(options =>
 
         await context.HttpContext.Response.WriteAsJsonAsync(problem, token);
     };
-    
+
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
     {
         var partitionKey = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrEmpty(partitionKey))
             partitionKey = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-        
+
         return RateLimitPartition.GetFixedWindowLimiter(partitionKey, _ => new FixedWindowRateLimiterOptions()
         {
             PermitLimit = 100,
@@ -184,7 +184,7 @@ app.UseAuthorization();
 
 app.MapEndpoints();
 
-app.MapMethods("/health", ["GET", "HEAD"], () => new { Status = "Healthy", Date = DateTime.UtcNow });
+app.MapMethods("api/health", ["GET", "HEAD"], () => new { Status = "Healthy", Date = DateTime.UtcNow });
 
 app.UseRateLimiter();
 

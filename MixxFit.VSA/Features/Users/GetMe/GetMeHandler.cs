@@ -22,6 +22,7 @@ public class GetMeHandler(UserManager<User> userManager) : IHandler
                 CurrentWeight: u.CurrentWeight,
                 TargetWeight: u.TargetWeight,
                 Height: u.HeightCm,
+                DailyCalorieGoal: u.DailyCalorieGoal,
                 DateOfBirth: u.DateOfBirth,
                 AccountStatus: u.AccountStatus,
                 Gender: u.Gender

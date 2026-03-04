@@ -10,6 +10,7 @@ public record UserDetailsDto(
     double? CurrentWeight,
     double? TargetWeight,
     double? Height,
+    double? DailyCalorieGoal,
     DateTime? DateOfBirth,
     AccountStatus AccountStatus,
     Gender? Gender

@@ -52,17 +52,19 @@ public class RegisterHandler(
                 return Result<RegisterResponse>.Failure(tokenResult.Errors.ToArray());
             }
 
-            CreateFitnessProfile(user.Id);
+            var fitnessProfile = CreateFitnessProfile(user.Id);
             
             await context.SaveChangesAsync();
             await transaction.CommitAsync();
+            
+            user.FitnessProfile = fitnessProfile;
             
             var userDetails = new UserDetailsDto(
                 FullName: user.FirstName + " " + user.LastName,
                 UserName: user.UserName,
                 Email: user.Email,
                 ImagePath: user.ImagePath,
-                CurrentWeight: user.FitnessProfile!.Weight,
+                CurrentWeight: user.FitnessProfile.Weight,
                 TargetWeight: user.FitnessProfile.TargetWeight,
                 DailyCalorieGoal: user.FitnessProfile.DailyCalorieGoal,
                 Height: user.FitnessProfile.Height,
@@ -102,7 +104,7 @@ public class RegisterHandler(
 
     }
 
-    private void CreateFitnessProfile(string userId)
+    private FitnessProfile CreateFitnessProfile(string userId)
     {
         var fitnessProfile = new FitnessProfile
         {
@@ -110,5 +112,6 @@ public class RegisterHandler(
         };
         
         context.FitnessProfiles.Add(fitnessProfile);
+        return fitnessProfile;
     }
 }

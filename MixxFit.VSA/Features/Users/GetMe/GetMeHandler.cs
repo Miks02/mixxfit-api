@@ -14,18 +14,19 @@ public class GetMeHandler(UserManager<User> userManager) : IHandler
     {
         var user = await userManager.Users
             .Where(u => u.Id == userId)
+            .Include(u => u.FitnessProfile)
             .Select(u => new UserDetailsDto(
                 FullName: u.FirstName + " " + u.LastName,
                 UserName: u.UserName!,
                 Email: u.Email!,
                 ImagePath: u.ImagePath,
-                CurrentWeight: u.CurrentWeight,
-                TargetWeight: u.TargetWeight,
-                Height: u.HeightCm,
-                DailyCalorieGoal: u.DailyCalorieGoal,
-                DateOfBirth: u.DateOfBirth,
+                CurrentWeight: u.FitnessProfile.Weight,
+                TargetWeight: u.FitnessProfile.TargetWeight,
+                Height: u.FitnessProfile.Height,
+                DailyCalorieGoal: u.FitnessProfile.DailyCalorieGoal,
+                DateOfBirth: u.FitnessProfile.DateOfBirth,
                 AccountStatus: u.AccountStatus,
-                Gender: u.Gender
+                Gender: u.FitnessProfile.Gender
             ))
             .FirstOrDefaultAsync(cancellationToken);
 

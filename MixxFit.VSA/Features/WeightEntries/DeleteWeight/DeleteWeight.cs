@@ -25,18 +25,18 @@ public class DeleteWeightHandler(AppDbContext context, ILogger<DeleteWeightHandl
             context.WeightEntries.Remove(entry);
             await context.SaveChangesAsync(cancellationToken);
 
-            var user = await context.Users
-                .Where(u => u.Id == userId)
+            var profile = await context.FitnessProfiles
+                .Where(u => u.UserId == userId)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (user is null)
+            if (profile is null)
             {
                 await transaction.RollbackAsync(cancellationToken);
                 return Result.Failure(UserError.NotFound(userId));
             }
 
-            user.CurrentWeight = await GetLastWeightFromUser(user.Id, cancellationToken);
-            
+            profile.Weight = await GetLastWeightFromUser(userId, cancellationToken);
+
             await context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }
@@ -48,8 +48,8 @@ public class DeleteWeightHandler(AppDbContext context, ILogger<DeleteWeightHandl
         }
 
         return Result.Success();
-    } 
-    
+    }
+
     private async Task<double?> GetLastWeightFromUser(string userId, CancellationToken cancellationToken)
     {
         var lastWeight = await context.WeightEntries

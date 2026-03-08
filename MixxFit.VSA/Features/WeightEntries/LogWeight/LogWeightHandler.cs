@@ -33,16 +33,16 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
             {
                 await context.WeightEntries.AddAsync(newEntry, cancellationToken);
 
-                var user = await context.Users
-                    .FirstOrDefaultAsync(u => u.Id == newEntry.UserId, cancellationToken);
+                var profile = await context.FitnessProfiles
+                    .FirstOrDefaultAsync(u => u.UserId == newEntry.UserId, cancellationToken);
 
-                if (user is null)
+                if (profile is null)
                 {
                     await transaction.RollbackAsync(cancellationToken);
                     return Result<LogWeightResponse>.Failure(UserError.NotFound(userId));
                 }
 
-                user.CurrentWeight = newEntry.Weight;
+                profile.Weight = newEntry.Weight;
 
                 await context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
@@ -53,7 +53,7 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
                 await transaction.RollbackAsync(cancellationToken);
                 throw;
             }
-            
+
             var createdWeightEntry = new LogWeightResponse()
             {
                 Id = newEntry.Id,

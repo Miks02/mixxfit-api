@@ -14,13 +14,14 @@ namespace MixxFit.VSA.Features.Profile.UpdateFitnessProfile;
 
 public static class UpdateTargetWeight
 {
-    public record UpdateTargetWeightRequest(double Weight);
+    public record UpdateTargetWeightRequest(double TargetWeight);
+    public record UpdateTargetWeightResponse(double TargetWeight);
 
     public class UpdateTargetWeightValidator : AbstractValidator<UpdateTargetWeightRequest>
     {
         public UpdateTargetWeightValidator()
         {
-            RuleFor(r => r.Weight)
+            RuleFor(r => r.TargetWeight)
                 .InclusiveBetween(25, 400)
                 .WithMessage("Target weight must be between 25 and 400 kg.");
         }
@@ -28,7 +29,7 @@ public static class UpdateTargetWeight
 
     public class UpdateTargetWeightHandler(AppDbContext context) : IHandler
     {
-        public async Task<Result<double?>> Handle(
+        public async Task<Result<UpdateTargetWeightResponse>> Handle(
             string userId,
             UpdateTargetWeightRequest request, CancellationToken cancellationToken = default)
         {
@@ -37,13 +38,13 @@ public static class UpdateTargetWeight
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (profile is null)
-                return Result<double?>.Failure(UserError.NotFound(userId));
+                return Result<UpdateTargetWeightResponse>.Failure(UserError.NotFound(userId));
 
-            profile.TargetWeight = request.Weight;
+            profile.TargetWeight = request.TargetWeight;
 
             await context.SaveChangesAsync(cancellationToken);
 
-            return Result<double?>.Success(profile.TargetWeight);
+            return Result<UpdateTargetWeightResponse>.Success(new UpdateTargetWeightResponse((double)profile.TargetWeight));
         }
     }
 

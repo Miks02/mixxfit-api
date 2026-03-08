@@ -13,6 +13,7 @@ namespace MixxFit.VSA.Features.Users.UpdateUserFields;
 public static class UpdateHeight
 {
     public record UpdateHeightRequest(double Height);
+    public record UpdateHeightResponse(double? Height);
 
     public class UpdateHeightValidator : AbstractValidator<UpdateHeightRequest>
     {
@@ -26,7 +27,7 @@ public static class UpdateHeight
 
     public class UpdateHeightHandler(UserManager<User> userManager) : IHandler
     {
-        public async Task<Result<double?>> Handle(
+        public async Task<Result<UpdateHeightResponse>> Handle(
             string userId,
             UpdateHeightRequest request, CancellationToken cancellationToken = default)
         {
@@ -35,13 +36,13 @@ public static class UpdateHeight
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (user is null)
-                return Result<double?>.Failure(UserError.NotFound(userId));
+                return Result<UpdateHeightResponse>.Failure(UserError.NotFound(userId));
 
             user.HeightCm = request.Height;
 
             var updateResult = await userManager.UpdateAsync(user);
 
-            return updateResult.HandleIdentityResult(user.HeightCm);
+            return updateResult.HandleIdentityResult(new UpdateHeightResponse(user.HeightCm));
         }
     }
 
@@ -60,7 +61,7 @@ public static class UpdateHeight
             })
             .WithTags("Users")
             .RequireAuthorization()
-            .Produces<double?>()
+            .Produces<UpdateHeightResponse>()
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
         }
     }

@@ -24,9 +24,9 @@ public static class UpdateProfilePicture
 
             if (user is null)
                 return Result<string?>.Failure(UserError.NotFound(userId));
-            
+
             var uploadResult = await fileService.UploadFile(imageFile, user.ImagePath, "user_avatars");
-            
+
             if(!uploadResult.IsSuccess)
                 return Result<string?>.Failure(uploadResult.Errors.ToArray());
 

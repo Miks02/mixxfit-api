@@ -14,6 +14,7 @@ namespace MixxFit.VSA.Features.Users.UpdateUserFields;
 public static class UpdateGender
 {
     public record UpdateGenderRequest(Gender Gender);
+    public record UpdateGenderResponse(Gender? Gender);
 
     public class UpdateGenderValidator : AbstractValidator<UpdateGenderRequest>
     {
@@ -28,7 +29,7 @@ public static class UpdateGender
 
     public class UpdateGenderHandler(UserManager<User> userManager) : IHandler
     {
-        public async Task<Result<Gender?>> Handle(
+        public async Task<Result<UpdateGenderResponse>> Handle(
             string userId,
             UpdateGenderRequest request, CancellationToken cancellationToken = default)
         {
@@ -37,13 +38,13 @@ public static class UpdateGender
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (user is null)
-                return Result<Gender?>.Failure(UserError.NotFound(userId));
+                return Result<UpdateGenderResponse>.Failure(UserError.NotFound(userId));
 
             user.Gender = request.Gender;
 
             var updateResult = await userManager.UpdateAsync(user);
 
-            return updateResult.HandleIdentityResult(user.Gender);
+            return updateResult.HandleIdentityResult(new UpdateGenderResponse(user.Gender));
         }
     }
 
@@ -62,7 +63,7 @@ public static class UpdateGender
             })
             .WithTags("Users")
             .RequireAuthorization()
-            .Produces<Gender?>()
+            .Produces<UpdateGenderResponse>()
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
         }
     }

@@ -13,6 +13,7 @@ namespace MixxFit.VSA.Features.Users.UpdateUserFields;
 public static class UpdateDateOfBirth
 {
     public record UpdateDateOfBirthRequest(DateTime DateOfBirth);
+    public record UpdateDateOfBirthResponse(DateTime? DateOfBirth);
 
     public class UpdateDateOfBirthValidator : AbstractValidator<UpdateDateOfBirthRequest>
     {
@@ -32,7 +33,7 @@ public static class UpdateDateOfBirth
 
     public class UpdateDateOfBirthHandler(UserManager<User> userManager) : IHandler
     {
-        public async Task<Result<DateTime?>> Handle(
+        public async Task<Result<UpdateDateOfBirthResponse>> Handle(
             string userId,
             UpdateDateOfBirthRequest request, CancellationToken cancellationToken = default)
         {
@@ -41,13 +42,13 @@ public static class UpdateDateOfBirth
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (user is null)
-                return Result<DateTime?>.Failure(UserError.NotFound(userId));
+                return Result<UpdateDateOfBirthResponse>.Failure(UserError.NotFound(userId));
 
             user.DateOfBirth = request.DateOfBirth.ToUniversalTime();
 
             var updateResult = await userManager.UpdateAsync(user);
 
-            return updateResult.HandleIdentityResult(user.DateOfBirth);
+            return updateResult.HandleIdentityResult(new UpdateDateOfBirthResponse(user.DateOfBirth));
         }
     }
 
@@ -66,7 +67,7 @@ public static class UpdateDateOfBirth
             })
             .WithTags("Users")
             .RequireAuthorization()
-            .Produces<DateTime?>()
+            .Produces<UpdateDateOfBirthResponse>()
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
         }
     }

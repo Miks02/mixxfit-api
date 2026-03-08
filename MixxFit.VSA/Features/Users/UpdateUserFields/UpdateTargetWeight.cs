@@ -13,6 +13,7 @@ namespace MixxFit.VSA.Features.Users.UpdateUserFields;
 public static class UpdateTargetWeight
 {
     public record UpdateTargetWeightRequest(double Weight);
+    public record UpdateTargetWeightResponse(double? Weight);
 
     public class UpdateTargetWeightValidator : AbstractValidator<UpdateTargetWeightRequest>
     {
@@ -26,7 +27,7 @@ public static class UpdateTargetWeight
 
     public class UpdateTargetWeightHandler(UserManager<User> userManager) : IHandler
     {
-        public async Task<Result<double?>> Handle(
+        public async Task<Result<UpdateTargetWeightResponse>> Handle(
             string userId,
             UpdateTargetWeightRequest request, CancellationToken cancellationToken = default)
         {
@@ -35,13 +36,13 @@ public static class UpdateTargetWeight
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (user is null)
-                return Result<double?>.Failure(UserError.NotFound(userId));
+                return Result<UpdateTargetWeightResponse>.Failure(UserError.NotFound(userId));
 
             user.TargetWeight = request.Weight;
 
             var updateResult = await userManager.UpdateAsync(user);
 
-            return updateResult.HandleIdentityResult(user.TargetWeight);
+            return updateResult.HandleIdentityResult(new UpdateTargetWeightResponse(user.TargetWeight));
         }
     }
 
@@ -60,7 +61,7 @@ public static class UpdateTargetWeight
             })
             .WithTags("Users")
             .RequireAuthorization()
-            .Produces<double?>()
+            .Produces<UpdateTargetWeightResponse>()
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
         }
     }

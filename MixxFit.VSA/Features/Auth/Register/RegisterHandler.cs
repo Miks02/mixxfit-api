@@ -4,7 +4,6 @@ using MixxFit.VSA.Common.Extensions;
 using MixxFit.VSA.Common.Interfaces;
 using MixxFit.VSA.Common.Results;
 using MixxFit.VSA.Domain.Entities;
-using MixxFit.VSA.Domain.ErrorCatalog;
 using MixxFit.VSA.Features.Common;
 using MixxFit.VSA.Infrastructure.Persistence;
 
@@ -19,7 +18,7 @@ public class RegisterHandler(
 {
     public async Task<Result<RegisterResponse>> Handle(RegisterRequest request)
     {
-        var user = new User()
+        var user = new User
         {
             FirstName = request.FirstName,
             LastName = request.LastName,

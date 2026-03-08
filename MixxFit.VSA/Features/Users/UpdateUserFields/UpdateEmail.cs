@@ -13,6 +13,7 @@ namespace MixxFit.VSA.Features.Users.UpdateUserFields;
 public static class UpdateEmail
 {
     public record UpdateEmailRequest(string Email);
+    public record UpdateEmailResponse(string Email);
 
     public class UpdateEmailValidator : AbstractValidator<UpdateEmailRequest>
     {
@@ -28,7 +29,7 @@ public static class UpdateEmail
 
     public class UpdateEmailHandler(UserManager<User> userManager) : IHandler
     {
-        public async Task<Result<string>> Handle(
+        public async Task<Result<UpdateEmailResponse>> Handle(
             string userId,
             UpdateEmailRequest request, CancellationToken cancellationToken = default)
         {
@@ -37,14 +38,13 @@ public static class UpdateEmail
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (user is null)
-                return Result<string>.Failure(UserError.NotFound(userId));
-            
+                return Result<UpdateEmailResponse>.Failure(UserError.NotFound(userId));
 
             user.Email = request.Email;
 
             var updateResult = await userManager.UpdateAsync(user);
 
-            return updateResult.HandleIdentityResult(user.Email!);
+            return updateResult.HandleIdentityResult(new UpdateEmailResponse(user.Email!));
         }
     }
 
@@ -63,7 +63,7 @@ public static class UpdateEmail
             })
             .WithTags("Users")
             .RequireAuthorization()
-            .Produces<string>()
+            .Produces<UpdateEmailResponse>()
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
         }
     }

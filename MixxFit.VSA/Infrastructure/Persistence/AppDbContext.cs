@@ -8,6 +8,7 @@ namespace MixxFit.VSA.Infrastructure.Persistence;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
 {
+    public DbSet<FitnessProfile> FitnessProfiles { get; set; }
     public DbSet<Workout> Workouts { get; set; }
     public DbSet<ExerciseEntry> ExerciseEntries { get; set; }
     public DbSet<SetEntry> SetEntries { get; set; }

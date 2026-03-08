@@ -8,41 +8,43 @@ using MixxFit.VSA.Common.Results;
 using MixxFit.VSA.Domain.Entities;
 using MixxFit.VSA.Domain.ErrorCatalog;
 
-namespace MixxFit.VSA.Features.Users.UpdateUserFields;
+using MixxFit.VSA.Infrastructure.Persistence;
+
+namespace MixxFit.VSA.Features.Profile.UpdateFitnessProfile;
 
 public static class UpdateTargetWeight
 {
-    public record UpdateTargetWeightRequest(double Weight);
-    public record UpdateTargetWeightResponse(double? Weight);
+    public record UpdateTargetWeightRequest(double TargetWeight);
+    public record UpdateTargetWeightResponse(double TargetWeight);
 
     public class UpdateTargetWeightValidator : AbstractValidator<UpdateTargetWeightRequest>
     {
         public UpdateTargetWeightValidator()
         {
-            RuleFor(r => r.Weight)
+            RuleFor(r => r.TargetWeight)
                 .InclusiveBetween(25, 400)
                 .WithMessage("Target weight must be between 25 and 400 kg.");
         }
     }
 
-    public class UpdateTargetWeightHandler(UserManager<User> userManager) : IHandler
+    public class UpdateTargetWeightHandler(AppDbContext context) : IHandler
     {
         public async Task<Result<UpdateTargetWeightResponse>> Handle(
             string userId,
             UpdateTargetWeightRequest request, CancellationToken cancellationToken = default)
         {
-            var user = await userManager.Users
-                .Where(u => u.Id == userId)
+            var profile = await context.FitnessProfiles
+                .Where(p => p.UserId == userId)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (user is null)
+            if (profile is null)
                 return Result<UpdateTargetWeightResponse>.Failure(UserError.NotFound(userId));
 
-            user.TargetWeight = request.Weight;
+            profile.TargetWeight = request.TargetWeight;
 
-            var updateResult = await userManager.UpdateAsync(user);
+            await context.SaveChangesAsync(cancellationToken);
 
-            return updateResult.HandleIdentityResult(new UpdateTargetWeightResponse(user.TargetWeight));
+            return Result<UpdateTargetWeightResponse>.Success(new UpdateTargetWeightResponse((double)profile.TargetWeight));
         }
     }
 
@@ -50,7 +52,7 @@ public static class UpdateTargetWeight
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPatch("users/target-weight", async (
+            app.MapPatch("fitness-profile/target-weight", async (
                 UpdateTargetWeightRequest request,
                 ICurrentUserProvider currentUserProvider,
                 UpdateTargetWeightHandler handler,
@@ -59,9 +61,9 @@ public static class UpdateTargetWeight
                 var result = await handler.Handle(currentUserProvider.GetCurrentUserId(), request, cancellationToken);
                 return result.ToTypedResult();
             })
-            .WithTags("Users")
+            .WithTags("FitnessProfile")
             .RequireAuthorization()
-            .Produces<UpdateTargetWeightResponse>()
+            .Produces<double?>()
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
         }
     }

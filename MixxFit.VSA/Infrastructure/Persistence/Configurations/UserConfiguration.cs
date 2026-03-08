@@ -42,6 +42,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder
+            .HasOne(u => u.FitnessProfile)
+            .WithOne(f => f.User)
+            .HasForeignKey<FitnessProfile>(f => f.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
             .HasMany(u => u.Workouts)
             .WithOne(w => w.User)
             .HasForeignKey(w => w.UserId)

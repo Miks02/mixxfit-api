@@ -5,16 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using MixxFit.VSA.Common.Extensions;
 using MixxFit.VSA.Common.Interfaces;
 using MixxFit.VSA.Common.Results;
-using MixxFit.VSA.Domain.Entities;
 using MixxFit.VSA.Domain.Enums;
 using MixxFit.VSA.Domain.ErrorCatalog;
 
-namespace MixxFit.VSA.Features.Users.UpdateUserFields;
+using MixxFit.VSA.Infrastructure.Persistence;
+
+namespace MixxFit.VSA.Features.Profile.UpdateFitnessProfile;
 
 public static class UpdateGender
 {
     public record UpdateGenderRequest(Gender Gender);
-    public record UpdateGenderResponse(Gender? Gender);
 
     public class UpdateGenderValidator : AbstractValidator<UpdateGenderRequest>
     {
@@ -27,24 +27,24 @@ public static class UpdateGender
         }
     }
 
-    public class UpdateGenderHandler(UserManager<User> userManager) : IHandler
+    public class UpdateGenderHandler(AppDbContext context) : IHandler
     {
-        public async Task<Result<UpdateGenderResponse>> Handle(
+        public async Task<Result<Gender?>> Handle(
             string userId,
             UpdateGenderRequest request, CancellationToken cancellationToken = default)
         {
-            var user = await userManager.Users
-                .Where(u => u.Id == userId)
+            var profile = await context.FitnessProfiles
+                .Where(p => p.UserId == userId)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (user is null)
-                return Result<UpdateGenderResponse>.Failure(UserError.NotFound(userId));
+            if (profile is null)
+                return Result<Gender?>.Failure(UserError.NotFound(userId));
 
-            user.Gender = request.Gender;
+            profile.Gender = request.Gender;
 
-            var updateResult = await userManager.UpdateAsync(user);
+            await context.SaveChangesAsync(cancellationToken);
 
-            return updateResult.HandleIdentityResult(new UpdateGenderResponse(user.Gender));
+            return Result<Gender?>.Success(profile.Gender);
         }
     }
 
@@ -52,7 +52,7 @@ public static class UpdateGender
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPatch("users/gender", async (
+            app.MapPatch("fitness-profile/gender", async (
                 UpdateGenderRequest request,
                 ICurrentUserProvider currentUserProvider,
                 UpdateGenderHandler handler,
@@ -61,9 +61,9 @@ public static class UpdateGender
                 var result = await handler.Handle(currentUserProvider.GetCurrentUserId(), request, cancellationToken);
                 return result.ToTypedResult();
             })
-            .WithTags("Users")
+            .WithTags("FitnessProfile")
             .RequireAuthorization()
-            .Produces<UpdateGenderResponse>()
+            .Produces<Gender?>()
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
         }
     }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MixxFit.VSA.Common.Interfaces;
 using MixxFit.VSA.Common.Results;
 using MixxFit.VSA.Domain.Entities;
@@ -11,7 +12,10 @@ public class LoginHandler(UserManager<User> userManager, ITokenService tokenServ
 {
     public async Task<Result<LoginResponse>> Handle(LoginRequest request)
     {
-        var user = await userManager.FindByEmailAsync(request.Email);
+        var user = await userManager.Users
+            .Include(u => u.FitnessProfile)
+            .Where(u => u.Email == request.Email)
+            .FirstOrDefaultAsync();
 
         if (user is null)
             return Result<LoginResponse>.Failure(AuthError.LoginFailed("Incorrect email or password"));
@@ -29,13 +33,13 @@ public class LoginHandler(UserManager<User> userManager, ITokenService tokenServ
             UserName: user.UserName!,
             Email: user.Email!,
             ImagePath: user.ImagePath,
-            CurrentWeight: user.CurrentWeight,
-            TargetWeight: user.TargetWeight,
-            Height: user.HeightCm,
-            DailyCalorieGoal: user.DailyCalorieGoal,
-            DateOfBirth: user.DateOfBirth,
+            CurrentWeight: user.FitnessProfile.Weight,
+            TargetWeight: user.FitnessProfile.TargetWeight,
+            Height: user.FitnessProfile.Height,
+            DailyCalorieGoal: user.FitnessProfile.DailyCalorieGoal,
+            DateOfBirth: user.FitnessProfile.DateOfBirth,
             AccountStatus: user.AccountStatus,
-            Gender: user.Gender
+            Gender: user.FitnessProfile.Gender
         );
         
         var response = new LoginResponse(tokenResult.Payload!.AccessToken, tokenResult.Payload.RefreshToken, userDetails);

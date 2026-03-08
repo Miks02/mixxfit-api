@@ -8,12 +8,13 @@ using MixxFit.VSA.Common.Results;
 using MixxFit.VSA.Domain.Entities;
 using MixxFit.VSA.Domain.ErrorCatalog;
 
-namespace MixxFit.VSA.Features.Users.UpdateUserFields;
+using MixxFit.VSA.Infrastructure.Persistence;
+
+namespace MixxFit.VSA.Features.Profile.UpdateFitnessProfile;
 
 public static class UpdateHeight
 {
     public record UpdateHeightRequest(double Height);
-    public record UpdateHeightResponse(double? Height);
 
     public class UpdateHeightValidator : AbstractValidator<UpdateHeightRequest>
     {
@@ -25,24 +26,24 @@ public static class UpdateHeight
         }
     }
 
-    public class UpdateHeightHandler(UserManager<User> userManager) : IHandler
+    public class UpdateHeightHandler(AppDbContext context) : IHandler
     {
-        public async Task<Result<UpdateHeightResponse>> Handle(
+        public async Task<Result<double?>> Handle(
             string userId,
             UpdateHeightRequest request, CancellationToken cancellationToken = default)
         {
-            var user = await userManager.Users
-                .Where(u => u.Id == userId)
+            var profile = await context.FitnessProfiles
+                .Where(p => p.UserId == userId)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (user is null)
-                return Result<UpdateHeightResponse>.Failure(UserError.NotFound(userId));
+            if (profile is null)
+                return Result<double?>.Failure(UserError.NotFound(userId));
 
-            user.HeightCm = request.Height;
+            profile.Height = request.Height;
 
-            var updateResult = await userManager.UpdateAsync(user);
+            await context.SaveChangesAsync(cancellationToken);
 
-            return updateResult.HandleIdentityResult(new UpdateHeightResponse(user.HeightCm));
+            return Result<double?>.Success(profile.Height);
         }
     }
 
@@ -50,7 +51,7 @@ public static class UpdateHeight
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPatch("users/height", async (
+            app.MapPatch("fitness-profile/height", async (
                 UpdateHeightRequest request,
                 ICurrentUserProvider currentUserProvider,
                 UpdateHeightHandler handler,
@@ -59,9 +60,9 @@ public static class UpdateHeight
                 var result = await handler.Handle(currentUserProvider.GetCurrentUserId(), request, cancellationToken);
                 return result.ToTypedResult();
             })
-            .WithTags("Users")
+            .WithTags("FitnessProfile")
             .RequireAuthorization()
-            .Produces<UpdateHeightResponse>()
+            .Produces<double?>()
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
         }
     }

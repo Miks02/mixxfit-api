@@ -13,6 +13,7 @@ namespace MixxFit.VSA.Features.Users.UpdateUserFields;
 public static class UpdateUserName
 {
     public record UpdateUserNameRequest(string UserName);
+    public record UpdateUserNameResponse(string UserName);
 
     public class UpdateUserNameValidator : AbstractValidator<UpdateUserNameRequest>
     {
@@ -30,7 +31,7 @@ public static class UpdateUserName
 
     public class UpdateUserNameHandler(UserManager<User> userManager) : IHandler
     {
-        public async Task<Result<string>> Handle(
+        public async Task<Result<UpdateUserNameResponse>> Handle(
             string userId,
             UpdateUserNameRequest request, CancellationToken cancellationToken = default)
         {
@@ -39,13 +40,13 @@ public static class UpdateUserName
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (user is null)
-                return Result<string>.Failure(UserError.NotFound(userId));
+                return Result<UpdateUserNameResponse>.Failure(UserError.NotFound(userId));
 
             user.UserName = request.UserName;
 
             var updateResult = await userManager.UpdateAsync(user);
 
-            return updateResult.HandleIdentityResult(user.UserName!);
+            return updateResult.HandleIdentityResult(new UpdateUserNameResponse(user.UserName!));
         }
     }
 
@@ -64,7 +65,7 @@ public static class UpdateUserName
             })
             .WithTags("Users")
             .RequireAuthorization()
-            .Produces<string>()
+            .Produces<UpdateUserNameResponse>()
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
         }
     }

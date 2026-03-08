@@ -24,6 +24,9 @@ public class User : IdentityUser
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? DateOfBirth { get; set; }
 
+    public FitnessProfile FitnessProfile { get; set; } = null!;
+    public int FitnessProfileId { get; set; }
+
     public ICollection<WeightEntry> WeightEntries { get; set; } = [];
     public ICollection<Workout> Workouts { get; set; } = [];
     public ICollection<CalorieEntry> CalorieEntries { get; set; } = [];

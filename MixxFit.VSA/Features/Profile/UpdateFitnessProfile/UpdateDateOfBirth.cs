@@ -7,13 +7,13 @@ using MixxFit.VSA.Common.Interfaces;
 using MixxFit.VSA.Common.Results;
 using MixxFit.VSA.Domain.Entities;
 using MixxFit.VSA.Domain.ErrorCatalog;
+using MixxFit.VSA.Infrastructure.Persistence;
 
-namespace MixxFit.VSA.Features.Users.UpdateUserFields;
+namespace MixxFit.VSA.Features.Profile.UpdateFitnessProfile;
 
 public static class UpdateDateOfBirth
 {
     public record UpdateDateOfBirthRequest(DateTime DateOfBirth);
-    public record UpdateDateOfBirthResponse(DateTime? DateOfBirth);
 
     public class UpdateDateOfBirthValidator : AbstractValidator<UpdateDateOfBirthRequest>
     {
@@ -31,24 +31,24 @@ public static class UpdateDateOfBirth
         }
     }
 
-    public class UpdateDateOfBirthHandler(UserManager<User> userManager) : IHandler
+    public class UpdateDateOfBirthHandler(AppDbContext context) : IHandler
     {
-        public async Task<Result<UpdateDateOfBirthResponse>> Handle(
+        public async Task<Result<DateTime?>> Handle(
             string userId,
             UpdateDateOfBirthRequest request, CancellationToken cancellationToken = default)
         {
-            var user = await userManager.Users
-                .Where(u => u.Id == userId)
+            var profile = await context.FitnessProfiles
+                .Where(p => p.UserId == userId)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (user is null)
-                return Result<UpdateDateOfBirthResponse>.Failure(UserError.NotFound(userId));
+            if (profile is null)
+                return Result<DateTime?>.Failure(UserError.NotFound(userId));
 
-            user.DateOfBirth = request.DateOfBirth.ToUniversalTime();
+            profile.DateOfBirth = request.DateOfBirth.ToUniversalTime();
 
-            var updateResult = await userManager.UpdateAsync(user);
+            await context.SaveChangesAsync(cancellationToken);
 
-            return updateResult.HandleIdentityResult(new UpdateDateOfBirthResponse(user.DateOfBirth));
+            return Result<DateTime?>.Success(profile.DateOfBirth);
         }
     }
 
@@ -56,7 +56,7 @@ public static class UpdateDateOfBirth
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPatch("users/date-of-birth", async (
+            app.MapPatch("fitness-profile/date-of-birth", async (
                 UpdateDateOfBirthRequest request,
                 ICurrentUserProvider currentUserProvider,
                 UpdateDateOfBirthHandler handler,
@@ -65,9 +65,9 @@ public static class UpdateDateOfBirth
                 var result = await handler.Handle(currentUserProvider.GetCurrentUserId(), request, cancellationToken);
                 return result.ToTypedResult();
             })
-            .WithTags("Users")
+            .WithTags("FitnessProfile")
             .RequireAuthorization()
-            .Produces<UpdateDateOfBirthResponse>()
+            .Produces<DateTime?>()
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
         }
     }

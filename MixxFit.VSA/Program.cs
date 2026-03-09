@@ -58,6 +58,16 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+var cloudinarySettings = builder.Configuration.GetSection("CloudinarySettings").Get<CloudinaryOptions>();
+var account = new Account(
+    cloudinarySettings!.CloudName,
+    cloudinarySettings.ApiKey,
+    cloudinarySettings.ApiSecret
+);
+var cloudinary = new Cloudinary(account);
+
+builder.Services.AddSingleton(cloudinary);
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -69,19 +79,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICookieProvider, CookieProvider>();
 builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
-builder.Services.AddScoped<IFileService, LocalFileStorage>();
+builder.Services.AddScoped<IFileService, CloudinaryFileStorage>();
 
 builder.Services.InjectHandlers();
-
-var cloudinarySettings = builder.Configuration.GetSection("CloudinarySettings").Get<CloudinaryOptions>();
-var account = new Account(
-    cloudinarySettings!.CloudName,
-    cloudinarySettings.ApiKey,
-    cloudinarySettings.ApiSecret
-);
-var cloudinary = new Cloudinary(account);
-
-builder.Services.AddSingleton(cloudinary);
 
 builder.Services.AddCors(options =>
 {

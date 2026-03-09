@@ -1,44 +1,31 @@
+using System.Reflection;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.RateLimiting;
 using CloudinaryDotNet;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Build.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MixxFit.API.Common.Interfaces;
+using MixxFit.API.Domain.Entities;
+using MixxFit.API.Infrastructure.Configuration;
+using MixxFit.API.Infrastructure.Exceptions;
+using MixxFit.API.Infrastructure.Extensions;
+using MixxFit.API.Infrastructure.Persistence;
+using MixxFit.API.Infrastructure.Security;
+using MixxFit.API.Infrastructure.Storage;
 using Scalar.AspNetCore;
-using System.Reflection;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.RateLimiting;
-using MixxFit.API.Data;
-using MixxFit.API.DTO.Global;
-using MixxFit.API.Exceptions.Handlers;
-using MixxFit.API.Filters;
-using MixxFit.API.Models;
-using MixxFit.API.Services.Implementations;
-using MixxFit.API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddProblemDetails(configure =>
-{
-    configure.CustomizeProblemDetails = context =>
-    {
-        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
-    };
-});
-
-builder.Services.AddExceptionHandler<CancellationExceptionHandler>();
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"));
-    
 });
-
 builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
         options.Password.RequireDigit = false;
@@ -51,9 +38,27 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ClockSkew = TimeSpan.Zero,
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["JwtConfig:Audience"],
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Token"]!))
+        };
+    });
 
-var cloudinarySettings = builder.Configuration.GetSection("CloudinarySettings").Get<CloudinarySettings>();
+var cloudinarySettings = builder.Configuration.GetSection("CloudinarySettings").Get<CloudinaryOptions>();
 var account = new Account(
     cloudinarySettings!.CloudName,
     cloudinarySettings.ApiKey,
@@ -63,20 +68,20 @@ var cloudinary = new Cloudinary(account);
 
 builder.Services.AddSingleton(cloudinary);
 
-builder.Services
-    .AddScoped<IUserService, UserService>()
-    .AddScoped<IAuthService, AuthService>()
-    .AddScoped<IWorkoutService, WorkoutService>()
-    .AddScoped<IProfileService, ProfileService>()
-    .AddScoped<IDashboardService, DashboardService>()
-    .AddScoped<IWeightEntryService, WeightEntryService>()
-    .AddScoped<IFileService, CloudinaryFileService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddProblemDetails();
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddOpenApi();
 
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    options.SuppressModelStateInvalidFilter = true;
-});
+builder.Services.AddAuthorization();
 
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ICookieProvider, CookieProvider>();
+builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+builder.Services.AddScoped<IFileService, CloudinaryFileStorage>();
+
+builder.Services.InjectHandlers();
 
 builder.Services.AddCors(options =>
 {
@@ -99,26 +104,6 @@ builder.Services.AddCors(options =>
     });
 
 });
-
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ClockSkew = TimeSpan.Zero,
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["JwtConfig:Audience"],
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Token"]!))
-        };
-    });
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -150,14 +135,14 @@ builder.Services.AddRateLimiter(options =>
 
         await context.HttpContext.Response.WriteAsJsonAsync(problem, token);
     };
-    
+
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
     {
         var partitionKey = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrEmpty(partitionKey))
             partitionKey = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-        
+
         return RateLimitPartition.GetFixedWindowLimiter(partitionKey, _ => new FixedWindowRateLimiterOptions()
         {
             PermitLimit = 100,
@@ -168,12 +153,6 @@ builder.Services.AddRateLimiter(options =>
 
 });
 
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<ValidationFilter>();
-    options.Filters.Add<ProblemDetailsFilter>();
-});
-
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
@@ -181,11 +160,14 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Clear();
 });
 
-builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-builder.Services.AddOpenApi("v1");
-
 var app = builder.Build();
+
+app.UseStaticFiles();
+
+app.UseForwardedHeaders();
+
+
+app.UseExceptionHandler();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -197,43 +179,15 @@ else
     app.UseCors("ProdCors");
 }
 
-app.UseForwardedHeaders();
-
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-
-    var context = services.GetRequiredService<AppDbContext>();
-
-    context.Database.Migrate();
-
-    Console.WriteLine("Database migrated successfully");
-}
-
-
-app.UseStaticFiles();
-
-app.Use(async (context, next) =>
-{
-    try
-    {
-        await next();
-    }
-    catch (OperationCanceledException)
-    {
-        context.Response.StatusCode = 499;
-    }
-});
-
-app.UseExceptionHandler();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapMethods("/api/health", ["GET", "HEAD"], () => new { Status = "Healthy", Date = DateTime.UtcNow });
+app.MapEndpoints();
+
+app.MapMethods("api/health", ["GET", "HEAD"], () => new { Status = "Healthy", Date = DateTime.UtcNow });
 
 app.UseRateLimiter();
 
-app.MapControllers();
+app.UseHttpsRedirection();
 
 app.Run();

@@ -10,15 +10,15 @@ RUN apt-get update && apt-get install -y \
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY ["MixxFit.VSA/MixxFit.VSA.csproj", "MixxFit.VSA/"]
-RUN dotnet restore "MixxFit.VSA/MixxFit.VSA.csproj"
+COPY ["MixxFit.API/MixxFit.API.csproj", "MixxFit.API/"]
+RUN dotnet restore "MixxFit.API/MixxFit.API.csproj"
 
-COPY MixxFit.VSA/ ./MixxFit.VSA/
+COPY MixxFit.API/ ./MixxFit.API/
 
-RUN dotnet build "MixxFit.VSA/MixxFit.VSA.csproj" -c Release -o /app/build
+RUN dotnet build "MixxFit.API/MixxFit.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "MixxFit.VSA/MixxFit.VSA.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "MixxFit.API/MixxFit.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
@@ -27,4 +27,4 @@ COPY --from=publish /app/publish .
 ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Development
 
-ENTRYPOINT ["dotnet", "MixxFit.VSA.dll"]
+ENTRYPOINT ["dotnet", "MixxFit.API.dll"]

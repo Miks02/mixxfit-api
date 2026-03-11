@@ -21,38 +21,13 @@ Minimal Web API built around vertical slices. Each feature folder contains every
 │   └── ErrorCatalog/              # AuthError, FileError, GeneralError, UserError
 │
 ├── Features/                      # One sub-folder per use case (the "slices")
-│   ├── Auth/
-│   │   ├── ChangePassword/
-│   │   ├── Login/
-│   │   ├── Logout/
-│   │   ├── Register/
-│   │   └── RotateTokens/
-│   ├── Dashboard/
-│   │   └── GetDashboard/
-│   ├── Nutrition/
-│   │   ├── CalculateCalories/
-│   │   └── SetDailyCalories/
-│   ├── Profile/
-│   │   └── UpdateFitnessProfile/
-│   ├── Users/
-│   │   ├── DeleteUser/
-│   │   ├── GetMe/
-│   │   └── UpdateUserFields/
-│   ├── WeightEntries/
-│   │   ├── DeleteWeight/
-│   │   ├── GetWeightById/
-│   │   ├── GetWeightChart/
-│   │   ├── GetWeightLogs/
-│   │   ├── GetWeightSummary/
-│   │   ├── LogWeight/
-│   │   └── Shared/
-│   └── Workouts/
-│       ├── CreateWorkout/
-│       ├── DeleteWorkout/
-│       ├── GetPagedWorkouts/
-│       ├── GetWorkoutById/
-│       ├── GetWorkoutChartData/
-│       └── GetWorkoutsOverview/
+│   ├── Auth
+│   ├── Dashboard
+│   ├── Nutrition
+│   ├── Profile
+│   ├── Users
+│   ├── WeightEntries
+│   └── Workouts
 │
 ├── Infrastructure/                # Cross-cutting concerns
 |   ├── Configuration/             # CloudinaryOptions and other settings

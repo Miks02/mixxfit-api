@@ -8,6 +8,9 @@ public class ExerciseEntry
 
     public string Name { get; set; } = null!;
     
+    public int? ExerciseId { get; set; }
+    public Exercise? Exercise { get; set; }
+    
     public ExerciseType ExerciseType { get; set; }
     public CardioType? CardioType { get; set; }
     

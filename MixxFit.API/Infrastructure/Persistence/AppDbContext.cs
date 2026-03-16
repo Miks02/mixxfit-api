@@ -20,6 +20,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.HasCollation("my_case_insensitive", locale: "en-u-ks-level2", provider: "icu", deterministic: false);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         
         base.OnModelCreating(builder);

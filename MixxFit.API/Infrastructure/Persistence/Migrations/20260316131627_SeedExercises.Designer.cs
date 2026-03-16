@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MixxFit.API.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,13 +12,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MixxFit.API.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260316131627_SeedExercises")]
+    partial class SeedExercises
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:CollationDefinition:my_case_insensitive", "en-u-ks-level2,en-u-ks-level2,icu,False")
                 .HasAnnotation("ProductVersion", "10.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -210,8 +212,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .UseCollation("my_case_insensitive");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");

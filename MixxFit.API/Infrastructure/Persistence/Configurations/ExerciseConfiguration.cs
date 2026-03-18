@@ -42,18 +42,22 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
 
     private static IReadOnlyList<Exercise> GetExercises()
     {
+        var updatedData = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc);
 
         var id = 1;
         var exercises = new List<Exercise>();
 
         Exercise E(string name, ExerciseType type, int categoryId, int muscleGroupId)
-            => new() { Id = id++, Name = name, ExerciseType = type, ExerciseCategoryId = categoryId, MuscleGroupId = muscleGroupId };
+            => new()
+            {
+                Id = id++,
+                Name = name,
+                ExerciseType = type,
+                ExerciseCategoryId = categoryId,
+                MuscleGroupId = muscleGroupId,
+                CreatedAt = updatedData
+            };
 
-        // =============================================
-        // BARBELL (CategoryId = 2) — ExerciseType.WeightLifting
-        // =============================================
-
-        // Chest (1)
         exercises.Add(E("Bench Press", ExerciseType.WeightLifting, 2, 1));
         exercises.Add(E("Incline Bench Press", ExerciseType.WeightLifting, 2, 1));
         exercises.Add(E("Decline Bench Press", ExerciseType.WeightLifting, 2, 1));
@@ -61,7 +65,6 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Floor Press", ExerciseType.WeightLifting, 2, 1));
         exercises.Add(E("Guillotine Press", ExerciseType.WeightLifting, 2, 1));
 
-        // Back (2)
         exercises.Add(E("Bent Over Row", ExerciseType.WeightLifting, 2, 2));
         exercises.Add(E("Pendlay Row", ExerciseType.WeightLifting, 2, 2));
         exercises.Add(E("T-Bar Row", ExerciseType.WeightLifting, 2, 2));
@@ -69,14 +72,12 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Rack Pull", ExerciseType.WeightLifting, 2, 2));
         exercises.Add(E("Seal Row", ExerciseType.WeightLifting, 2, 2));
 
-        // Shoulders (3)
         exercises.Add(E("Overhead Press", ExerciseType.WeightLifting, 2, 3));
         exercises.Add(E("Behind Neck Press", ExerciseType.WeightLifting, 2, 3));
         exercises.Add(E("Upright Row", ExerciseType.WeightLifting, 2, 3));
         exercises.Add(E("Front Raise", ExerciseType.WeightLifting, 2, 3));
         exercises.Add(E("Bradford Press", ExerciseType.WeightLifting, 2, 3));
 
-        // Arms (4)
         exercises.Add(E("Curl", ExerciseType.WeightLifting, 2, 4));
         exercises.Add(E("Preacher Curl", ExerciseType.WeightLifting, 2, 4));
         exercises.Add(E("Reverse Curl", ExerciseType.WeightLifting, 2, 4));
@@ -85,7 +86,6 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("EZ Bar Curl", ExerciseType.WeightLifting, 2, 4));
         exercises.Add(E("EZ Bar Skull Crusher", ExerciseType.WeightLifting, 2, 4));
 
-        // Legs (5)
         exercises.Add(E("Squat", ExerciseType.WeightLifting, 2, 5));
         exercises.Add(E("Front Squat", ExerciseType.WeightLifting, 2, 5));
         exercises.Add(E("Lunge", ExerciseType.WeightLifting, 2, 5));
@@ -96,20 +96,13 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Zercher Squat", ExerciseType.WeightLifting, 2, 5));
         exercises.Add(E("Hack Squat", ExerciseType.WeightLifting, 2, 5));
 
-        // Core (6)
         exercises.Add(E("Rollout", ExerciseType.WeightLifting, 2, 6));
         exercises.Add(E("Landmine Rotation", ExerciseType.WeightLifting, 2, 6));
 
-        // Glutes (7)
         exercises.Add(E("Hip Thrust", ExerciseType.WeightLifting, 2, 7));
         exercises.Add(E("Glute Bridge", ExerciseType.WeightLifting, 2, 7));
         exercises.Add(E("Sumo Deadlift", ExerciseType.WeightLifting, 2, 7));
 
-        // =============================================
-        // DUMBBELL (CategoryId = 3) — ExerciseType.WeightLifting
-        // =============================================
-
-        // Chest (1)
         exercises.Add(E("Bench Press", ExerciseType.WeightLifting, 3, 1));
         exercises.Add(E("Incline Bench Press", ExerciseType.WeightLifting, 3, 1));
         exercises.Add(E("Decline Bench Press", ExerciseType.WeightLifting, 3, 1));
@@ -118,7 +111,6 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Pullover", ExerciseType.WeightLifting, 3, 1));
         exercises.Add(E("Squeeze Press", ExerciseType.WeightLifting, 3, 1));
 
-        // Back (2)
         exercises.Add(E("Row", ExerciseType.WeightLifting, 3, 2));
         exercises.Add(E("Bent Over Row", ExerciseType.WeightLifting, 3, 2));
         exercises.Add(E("Reverse Fly", ExerciseType.WeightLifting, 3, 2));
@@ -127,7 +119,6 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Shrug", ExerciseType.WeightLifting, 3, 2));
         exercises.Add(E("Chest Supported Row", ExerciseType.WeightLifting, 3, 2));
 
-        // Shoulders (3)
         exercises.Add(E("Shoulder Press", ExerciseType.WeightLifting, 3, 3));
         exercises.Add(E("Arnold Press", ExerciseType.WeightLifting, 3, 3));
         exercises.Add(E("Lateral Raise", ExerciseType.WeightLifting, 3, 3));
@@ -137,7 +128,6 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Y Raise", ExerciseType.WeightLifting, 3, 3));
         exercises.Add(E("Scott Press", ExerciseType.WeightLifting, 3, 3));
 
-        // Arms (4)
         exercises.Add(E("Bicep Curl", ExerciseType.WeightLifting, 3, 4));
         exercises.Add(E("Hammer Curl", ExerciseType.WeightLifting, 3, 4));
         exercises.Add(E("Concentration Curl", ExerciseType.WeightLifting, 3, 4));
@@ -149,7 +139,6 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Zottman Curl", ExerciseType.WeightLifting, 3, 4));
         exercises.Add(E("Wrist Curl", ExerciseType.WeightLifting, 3, 4));
 
-        // Legs (5)
         exercises.Add(E("Squat", ExerciseType.WeightLifting, 3, 5));
         exercises.Add(E("Goblet Squat", ExerciseType.WeightLifting, 3, 5));
         exercises.Add(E("Lunge", ExerciseType.WeightLifting, 3, 5));
@@ -160,28 +149,20 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Calf Raise", ExerciseType.WeightLifting, 3, 5));
         exercises.Add(E("Sumo Squat", ExerciseType.WeightLifting, 3, 5));
 
-        // Core (6)
         exercises.Add(E("Russian Twist", ExerciseType.WeightLifting, 3, 6));
         exercises.Add(E("Side Bend", ExerciseType.WeightLifting, 3, 6));
         exercises.Add(E("Woodchop", ExerciseType.WeightLifting, 3, 6));
 
-        // Glutes (7)
         exercises.Add(E("Hip Thrust", ExerciseType.WeightLifting, 3, 7));
         exercises.Add(E("Glute Bridge", ExerciseType.WeightLifting, 3, 7));
         exercises.Add(E("Sumo Deadlift", ExerciseType.WeightLifting, 3, 7));
         exercises.Add(E("Frog Pump", ExerciseType.WeightLifting, 3, 7));
 
-        // =============================================
-        // CABLE (CategoryId = 11) — ExerciseType.WeightLifting
-        // =============================================
-
-        // Chest (1)
         exercises.Add(E("Chest Fly", ExerciseType.WeightLifting, 11, 1));
         exercises.Add(E("Low Chest Fly", ExerciseType.WeightLifting, 11, 1));
         exercises.Add(E("High Chest Fly", ExerciseType.WeightLifting, 11, 1));
         exercises.Add(E("Crossover", ExerciseType.WeightLifting, 11, 1));
 
-        // Back (2)
         exercises.Add(E("Seated Row", ExerciseType.WeightLifting, 11, 2));
         exercises.Add(E("Lat Pulldown", ExerciseType.WeightLifting, 11, 2));
         exercises.Add(E("Close Grip Pulldown", ExerciseType.WeightLifting, 11, 2));
@@ -191,14 +172,12 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Wide Grip Pulldown", ExerciseType.WeightLifting, 11, 2));
         exercises.Add(E("Reverse Grip Pulldown", ExerciseType.WeightLifting, 11, 2));
 
-        // Shoulders (3)
         exercises.Add(E("Lateral Raise", ExerciseType.WeightLifting, 11, 3));
         exercises.Add(E("Front Raise", ExerciseType.WeightLifting, 11, 3));
         exercises.Add(E("Rear Delt Fly", ExerciseType.WeightLifting, 11, 3));
         exercises.Add(E("Upright Row", ExerciseType.WeightLifting, 11, 3));
         exercises.Add(E("External Rotation", ExerciseType.WeightLifting, 11, 3));
 
-        // Arms (4)
         exercises.Add(E("Bicep Curl", ExerciseType.WeightLifting, 11, 4));
         exercises.Add(E("Hammer Curl", ExerciseType.WeightLifting, 11, 4));
         exercises.Add(E("Overhead Curl", ExerciseType.WeightLifting, 11, 4));
@@ -208,49 +187,37 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Reverse Curl", ExerciseType.WeightLifting, 11, 4));
         exercises.Add(E("Single Arm Curl", ExerciseType.WeightLifting, 11, 4));
 
-        // Legs (5)
         exercises.Add(E("Pull Through", ExerciseType.WeightLifting, 11, 5));
         exercises.Add(E("Leg Extension", ExerciseType.WeightLifting, 11, 5));
 
-        // Core (6)
         exercises.Add(E("Crunch", ExerciseType.WeightLifting, 11, 6));
         exercises.Add(E("Woodchop", ExerciseType.WeightLifting, 11, 6));
         exercises.Add(E("Pallof Press", ExerciseType.WeightLifting, 11, 6));
         exercises.Add(E("Reverse Crunch", ExerciseType.WeightLifting, 11, 6));
 
-        // Glutes (7)
         exercises.Add(E("Kickback", ExerciseType.WeightLifting, 11, 7));
         exercises.Add(E("Hip Abduction", ExerciseType.WeightLifting, 11, 7));
         exercises.Add(E("Hip Adduction", ExerciseType.WeightLifting, 11, 7));
 
-        // =============================================
-        // MACHINE (CategoryId = 4) — ExerciseType.WeightLifting
-        // =============================================
-
-        // Chest (1)
         exercises.Add(E("Chest Press", ExerciseType.WeightLifting, 4, 1));
         exercises.Add(E("Incline Chest Press", ExerciseType.WeightLifting, 4, 1));
         exercises.Add(E("Pec Deck Fly", ExerciseType.WeightLifting, 4, 1));
 
-        // Back (2)
         exercises.Add(E("Seated Row", ExerciseType.WeightLifting, 4, 2));
         exercises.Add(E("Lat Pulldown", ExerciseType.WeightLifting, 4, 2));
         exercises.Add(E("Assisted Pull Up", ExerciseType.WeightLifting, 4, 2));
         exercises.Add(E("Reverse Fly", ExerciseType.WeightLifting, 4, 2));
         exercises.Add(E("T-Bar Row", ExerciseType.WeightLifting, 4, 2));
 
-        // Shoulders (3)
         exercises.Add(E("Shoulder Press", ExerciseType.WeightLifting, 4, 3));
         exercises.Add(E("Lateral Raise", ExerciseType.WeightLifting, 4, 3));
         exercises.Add(E("Rear Delt Fly", ExerciseType.WeightLifting, 4, 3));
 
-        // Arms (4)
         exercises.Add(E("Bicep Curl", ExerciseType.WeightLifting, 4, 4));
         exercises.Add(E("Tricep Extension", ExerciseType.WeightLifting, 4, 4));
         exercises.Add(E("Preacher Curl", ExerciseType.WeightLifting, 4, 4));
         exercises.Add(E("Tricep Dip", ExerciseType.WeightLifting, 4, 4));
 
-        // Legs (5)
         exercises.Add(E("Leg Press", ExerciseType.WeightLifting, 4, 5));
         exercises.Add(E("Hack Squat", ExerciseType.WeightLifting, 4, 5));
         exercises.Add(E("Leg Extension", ExerciseType.WeightLifting, 4, 5));
@@ -262,48 +229,36 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Pendulum Squat", ExerciseType.WeightLifting, 4, 5));
         exercises.Add(E("V Squat", ExerciseType.WeightLifting, 4, 5));
 
-        // Core (6)
         exercises.Add(E("Ab Crunch", ExerciseType.WeightLifting, 4, 6));
         exercises.Add(E("Torso Rotation", ExerciseType.WeightLifting, 4, 6));
 
-        // Glutes (7)
         exercises.Add(E("Hip Thrust", ExerciseType.WeightLifting, 4, 7));
         exercises.Add(E("Glute Kickback", ExerciseType.WeightLifting, 4, 7));
         exercises.Add(E("Hip Abduction", ExerciseType.WeightLifting, 4, 7));
         exercises.Add(E("Hip Adduction", ExerciseType.WeightLifting, 4, 7));
 
-        // Full Body (8)
         exercises.Add(E("Smith Machine Squat", ExerciseType.WeightLifting, 4, 8));
         exercises.Add(E("Smith Machine Bench Press", ExerciseType.WeightLifting, 4, 8));
 
-        // =============================================
-        // BODYWEIGHT (CategoryId = 6) — ExerciseType.BodyWeight
-        // =============================================
-
-        // Chest (1)
         exercises.Add(E("Push Up", ExerciseType.BodyWeight, 6, 1));
         exercises.Add(E("Diamond Push Up", ExerciseType.BodyWeight, 6, 1));
         exercises.Add(E("Wide Push Up", ExerciseType.BodyWeight, 6, 1));
         exercises.Add(E("Decline Push Up", ExerciseType.BodyWeight, 6, 1));
         exercises.Add(E("Dip", ExerciseType.BodyWeight, 6, 1));
 
-        // Back (2)
         exercises.Add(E("Pull Up", ExerciseType.BodyWeight, 6, 2));
         exercises.Add(E("Chin Up", ExerciseType.BodyWeight, 6, 2));
         exercises.Add(E("Wide Grip Pull Up", ExerciseType.BodyWeight, 6, 2));
         exercises.Add(E("Inverted Row", ExerciseType.BodyWeight, 6, 2));
         exercises.Add(E("Neutral Grip Pull Up", ExerciseType.BodyWeight, 6, 2));
 
-        // Shoulders (3)
         exercises.Add(E("Pike Push Up", ExerciseType.BodyWeight, 6, 3));
         exercises.Add(E("Handstand Push Up", ExerciseType.BodyWeight, 6, 3));
 
-        // Arms (4)
         exercises.Add(E("Tricep Dip", ExerciseType.BodyWeight, 6, 4));
         exercises.Add(E("Bench Dip", ExerciseType.BodyWeight, 6, 4));
         exercises.Add(E("Close Grip Push Up", ExerciseType.BodyWeight, 6, 4));
 
-        // Legs (5)
         exercises.Add(E("Squat", ExerciseType.BodyWeight, 6, 5));
         exercises.Add(E("Lunge", ExerciseType.BodyWeight, 6, 5));
         exercises.Add(E("Pistol Squat", ExerciseType.BodyWeight, 6, 5));
@@ -312,7 +267,6 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Calf Raise", ExerciseType.BodyWeight, 6, 5));
         exercises.Add(E("Box Jump", ExerciseType.BodyWeight, 6, 5));
 
-        // Core (6)
         exercises.Add(E("Crunch", ExerciseType.BodyWeight, 6, 6));
         exercises.Add(E("Sit Up", ExerciseType.BodyWeight, 6, 6));
         exercises.Add(E("Plank", ExerciseType.BodyWeight, 6, 6));
@@ -328,29 +282,19 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Dead Bug", ExerciseType.BodyWeight, 6, 6));
         exercises.Add(E("Ab Wheel Rollout", ExerciseType.BodyWeight, 6, 6));
 
-        // Glutes (7)
         exercises.Add(E("Glute Bridge", ExerciseType.BodyWeight, 6, 7));
         exercises.Add(E("Single Leg Glute Bridge", ExerciseType.BodyWeight, 6, 7));
         exercises.Add(E("Donkey Kick", ExerciseType.BodyWeight, 6, 7));
         exercises.Add(E("Fire Hydrant", ExerciseType.BodyWeight, 6, 7));
 
-        // Full Body (8)
         exercises.Add(E("Burpee", ExerciseType.BodyWeight, 6, 8));
         exercises.Add(E("Bear Crawl", ExerciseType.BodyWeight, 6, 8));
-
-        // =============================================
-        // ASSISTED BODYWEIGHT (CategoryId = 8) — ExerciseType.WeightLifting
-        // =============================================
 
         exercises.Add(E("Pull Up", ExerciseType.WeightLifting, 8, 2));
         exercises.Add(E("Chin Up", ExerciseType.WeightLifting, 8, 2));
         exercises.Add(E("Dip", ExerciseType.WeightLifting, 8, 1));
         exercises.Add(E("Tricep Dip", ExerciseType.WeightLifting, 8, 4));
         exercises.Add(E("Pistol Squat", ExerciseType.WeightLifting, 8, 5));
-
-        // =============================================
-        // OLYMPIC (CategoryId = 10) — ExerciseType.WeightLifting
-        // =============================================
 
         exercises.Add(E("Clean", ExerciseType.WeightLifting, 10, 8));
         exercises.Add(E("Clean and Jerk", ExerciseType.WeightLifting, 10, 8));
@@ -362,10 +306,6 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Snatch Pull", ExerciseType.WeightLifting, 10, 2));
         exercises.Add(E("Thruster", ExerciseType.WeightLifting, 10, 8));
         exercises.Add(E("Overhead Squat", ExerciseType.WeightLifting, 10, 8));
-
-        // =============================================
-        // CARDIO (CategoryId = 1) — ExerciseType.Cardio
-        // =============================================
 
         exercises.Add(E("Running", ExerciseType.Cardio, 1, 8));
         exercises.Add(E("Treadmill Running", ExerciseType.Cardio, 1, 8));
@@ -383,20 +323,12 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         exercises.Add(E("Ski Erg", ExerciseType.Cardio, 1, 8));
         exercises.Add(E("Sprinting", ExerciseType.Cardio, 1, 5));
 
-        // =============================================
-        // DURATION (CategoryId = 7) — ExerciseType.Cardio
-        // =============================================
-
         exercises.Add(E("Yoga", ExerciseType.Cardio, 7, 8));
         exercises.Add(E("Pilates", ExerciseType.Cardio, 7, 6));
         exercises.Add(E("Foam Rolling", ExerciseType.Cardio, 7, 8));
         exercises.Add(E("Sauna", ExerciseType.Cardio, 7, 8));
         exercises.Add(E("Hiking", ExerciseType.Cardio, 7, 5));
         exercises.Add(E("Active Recovery Walk", ExerciseType.Cardio, 7, 8));
-
-        // =============================================
-        // STRETCHING (CategoryId = 9) — ExerciseType.Stretching
-        // =============================================
 
         exercises.Add(E("Hamstring Stretch", ExerciseType.Stretching, 9, 5));
         exercises.Add(E("Quad Stretch", ExerciseType.Stretching, 9, 5));

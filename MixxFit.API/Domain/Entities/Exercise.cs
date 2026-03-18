@@ -18,4 +18,6 @@ public class Exercise
     
     public int MuscleGroupId { get; set; }
     public MuscleGroup MuscleGroup { get; set; } = null!;
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

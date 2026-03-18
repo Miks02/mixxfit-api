@@ -1,3 +1,5 @@
+using MixxFit.API.Domain.Enums;
+
 namespace MixxFit.API.Features.Exercises.CreateExercise;
 
 public record CreateExerciseRequest

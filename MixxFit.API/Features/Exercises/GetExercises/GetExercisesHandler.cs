@@ -31,7 +31,7 @@ public class GetExercisesHandler(AppDbContext context) : IHandler
                 Name = e.Name + $" ({e.ExerciseCategory.Name})",
                 MuscleGroupName = e.MuscleGroup.Name,
                 ExerciseType = e.ExerciseType,
-                UserId = e.UserId
+                IsUserDefined = e.UserId == userId
             })
             .ToListAsync(cancellationToken);
         

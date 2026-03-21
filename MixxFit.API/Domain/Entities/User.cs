@@ -30,5 +30,7 @@ public class User : IdentityUser
     public ICollection<WeightEntry> WeightEntries { get; set; } = [];
     public ICollection<Workout> Workouts { get; set; } = [];
     public ICollection<CalorieEntry> CalorieEntries { get; set; } = [];
-
+    
+    public ICollection<Exercise> Exercises { get; set; } = [];
+    
 }

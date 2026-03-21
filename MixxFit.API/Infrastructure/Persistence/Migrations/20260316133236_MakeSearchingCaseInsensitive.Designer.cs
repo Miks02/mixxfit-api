@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MixxFit.API.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MixxFit.API.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260316133236_MakeSearchingCaseInsensitive")]
+    partial class MakeSearchingCaseInsensitive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,9 +201,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("ExerciseCategoryId")
                         .HasColumnType("integer");
 
@@ -240,7 +240,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -249,7 +248,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -258,7 +256,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -267,7 +264,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -276,7 +272,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -285,7 +280,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -294,7 +288,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -303,7 +296,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -312,7 +304,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -321,7 +312,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -330,7 +320,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 11,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -339,7 +328,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 12,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -348,7 +336,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 13,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -357,7 +344,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 14,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -366,7 +352,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 15,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -375,7 +360,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 16,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -384,7 +368,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 17,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -393,7 +376,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 18,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -402,7 +384,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 19,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -411,7 +392,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 20,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -420,7 +400,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 21,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -429,7 +408,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 22,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -438,7 +416,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 23,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -447,7 +424,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 24,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -456,7 +432,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 25,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -465,7 +440,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 26,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -474,7 +448,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 27,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -483,7 +456,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 28,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -492,7 +464,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 29,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -501,7 +472,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 30,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -510,7 +480,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 31,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -519,7 +488,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 32,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -528,7 +496,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 33,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -537,7 +504,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 34,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 6,
@@ -546,7 +512,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 35,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 6,
@@ -555,7 +520,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 36,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -564,7 +528,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 37,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -573,7 +536,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 38,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -582,7 +544,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 39,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -591,7 +552,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 40,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -600,7 +560,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 41,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -609,7 +568,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 42,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -618,7 +576,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 43,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -627,7 +584,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 44,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -636,7 +592,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 45,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -645,7 +600,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 46,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -654,7 +608,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 47,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -663,7 +616,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 48,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -672,7 +624,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 49,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -681,7 +632,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 50,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -690,7 +640,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 51,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -699,7 +648,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 52,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -708,7 +656,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 53,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -717,7 +664,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 54,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -726,7 +672,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 55,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -735,7 +680,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 56,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -744,7 +688,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 57,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -753,7 +696,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 58,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -762,7 +704,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 59,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -771,7 +712,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 60,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -780,7 +720,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 61,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -789,7 +728,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 62,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -798,7 +736,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 63,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -807,7 +744,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 64,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -816,7 +752,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 65,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -825,7 +760,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 66,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -834,7 +768,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 67,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -843,7 +776,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 68,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -852,7 +784,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 69,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -861,7 +792,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 70,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -870,7 +800,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 71,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -879,7 +808,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 72,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -888,7 +816,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 73,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -897,7 +824,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 74,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -906,7 +832,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 75,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -915,7 +840,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 76,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -924,7 +848,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 77,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -933,7 +856,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 78,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -942,7 +864,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 79,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -951,7 +872,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 80,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 6,
@@ -960,7 +880,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 81,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 6,
@@ -969,7 +888,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 82,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 6,
@@ -978,7 +896,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 83,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -987,7 +904,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 84,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -996,7 +912,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 85,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -1005,7 +920,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 86,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -1014,7 +928,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 87,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -1023,7 +936,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 88,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -1032,7 +944,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 89,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -1041,7 +952,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 90,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -1050,7 +960,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 91,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1059,7 +968,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 92,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1068,7 +976,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 93,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1077,7 +984,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 94,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1086,7 +992,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 95,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1095,7 +1000,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 96,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1104,7 +1008,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 97,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1113,7 +1016,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 98,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1122,7 +1024,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 99,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -1131,7 +1032,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 100,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -1140,7 +1040,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 101,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -1149,7 +1048,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 102,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -1158,7 +1056,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 103,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -1167,7 +1064,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 104,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1176,7 +1072,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 105,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1185,7 +1080,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 106,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1194,7 +1088,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 107,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1203,7 +1096,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 108,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1212,7 +1104,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 109,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1221,7 +1112,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 110,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1230,7 +1120,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 111,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1239,7 +1128,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 112,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1248,7 +1136,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 113,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1257,7 +1144,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 114,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 6,
@@ -1266,7 +1152,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 115,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 6,
@@ -1275,7 +1160,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 116,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 6,
@@ -1284,7 +1168,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 117,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 6,
@@ -1293,7 +1176,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 118,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -1302,7 +1184,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 119,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -1311,7 +1192,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 120,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -1320,7 +1200,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 121,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -1329,7 +1208,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 122,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -1338,7 +1216,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 123,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -1347,7 +1224,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 124,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1356,7 +1232,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 125,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1365,7 +1240,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 126,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1374,7 +1248,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 127,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1383,7 +1256,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 128,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -1392,7 +1264,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 129,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -1401,7 +1272,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 130,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -1410,7 +1280,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 131,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -1419,7 +1288,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 132,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1428,7 +1296,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 133,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1437,7 +1304,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 134,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1446,7 +1312,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 135,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -1455,7 +1320,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 136,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1464,7 +1328,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 137,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1473,7 +1336,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 138,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1482,7 +1344,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 139,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1491,7 +1352,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 140,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1500,7 +1360,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 141,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1509,7 +1368,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 142,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1518,7 +1376,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 143,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1527,7 +1384,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 144,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1536,7 +1392,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 145,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -1545,7 +1400,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 146,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 6,
@@ -1554,7 +1408,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 147,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 6,
@@ -1563,7 +1416,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 148,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -1572,7 +1424,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 149,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -1581,7 +1432,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 150,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -1590,7 +1440,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 151,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 7,
@@ -1599,7 +1448,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 152,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 8,
@@ -1608,7 +1456,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 153,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
                             ExerciseType = 1,
                             MuscleGroupId = 8,
@@ -1617,7 +1464,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 154,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 1,
@@ -1626,7 +1472,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 155,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 1,
@@ -1635,7 +1480,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 156,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 1,
@@ -1644,7 +1488,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 157,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 1,
@@ -1653,7 +1496,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 158,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 1,
@@ -1662,7 +1504,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 159,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 2,
@@ -1671,7 +1512,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 160,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 2,
@@ -1680,7 +1520,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 161,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 2,
@@ -1689,7 +1528,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 162,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 2,
@@ -1698,7 +1536,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 163,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 2,
@@ -1707,7 +1544,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 164,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 3,
@@ -1716,7 +1552,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 165,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 3,
@@ -1725,7 +1560,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 166,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 4,
@@ -1734,7 +1568,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 167,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 4,
@@ -1743,7 +1576,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 168,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 4,
@@ -1752,7 +1584,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 169,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 5,
@@ -1761,7 +1592,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 170,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 5,
@@ -1770,7 +1600,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 171,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 5,
@@ -1779,7 +1608,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 172,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 5,
@@ -1788,7 +1616,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 173,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 5,
@@ -1797,7 +1624,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 174,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 5,
@@ -1806,7 +1632,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 175,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 5,
@@ -1815,7 +1640,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 176,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1824,7 +1648,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 177,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1833,7 +1656,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 178,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1842,7 +1664,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 179,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1851,7 +1672,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 180,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1860,7 +1680,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 181,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1869,7 +1688,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 182,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1878,7 +1696,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 183,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1887,7 +1704,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 184,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1896,7 +1712,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 185,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1905,7 +1720,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 186,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1914,7 +1728,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 187,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1923,7 +1736,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 188,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1932,7 +1744,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 189,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 6,
@@ -1941,7 +1752,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 190,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 7,
@@ -1950,7 +1760,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 191,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 7,
@@ -1959,7 +1768,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 192,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 7,
@@ -1968,7 +1776,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 193,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 7,
@@ -1977,7 +1784,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 194,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 8,
@@ -1986,7 +1792,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 195,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
                             ExerciseType = 2,
                             MuscleGroupId = 8,
@@ -1995,7 +1800,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 196,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 8,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -2004,7 +1808,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 197,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 8,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -2013,7 +1816,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 198,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 8,
                             ExerciseType = 1,
                             MuscleGroupId = 1,
@@ -2022,7 +1824,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 199,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 8,
                             ExerciseType = 1,
                             MuscleGroupId = 4,
@@ -2031,7 +1832,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 200,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 8,
                             ExerciseType = 1,
                             MuscleGroupId = 5,
@@ -2040,7 +1840,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 201,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
                             ExerciseType = 1,
                             MuscleGroupId = 8,
@@ -2049,7 +1848,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 202,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
                             ExerciseType = 1,
                             MuscleGroupId = 8,
@@ -2058,7 +1856,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 203,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
                             ExerciseType = 1,
                             MuscleGroupId = 8,
@@ -2067,7 +1864,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 204,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
                             ExerciseType = 1,
                             MuscleGroupId = 8,
@@ -2076,7 +1872,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 205,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
                             ExerciseType = 1,
                             MuscleGroupId = 8,
@@ -2085,7 +1880,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 206,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
                             ExerciseType = 1,
                             MuscleGroupId = 3,
@@ -2094,7 +1888,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 207,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -2103,7 +1896,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 208,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
                             ExerciseType = 1,
                             MuscleGroupId = 2,
@@ -2112,7 +1904,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 209,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
                             ExerciseType = 1,
                             MuscleGroupId = 8,
@@ -2121,7 +1912,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 210,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
                             ExerciseType = 1,
                             MuscleGroupId = 8,
@@ -2130,7 +1920,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 211,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2139,7 +1928,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 212,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2148,7 +1936,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 213,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 5,
@@ -2157,7 +1944,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 214,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 5,
@@ -2166,7 +1952,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 215,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2175,7 +1960,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 216,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2184,7 +1968,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 217,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 5,
@@ -2193,7 +1976,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 218,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2202,7 +1984,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 219,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2211,7 +1992,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 220,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2220,7 +2000,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 221,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 5,
@@ -2229,7 +2008,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 222,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2238,7 +2016,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 223,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2247,7 +2024,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 224,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2256,7 +2032,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 225,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
                             ExerciseType = 3,
                             MuscleGroupId = 5,
@@ -2265,7 +2040,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 226,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2274,7 +2048,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 227,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
                             ExerciseType = 3,
                             MuscleGroupId = 6,
@@ -2283,7 +2056,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 228,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2292,7 +2064,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 229,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2301,7 +2072,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 230,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
                             ExerciseType = 3,
                             MuscleGroupId = 5,
@@ -2310,7 +2080,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 231,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
                             ExerciseType = 3,
                             MuscleGroupId = 8,
@@ -2319,7 +2088,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 232,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 5,
@@ -2328,7 +2096,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 233,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 5,
@@ -2337,7 +2104,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 234,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 5,
@@ -2346,7 +2112,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 235,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 1,
@@ -2355,7 +2120,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 236,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 3,
@@ -2364,7 +2128,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 237,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 4,
@@ -2373,7 +2136,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 238,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 2,
@@ -2382,7 +2144,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 239,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 5,
@@ -2391,7 +2152,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 240,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 7,
@@ -2400,7 +2160,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 241,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 3,
@@ -2409,7 +2168,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 242,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 6,
@@ -2418,7 +2176,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 243,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 2,
@@ -2427,7 +2184,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 244,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 7,
@@ -2436,7 +2192,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 245,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 5,
@@ -2445,7 +2200,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 246,
-                            CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
                             ExerciseType = 4,
                             MuscleGroupId = 6,

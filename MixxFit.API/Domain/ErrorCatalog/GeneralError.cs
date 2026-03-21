@@ -18,4 +18,7 @@ public class GeneralError
 
     public static Error LimitReached(string message = "Limit for this request has been reached")
         => new("General.LimitReached", message);
+    
+    public static Error Conflict(string message = "Conflict occurred")
+        => new("General.Conflict", message);
 }

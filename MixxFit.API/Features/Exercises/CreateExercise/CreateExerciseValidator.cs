@@ -8,9 +8,11 @@ public class CreateExerciseValidator : AbstractValidator<CreateExerciseRequest>
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithMessage("Name cannot be empty")
+            .WithMessage("Exercise name cannot be empty")
+            .MinimumLength(4)
+            .WithMessage("Exercise name must be at least 4 characters long")
             .MaximumLength(50)
-            .WithMessage("Name cannot cannot exceed 50 characters");
+            .WithMessage("Exercise name cannot cannot exceed 50 characters");
 
         RuleFor(x => x.CategoryId)
             .GreaterThan(0)

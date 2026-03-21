@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MixxFit.API.Features.Exercises.GetExercises;
@@ -5,7 +6,8 @@ namespace MixxFit.API.Features.Exercises.GetExercises;
 public record GetExercisesRequest
 {
     [FromQuery(Name = "onlyUserDefined")] 
-    public bool OnlyUserDefined { get; init; } 
+    [DefaultValue(false)]
+    public bool? OnlyUserDefined { get; init; }
     
     [FromQuery(Name = "searchTerm")]
     public string? SearchTerm { get; init; }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Common.Interfaces;
+using MixxFit.API.Features.Exercises.Shared;
 using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Features.Exercises.GetExercisesPage;
@@ -16,11 +17,12 @@ public class GetExercisesPageHandler(AppDbContext context) : IHandler
                 Id = e.Id,
                 Name = e.Name + $" ({e.ExerciseCategory.Name})",
                 MuscleGroupName = e.MuscleGroup.Name,
+                ExerciseCategoryName = e.ExerciseCategory.Name,
                 ExerciseType = e.ExerciseType,
                 IsUserDefined = e.UserId == userId
             })
             .ToListAsync(cancellationToken);
-        
+
         var muscleGroups = await context.MuscleGroups
             .Select(e => new MuscleGroupDto
             {
@@ -28,7 +30,7 @@ public class GetExercisesPageHandler(AppDbContext context) : IHandler
                 Id = e.Id
             })
             .ToListAsync(cancellationToken);
-        
+
         var exerciseCategories = await context.ExerciseCategories
             .Select(e => new ExerciseCategoryDto
             {
@@ -36,7 +38,7 @@ public class GetExercisesPageHandler(AppDbContext context) : IHandler
                 Id = e.Id
             })
             .ToListAsync(cancellationToken);
-        
+
         return new GetExercisesPageResponse
         {
             Exercises = exercises,

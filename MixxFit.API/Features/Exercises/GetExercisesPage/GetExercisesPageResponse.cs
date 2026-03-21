@@ -1,3 +1,5 @@
+using MixxFit.API.Features.Exercises.Shared;
+
 namespace MixxFit.API.Features.Exercises.GetExercisesPage;
 
 public record GetExercisesPageResponse

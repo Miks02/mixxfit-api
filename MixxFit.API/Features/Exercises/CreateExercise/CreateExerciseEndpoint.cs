@@ -2,6 +2,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using MixxFit.API.Common.Extensions;
 using MixxFit.API.Common.Interfaces;
+using MixxFit.API.Features.Exercises.Shared;
 
 namespace MixxFit.API.Features.Exercises.CreateExercise;
 
@@ -20,7 +21,7 @@ public class CreateExerciseEndpoint : IEndpoint
         })
         .WithTags("Exercises")
         .RequireAuthorization()
-        .Produces<CreateExerciseResponse>(StatusCodes.Status201Created)
+        .Produces<ExerciseDto>(StatusCodes.Status201Created)
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
     }
 }

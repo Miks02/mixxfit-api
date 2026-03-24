@@ -10,7 +10,7 @@ public class DeleteExerciseEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapDelete("/exercises/{id:int}", async (
-            [FromQuery] int id,
+            [FromRoute] int id,
             ICurrentUserProvider userProvider,
             DeleteExerciseHandler handler,
             CancellationToken cancellationToken) =>

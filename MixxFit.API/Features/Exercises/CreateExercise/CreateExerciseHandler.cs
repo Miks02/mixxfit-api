@@ -54,7 +54,7 @@ public class CreateExerciseHandler(AppDbContext context) : IHandler
         return Result<ExerciseDto>.Success(new ExerciseDto
         {
             Id = newExercise.Id,
-            Name = newExercise.Name,
+            Name = $"{newExercise.Name} ({exerciseCategoryName})",
             MuscleGroupName = muscleGroupName,
             ExerciseCategoryName = exerciseCategoryName,
             ExerciseType = newExercise.ExerciseType,

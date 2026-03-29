@@ -18,7 +18,7 @@ public static class UtilityExtensions
         return (int)timeSpan.Value.TotalMinutes;
     }
     
-    public static TimeSpan? ValidateMinutesAndSeconds(int? minutes, int? seconds)
+    public static int? ValidateMinutesAndSeconds(int? minutes, int? seconds)
     {
         if (minutes is null || seconds is null)
             return null;
@@ -26,6 +26,6 @@ public static class UtilityExtensions
         TimeSpan fromMinutes = TimeSpan.FromMinutes((double)minutes);
         TimeSpan fromSeconds = TimeSpan.FromSeconds((double)seconds);
 
-        return fromMinutes + fromSeconds;
+        return (int)fromMinutes.TotalSeconds + fromSeconds.Seconds;
     }
 }

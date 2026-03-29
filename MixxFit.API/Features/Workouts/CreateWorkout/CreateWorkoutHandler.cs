@@ -17,10 +17,10 @@ public class CreateWorkoutHandler(AppDbContext context) : IHandler
     {
         if (await IsWorkoutLimitReached(userId, cancellationToken))
             return Result<CreateWorkoutResponse>.Failure(GeneralError.LimitReached($"Workout limit has been reached for {userId}"));
-
+        
         var newWorkout = BuildWorkout(request, userId);
 
-        await context.AddAsync(newWorkout, cancellationToken);
+        context.Add(newWorkout);
         await context.SaveChangesAsync(cancellationToken);
         
         var workoutDto = ToWorkoutResponse(newWorkout);
@@ -48,24 +48,16 @@ public class CreateWorkoutHandler(AppDbContext context) : IHandler
             Notes = request.Notes,
             UserId = userId,
             WorkoutDate = request.WorkoutDate.ToUniversalTime(),
-            ExerciseEntries = request.ExerciseEntries.Select(e => new ExerciseEntry()
+            ExerciseEntries = request.ExerciseEntries.Select(e => new ExerciseEntry
             {
                 Name = e.Name,
                 ExerciseType = e.ExerciseType,
-                CardioType = e.CardioType,
-                DistanceKm = e.DistanceKm,
-                Duration = UtilityExtensions.ValidateMinutesAndSeconds(e.DurationMinutes, e.DurationSeconds),
-                AvgHeartRate = e.AvgHeartRate,
-                MaxHeartRate = e.MaxHeartRate,
-                CaloriesBurned = e.CaloriesBurned,
-                PaceMinPerKm = e.PaceMinPerKm,
-                WorkIntervalSec = e.WorkIntervalSec,
-                RestIntervalSec = e.RestIntervalSec,
-                IntervalsCount = e.IntervalsCount,
-                Sets = e.Sets.Select(s => new SetEntry()
+                Sets = e.Sets.Select(s => new SetEntry
                 {
                     Reps = s.Reps,
-                    WeightKg = s.WeightKg
+                    Weight = s.Weight,
+                    DurationSeconds = UtilityExtensions.ValidateMinutesAndSeconds(s.DurationMinutes, s.DurationSeconds),
+                    Distance = s.Distance
                 }).ToList()
             }).ToList()
         };
@@ -81,21 +73,18 @@ public class CreateWorkoutHandler(AppDbContext context) : IHandler
             UserId = workout.UserId,
             CreatedAt = workout.CreatedAt,
             WorkoutDate = workout.WorkoutDate,
-            Exercises = workout.ExerciseEntries.Select(e => new ExerciseEntryDto()
+            Exercises = workout.ExerciseEntries.Select(e => new ExerciseEntryDto
             {
                 Id = e.Id,
                 Name = e.Name,
                 ExerciseType = e.ExerciseType,
-                CardioType = e.CardioType,
-                AvgHeartRate = e.AvgHeartRate,
-                CaloriesBurned = e.CaloriesBurned,
-                DistanceKm = e.DistanceKm,
-                DurationMinutes = e.Duration.ToIntegerFromNullableMinutes(),
-                DurationSeconds = e.Duration.ToIntegerFromNullableSeconds(),
                 Sets = e.Sets.Select(s => new SetEntryDto()
                 {
                     Reps = s.Reps,
-                    WeightKg = s.WeightKg
+                    Weight = s.Weight,
+                    Distance = s.Distance,
+                    DurationMinutes = 0,
+                    DurationSeconds = 0
                 }).ToList()
             }).ToList()
         };

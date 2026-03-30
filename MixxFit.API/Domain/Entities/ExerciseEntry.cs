@@ -8,8 +8,8 @@ public class ExerciseEntry
 
     public string Name { get; set; } = null!;
     
-    public int? ExerciseId { get; set; }
-    public Exercise? Exercise { get; set; }
+    public int ExerciseId { get; set; }
+    public Exercise Exercise { get; set; } = null!;
     public ExerciseType ExerciseType { get; set; }
     
     public int WorkoutId { get; set; }

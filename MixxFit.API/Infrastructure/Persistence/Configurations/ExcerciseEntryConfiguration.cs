@@ -19,5 +19,11 @@ public class ExerciseEntryConfiguration : IEntityTypeConfiguration<ExerciseEntry
             .HasForeignKey(s => s.ExerciseEntryId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder
+            .HasOne(ee => ee.Exercise)
+            .WithMany(e => e.ExerciseEntries)
+            .HasForeignKey(ee => ee.ExerciseId)
+            .OnDelete(DeleteBehavior.Restrict);
+
     }
 }

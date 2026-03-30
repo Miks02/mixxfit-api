@@ -13,6 +13,10 @@ public class ExerciseEntryValidator : AbstractValidator<ExerciseEntryDto>
             .MaximumLength(100)
             .WithMessage("Maximum length is 100 characters");
 
+        RuleFor(x => x.ExerciseId)
+            .NotEmpty()
+            .WithMessage("Exercise ID is required");
+
         RuleFor(x => x.ExerciseType)
             .IsInEnum();
         

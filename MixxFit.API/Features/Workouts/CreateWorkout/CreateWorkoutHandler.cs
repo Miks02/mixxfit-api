@@ -83,7 +83,7 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
                 {
                     Reps = s.Reps,
                     Weight = s.Weight,
-                    DurationSeconds = UtilityExtensions.ValidateMinutesAndSeconds(s.DurationMinutes, s.DurationSeconds),
+                    DurationSeconds = s.DurationMinutes.ToTotalSeconds(s.DurationSeconds),
                     Distance = s.Distance
                 }).ToList()
             }).ToList()
@@ -110,8 +110,8 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
                     Reps = s.Reps,
                     Weight = s.Weight,
                     Distance = s.Distance,
-                    DurationMinutes = 0,
-                    DurationSeconds = 0
+                    DurationMinutes = s.DurationSeconds.ToMinutesFromSeconds(),
+                    DurationSeconds = s.DurationSeconds.ToSecondsFromRemainderMinutes()
                 }).ToList()
             }).ToList()
         };

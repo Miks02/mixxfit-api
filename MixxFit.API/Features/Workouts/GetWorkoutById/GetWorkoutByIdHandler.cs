@@ -32,22 +32,23 @@ public class GetWorkoutByIdHandler(AppDbContext context) : IHandler
             Id = w.Id,
             Name = w.Name,
             Notes = w.Notes,
-            WorkoutDate = w.WorkoutDate,
-            CreatedAt = w.CreatedAt,
             UserId = w.UserId,
-            Exercises = w.ExerciseEntries.Select(e => new ExerciseEntryDto()
+            CreatedAt = w.CreatedAt,
+            WorkoutDate = w.WorkoutDate,
+            Exercises = w.ExerciseEntries.Select(e => new ExerciseEntryDto
             {
                 Id = e.Id,
                 Name = e.Name,
                 ExerciseType = e.ExerciseType,
-                Sets = e.Sets.Select(s => new SetEntryDto()
+                Sets = e.Sets.Select(s => new SetEntryDto
                 {
                     Reps = s.Reps,
                     Weight = s.Weight,
                     Distance = s.Distance,
-                })
-            })
-
+                    DurationMinutes = s.DurationSeconds.ToMinutesFromSeconds(),
+                    DurationSeconds = s.DurationSeconds.ToSecondsFromRemainderMinutes()
+                }).ToList()
+            }).ToList()
         };
     }
 }

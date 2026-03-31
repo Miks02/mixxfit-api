@@ -24,7 +24,7 @@ public class SetEntryConfiguration : IEntityTypeConfiguration<SetEntry>
 
             t.HasCheckConstraint(
                 $"CK_SetEntries_{nameof(SetEntry.DurationSeconds)}_Positive",
-                $"\"{nameof(SetEntry.DurationSeconds)}\" IS NULL OR \"{nameof(SetEntry.DurationSeconds)}\" BETWEEN 0 AND 59");
+                $"\"{nameof(SetEntry.DurationSeconds)}\" IS NULL OR \"{nameof(SetEntry.DurationSeconds)}\" > 0");
         });
 
         builder.Property(x => x.Weight).HasColumnType("decimal(6,2)");

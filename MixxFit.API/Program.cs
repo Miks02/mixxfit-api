@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Domain.Entities;
+using MixxFit.API.Features.Workouts.CreateWorkout;
 using MixxFit.API.Infrastructure.Configuration;
 using MixxFit.API.Infrastructure.Exceptions;
 using MixxFit.API.Infrastructure.Extensions;
@@ -70,7 +71,7 @@ builder.Services.AddSingleton(cloudinary);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();
-builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+builder.Services.AddValidatorsFromAssemblyContaining<Program>(filter: descriptor => descriptor.ValidatorType != typeof(SetEntryValidator));
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
 

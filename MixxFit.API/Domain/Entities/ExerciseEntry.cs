@@ -8,28 +8,12 @@ public class ExerciseEntry
 
     public string Name { get; set; } = null!;
     
-    public int? ExerciseId { get; set; }
-    public Exercise? Exercise { get; set; }
-    
+    public int ExerciseId { get; set; }
+    public Exercise Exercise { get; set; } = null!;
     public ExerciseType ExerciseType { get; set; }
-    public CardioType? CardioType { get; set; }
     
     public int WorkoutId { get; set; }
     public Workout Workout { get; set; } = null!;
-    
-    public double? DistanceKm { get; set; }
-    public TimeSpan? Duration { get; set; }
-    
-    public int? AvgHeartRate { get; set; }
-    public int? MaxHeartRate { get; set; }
-    
-    public double? CaloriesBurned { get; set; }
-    
-    public double? PaceMinPerKm { get; set; }
-    
-    public int? WorkIntervalSec { get; set; }
-    public int? RestIntervalSec { get; set; }
-    public int? IntervalsCount { get; set; }
     
     public ICollection<SetEntry> Sets { get; set; } = [];
 

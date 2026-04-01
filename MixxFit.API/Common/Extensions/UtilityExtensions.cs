@@ -4,28 +4,18 @@ public static class UtilityExtensions
 {
     public static string ToLowerFirstLetter(this string str) => str.Substring(0, 1).ToLower() + str.Substring(1);
     
-    public static int? ToIntegerFromNullableSeconds(this TimeSpan? timeSpan)
+    public static int? ToTotalSeconds(this int? minutes, int? seconds)
     {
-        if (timeSpan is null)
-            return null;
-        return timeSpan.Value.Seconds;
+        return minutes * 60 + seconds;
     }
 
-    public static int? ToIntegerFromNullableMinutes(this TimeSpan? timeSpan)
+    public static int? ToMinutesFromSeconds(this int? seconds)
     {
-        if (timeSpan is null)
-            return null;
-        return (int)timeSpan.Value.TotalMinutes;
+        return seconds / 60;
     }
-    
-    public static TimeSpan? ValidateMinutesAndSeconds(int? minutes, int? seconds)
+
+    public static int? ToSecondsFromRemainderMinutes(this int? seconds)
     {
-        if (minutes is null || seconds is null)
-            return null;
-
-        TimeSpan fromMinutes = TimeSpan.FromMinutes((double)minutes);
-        TimeSpan fromSeconds = TimeSpan.FromSeconds((double)seconds);
-
-        return fromMinutes + fromSeconds;
+        return seconds % 60;
     }
 }

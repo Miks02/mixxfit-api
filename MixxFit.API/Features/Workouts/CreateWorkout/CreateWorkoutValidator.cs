@@ -20,7 +20,7 @@ public class CreateWorkoutValidator : AbstractValidator<CreateWorkoutRequest>
 
         RuleFor(p => p.ExerciseEntries)
             .NotEmpty().WithMessage("Exercise entries are required")
-            .Must(entries => entries.Count <= 100).WithMessage("Maximum 100 exercise entries allowed");
+            .Must(entries => entries.Count <= 100).WithMessage("Maximum of 100 exercise entries are allowed");
         
 
         RuleForEach(p => p.ExerciseEntries)

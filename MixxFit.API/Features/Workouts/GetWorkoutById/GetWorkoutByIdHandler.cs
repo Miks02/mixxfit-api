@@ -27,33 +27,28 @@ public class GetWorkoutByIdHandler(AppDbContext context) : IHandler
 
     private Expression<Func<Workout, GetWorkoutByIdResponse>> ProjectToWorkoutResponse()
     {
-        return w => new GetWorkoutByIdResponse()
+        return w => new GetWorkoutByIdResponse
         {
             Id = w.Id,
             Name = w.Name,
             Notes = w.Notes,
-            WorkoutDate = w.WorkoutDate,
-            CreatedAt = w.CreatedAt,
             UserId = w.UserId,
-            Exercises = w.ExerciseEntries.Select(e => new ExerciseEntryDto()
+            CreatedAt = w.CreatedAt,
+            WorkoutDate = w.WorkoutDate,
+            Exercises = w.ExerciseEntries.Select(e => new ExerciseEntryDto
             {
                 Id = e.Id,
                 Name = e.Name,
-                AvgHeartRate = e.AvgHeartRate,
-                MaxHeartRate = e.MaxHeartRate,
                 ExerciseType = e.ExerciseType,
-                CardioType = e.CardioType,
-                DistanceKm = e.DistanceKm,
-                DurationMinutes = e.Duration.ToIntegerFromNullableMinutes(),
-                DurationSeconds = e.Duration.ToIntegerFromNullableSeconds(),
-                CaloriesBurned = e.CaloriesBurned,
-                Sets = e.Sets.Select(s => new SetEntryDto()
+                Sets = e.Sets.Select(s => new SetEntryDto
                 {
                     Reps = s.Reps,
-                    WeightKg = s.WeightKg
-                })
-            })
-
+                    Weight = s.Weight,
+                    Distance = s.Distance,
+                    DurationMinutes = s.DurationSeconds.ToMinutesFromSeconds(),
+                    DurationSeconds = s.DurationSeconds.ToSecondsFromRemainderMinutes()
+                }).ToList()
+            }).ToList()
         };
     }
 }

@@ -10,31 +10,43 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
 {
     public void Configure(EntityTypeBuilder<Exercise> builder)
     {
-        builder.Property(p => p.Name)
+        builder
+            .Property(p => p.Name)
             .IsRequired()
             .HasMaxLength(50)
             .UseCollation("my_case_insensitive");
 
-        builder.HasIndex(p => new { p.Name, p.UserId })
+        builder
+            .HasIndex(p => new { p.Name, p.UserId })
             .IsUnique();
 
-        builder.HasIndex(p => new { p.Name, p.ExerciseCategoryId })
+        builder
+            .HasIndex(p => new { p.Name, p.ExerciseCategoryId })
             .IsUnique()
             .HasFilter("\"UserId\" IS NULL");
 
-        builder.HasOne(p => p.User)
+        builder
+            .HasOne(p => p.User)
             .WithMany(u => u.Exercises)
             .HasForeignKey(p => p.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(p => p.ExerciseCategory)
+        builder
+            .HasOne(p => p.ExerciseCategory)
             .WithMany(p => p.Exercises)
             .HasForeignKey(p => p.ExerciseCategoryId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(p => p.MuscleGroup)
+        builder
+            .HasOne(p => p.MuscleGroup)
             .WithMany(p => p.Exercises)
             .HasForeignKey(p => p.MuscleGroupId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasMany(p => p.ExerciseEntries)
+            .WithOne(ee => ee.Exercise)
+            .HasForeignKey(ee => ee.ExerciseId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasData(GetExercises());

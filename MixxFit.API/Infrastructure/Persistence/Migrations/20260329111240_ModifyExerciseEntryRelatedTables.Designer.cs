@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MixxFit.API.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MixxFit.API.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260329111240_ModifyExerciseEntryRelatedTables")]
+    partial class ModifyExerciseEntryRelatedTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2539,7 +2542,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ExerciseId")
+                    b.Property<int?>("ExerciseId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ExerciseType")
@@ -2698,7 +2701,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.Property<int?>("Reps")
                         .HasColumnType("integer");
 
-                    b.Property<decimal?>("Weight")
+                    b.Property<double?>("Weight")
                         .HasColumnType("decimal(6,2)");
 
                     b.HasKey("Id");
@@ -2709,7 +2712,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         {
                             t.HasCheckConstraint("CK_SetEntries_Distance_Positive", "\"Distance\" IS NULL OR \"Distance\" > 0");
 
-                            t.HasCheckConstraint("CK_SetEntries_DurationSeconds_Positive", "\"DurationSeconds\" IS NULL OR \"DurationSeconds\" > 0");
+                            t.HasCheckConstraint("CK_SetEntries_DurationSeconds_Positive", "\"DurationSeconds\" IS NULL OR \"DurationSeconds\" BETWEEN 0 AND 59");
 
                             t.HasCheckConstraint("CK_SetEntries_Reps_Positive", "\"Reps\" IS NULL OR \"Reps\" > 0");
 
@@ -3014,9 +3017,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("MixxFit.API.Domain.Entities.Exercise", "Exercise")
                         .WithMany("ExerciseEntries")
-                        .HasForeignKey("ExerciseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("ExerciseId");
 
                     b.HasOne("MixxFit.API.Domain.Entities.Workout", "Workout")
                         .WithMany("ExerciseEntries")

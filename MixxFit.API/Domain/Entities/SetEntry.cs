@@ -7,6 +7,9 @@ public class SetEntry
     public int ExerciseEntryId { get; set; }
     public ExerciseEntry ExerciseEntry { get; set; } = null!;
     
-    public int Reps { get; set; }
-    public double WeightKg { get; set; }
+    public int? Reps { get; set; }
+    public decimal? Weight { get; set; }
+    
+    public decimal? Distance { get; set; }
+    public int? DurationSeconds { get; set; }
 }

@@ -1,6 +1,13 @@
-using MixxFit.API.Domain.Enums;
-
 namespace MixxFit.API.Features.Workouts.GetWorkoutsOverview;
 
 public record WorkoutListItemDto
-    (int Id, string Name, DateTime WorkoutDate, int ExerciseCount, int SetCount, bool HasCardio, bool HasWeights, bool HasBodyWeight);
+{
+    public int Id { get; init; }
+    public string? Name { get; init; }
+    public DateTime WorkoutDate { get; init; }
+    public int ExerciseCount { get; init; }
+    public int SetCount { get; init; }
+    public bool HasCardio { get; init; }
+    public bool HasWeights { get; init; }
+    public bool HasBodyWeight { get; init; }
+}

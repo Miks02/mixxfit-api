@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Common.Interfaces;
-using MixxFit.API.Common.Results;
-using MixxFit.API.Domain.Entities;
 using MixxFit.API.Domain.Enums;
 using MixxFit.API.Infrastructure.Persistence;
 
@@ -14,25 +12,31 @@ public class GetWorkoutsOverviewHandler(AppDbContext context) : IHandler
         GetWorkoutsOverviewRequest request,
         CancellationToken cancellationToken)
     {
-        var pagedQuery = BuildPagedWorkoutQuery(userId, request);
+        var availableYears = await GetAvailableYearsAsync(userId, cancellationToken);
+        int? targetYear = request.Year ?? (availableYears.Count > 0 ? availableYears[0] : null);
+        var availableMonths = await GetAvailableMonthsAsync(userId, targetYear, cancellationToken);
+        int? targetMonth = null;
+        if (targetYear.HasValue)
+            targetMonth = request.Month.HasValue
+                ? (int)request.Month.Value
+                : (availableMonths.Count > 0 ? availableMonths[0] : null);
 
-        var paginatedWorkouts = await pagedQuery.ToListAsync(cancellationToken);
-        var totalPaginatedWorkouts = await pagedQuery.CountAsync(cancellationToken);
-        var totalWorkouts = await CountWorkoutsAsync(userId, request, cancellationToken);
-        
+        var workouts = await GetWorkoutListByParams(userId, request, targetYear, targetMonth, cancellationToken);
         var workoutSummary = await BuildWorkoutSummaryAsync(userId);
-        var pagedResult = new PagedResult<WorkoutListItemDto>(paginatedWorkouts, request.Page, request.PageSize, totalWorkouts, totalPaginatedWorkouts);
-        
-        return new GetWorkoutsOverviewResponse(pagedResult, workoutSummary);
+
+        return new GetWorkoutsOverviewResponse(targetYear, targetMonth, availableYears, availableMonths, workouts, workoutSummary);
     }
-    
-    private IQueryable<Workout> BuildWorkoutQuery(string userId, GetWorkoutsOverviewRequest request)
+
+    private async Task<IReadOnlyList<WorkoutListItemDto>> GetWorkoutListByParams(
+        string userId,
+        GetWorkoutsOverviewRequest request,
+        int? targetYear,
+        int? targetMonth,
+        CancellationToken cancellationToken)
     {
         var query = context.Workouts
             .AsNoTracking()
-            .Include(w => w.ExerciseEntries)
-            .Where(w => w.UserId == userId)
-            .AsQueryable();
+            .Where(w => w.UserId == userId);
 
         if (!string.IsNullOrWhiteSpace(request.Search))
             query = query.Where(w => w.Name.Contains(request.Search));
@@ -47,50 +51,51 @@ public class GetWorkoutsOverviewHandler(AppDbContext context) : IHandler
             };
         }
 
-        if (request.Date is null) 
-            return query;
-        
-        var startDate = request.Date.Value.Date;
-        var endDate = startDate.AddDays(1);
-        
-        var utcStart = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
-        var utcEnd = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
-        
-        return query.Where(w => w.WorkoutDate >= utcStart && w.WorkoutDate < utcEnd);
+        if (targetYear.HasValue)
+            query = query.Where(w => w.WorkoutDate.Year == targetYear.Value);
+
+        if (targetMonth.HasValue)
+            query = query.Where(w => w.WorkoutDate.Month == targetMonth.Value);
+
+        return await query
+            .Select(w => new WorkoutListItemDto
+            {
+                Id = w.Id,
+                Name = w.Name,
+                WorkoutDate = w.WorkoutDate,
+                ExerciseCount = w.ExerciseEntries.Count,
+                SetCount = w.ExerciseEntries.Sum(e => e.Sets.Count),
+                HasCardio = w.ExerciseEntries.Any(e => e.ExerciseType == ExerciseType.Cardio),
+                HasWeights = w.ExerciseEntries.Any(e => e.ExerciseType == ExerciseType.WeightLifting),
+                HasBodyWeight = w.ExerciseEntries.Any(e => e.ExerciseType == ExerciseType.BodyWeight)
+
+            })
+            .ToListAsync(cancellationToken);
     }
-    
-    private IQueryable<WorkoutListItemDto> BuildPagedWorkoutQuery(string userId, GetWorkoutsOverviewRequest request)
+
+    private async Task<IReadOnlyList<int>> GetAvailableYearsAsync(string userId, CancellationToken cancellationToken)
     {
-        var baseQuery = BuildWorkoutQuery(userId, request);
-
-        var paged = baseQuery
-            .Skip((request.Page - 1) * request.PageSize)
-            .Take(request.PageSize);
-
-        return paged.Select(w => new WorkoutListItemDto(
-                Id: w.Id,
-                Name: w.Name,
-                WorkoutDate: w.WorkoutDate,
-                ExerciseCount: w.ExerciseEntries.Count,
-                SetCount: w.ExerciseEntries.Sum(e => e.Sets.Count),
-                HasCardio:  w.ExerciseEntries.Any(e => e.ExerciseType == ExerciseType.Cardio),
-                HasWeights:  w.ExerciseEntries.Any(e => e.ExerciseType == ExerciseType.WeightLifting),
-                HasBodyWeight:  w.ExerciseEntries.Any(e => e.ExerciseType == ExerciseType.BodyWeight)
-            ));
+        return await context.Workouts
+            .Where(w => w.UserId == userId)
+            .Select(w => w.WorkoutDate.Year)
+            .Distinct()
+            .OrderBy(y => y)
+            .ToListAsync(cancellationToken);
     }
-    
-    private async Task<int> CountWorkoutsAsync(
-        string userId, 
-        GetWorkoutsOverviewRequest request, 
-        CancellationToken cancellationToken = default)
+
+    private async Task<IReadOnlyList<int>> GetAvailableMonthsAsync(string userId, int? year, CancellationToken cancellationToken)
     {
-        var baseQuery = BuildWorkoutQuery(userId, request);
+        if (!year.HasValue)
+            return [];
 
-        return await baseQuery
-            .Select(w => w.Id)
-            .CountAsync(cancellationToken);
+        return await context.Workouts
+            .Where(w => w.UserId == userId && w.WorkoutDate.Year == year.Value)
+            .Select(w => w.WorkoutDate.Month)
+            .Distinct()
+            .OrderBy(m => m)
+            .ToListAsync(cancellationToken);
     }
-    
+
     private async Task<WorkoutSummaryDto> BuildWorkoutSummaryAsync(string userId)
     {
         DateTime? lastWorkoutDate = await context.Workouts

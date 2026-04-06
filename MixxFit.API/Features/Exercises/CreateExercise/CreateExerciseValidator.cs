@@ -16,7 +16,9 @@ public class CreateExerciseValidator : AbstractValidator<CreateExerciseRequest>
 
         RuleFor(x => x.CategoryId)
             .GreaterThan(0)
-            .WithMessage("Category ID must be greater than 0");
+            .WithMessage("Category ID must be greater than 0")
+            .NotEqual(5)
+            .WithMessage("Category that has an ID of 5 is of type 'Other'. Which is not permitted for creating custom exercises");
 
         RuleFor(x => x.MuscleGroupId)
             .GreaterThan(0)

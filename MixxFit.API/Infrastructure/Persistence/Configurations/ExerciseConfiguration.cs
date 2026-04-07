@@ -49,6 +49,9 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
             .HasForeignKey(ee => ee.ExerciseId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder
+            .HasQueryFilter(e => e.IsDeleted == false);
+
         builder.HasData(GetExercises());
     }
 

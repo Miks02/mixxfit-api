@@ -19,7 +19,14 @@ public class UpdateExerciseHandler(AppDbContext context) : IHandler
             .FirstOrDefaultAsync(e => e.Id == request.Id && e.UserId == userId, cancellationToken);
         
         if (exerciseToUpdate is null)
-            return Result<ExerciseDto>.Failure(GeneralError.NotFound($"Exercise with id: {request.Id} has not been found"));
+            return Result<ExerciseDto>.Failure(ExerciseError.NotFound($"Exercise with id: {request.Id} has not been found"));
+        
+        var exerciseExists = await context.Exercises
+            .Where(e => e.Name == request.Name && e.UserId == userId && e.Id != request.Id)
+            .AnyAsync(cancellationToken);
+        
+        if(exerciseExists)
+            return Result<ExerciseDto>.Failure(ExerciseError.AlreadyExists());
         
         var muscleGroupName = await context.MuscleGroups
             .Where(m => m.Id == request.MuscleGroupId)

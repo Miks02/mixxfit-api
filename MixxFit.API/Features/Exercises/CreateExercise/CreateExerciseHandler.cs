@@ -21,7 +21,7 @@ public class CreateExerciseHandler(AppDbContext context) : IHandler
             .AnyAsync(cancellationToken);
 
         if(exerciseExists)
-            return Result<ExerciseDto>.Failure(GeneralError.Conflict("Exercise already exists"));
+            return Result<ExerciseDto>.Failure(ExerciseError.AlreadyExists());
 
         var muscleGroupName = await context.MuscleGroups
             .Where(m => m.Id == request.MuscleGroupId)

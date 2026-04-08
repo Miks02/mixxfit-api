@@ -22,6 +22,7 @@ public class CreateWorkoutEndpoint : IEndpoint
             .RequireAuthorization()
             .Produces<CreateWorkoutResponse>(StatusCodes.Status201Created)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status429TooManyRequests);
+            .Produces<ProblemDetails>(StatusCodes.Status429TooManyRequests)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
     }
 }

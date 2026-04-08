@@ -5,6 +5,7 @@ using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities;
 using MixxFit.API.Domain.ErrorCatalog;
+using MixxFit.API.Features.Exercises.Shared;
 using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Features.Workouts.CreateWorkout;
@@ -16,16 +17,15 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
         CreateWorkoutRequest request, 
         CancellationToken cancellationToken)
     {
-        if (await IsWorkoutLimitReached(userId, cancellationToken))
+        if (await IsWorkoutLimitReachedAsync(userId, cancellationToken))
             return Result<CreateWorkoutResponse>.Failure(GeneralError.LimitReached($"Workout limit has been reached for {userId}"));
-        
-        var invalidExerciseIds = await ValidateExerciseIds(request.ExerciseEntries, cancellationToken);
 
-        if (invalidExerciseIds.Count > 0)
-        {
-            logger.LogWarning("Invalid Exercise IDs attempted: {Ids}", string.Join(", ", invalidExerciseIds));
-            return Result<CreateWorkoutResponse>.Failure(GeneralError.NotFound("One or more exercises do not exist"));
-        }
+        var inputIds = request.ExerciseEntries
+            .Select(e => e.ExerciseId)
+            .ToHashSet();
+        
+        if (!await AreExercisesValidAsync(inputIds, cancellationToken))
+            return Result<CreateWorkoutResponse>.Failure(ExerciseError.NotFound());
         
         var newWorkout = BuildWorkout(request, userId);
         
@@ -37,7 +37,7 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
         return Result<CreateWorkoutResponse>.Success(workoutDto);
     }
     
-    private async Task<bool> IsWorkoutLimitReached(string userId, CancellationToken cancellationToken)
+    private async Task<bool> IsWorkoutLimitReachedAsync(string userId, CancellationToken cancellationToken)
     {
         var workoutsToday = await context.Workouts
             .Where(w => w.UserId == userId && w.WorkoutDate.Date == DateTime.Today.ToUniversalTime())
@@ -47,23 +47,38 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
         return workoutsToday == 5;
     }
 
-    private async Task<IReadOnlyList<int>> ValidateExerciseIds(IReadOnlyList<ExerciseEntryDto> exercises, CancellationToken cancellationToken)
+    private async Task<bool> AreExercisesValidAsync(HashSet<int> inputIds, CancellationToken cancellationToken)
     {
-        var inputIds = exercises
-            .Select(e => e.ExerciseId)
-            .Distinct()
-            .ToHashSet();
-
         var validIds = await context.Exercises
             .Where(e => inputIds.Contains(e.Id))
-            .Select(e => e.Id)
+            .Select(e => new
+            {
+                e.Id,
+                e.IsDeleted
+            })
             .ToListAsync(cancellationToken);
 
         var invalidIds = inputIds
-            .Except(validIds)
+            .Except(validIds.Select(e => e.Id))
             .ToList();
 
-        return invalidIds;
+        if (invalidIds.Count > 0)
+        {
+            logger.LogWarning("Some of the requested exercises do not exist in the system. Invalid IDs: {InvalidExerciseIds}", string.Join(", ", invalidIds));
+            return false;
+        }
+
+        var deletedExercises = validIds
+            .Where(e => e.IsDeleted)
+            .ToList();
+
+        if (deletedExercises.Count > 0)
+        {
+            logger.LogWarning("Some of the requested exercises are marked as deleted. Deleted IDs: {DeletedExerciseIds}", string.Join(", ", deletedExercises.Select(e => e.Id)));
+            return false;
+        }
+
+        return true;
     }
 
     private static Workout BuildWorkout(CreateWorkoutRequest request, string userId)

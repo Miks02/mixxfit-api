@@ -20,4 +20,6 @@ public class Exercise
     public MuscleGroup MuscleGroup { get; set; } = null!;
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    public bool IsDeleted { get; set; }
 }

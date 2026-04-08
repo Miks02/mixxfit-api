@@ -79,7 +79,7 @@ public class GetWorkoutsOverviewHandler(AppDbContext context) : IHandler
             .Where(w => w.UserId == userId)
             .Select(w => w.WorkoutDate.Year)
             .Distinct()
-            .OrderBy(y => y)
+            .OrderByDescending(y => y)
             .ToListAsync(cancellationToken);
     }
 
@@ -92,7 +92,7 @@ public class GetWorkoutsOverviewHandler(AppDbContext context) : IHandler
             .Where(w => w.UserId == userId && w.WorkoutDate.Year == year.Value)
             .Select(w => w.WorkoutDate.Month)
             .Distinct()
-            .OrderBy(m => m)
+            .OrderByDescending(m => m)
             .ToListAsync(cancellationToken);
     }
 

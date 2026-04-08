@@ -18,12 +18,13 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
 
         builder
             .HasIndex(p => new { p.Name, p.UserId })
-            .IsUnique();
+            .IsUnique()
+            .HasFilter("\"IsDeleted\" = FALSE");
 
         builder
             .HasIndex(p => new { p.Name, p.ExerciseCategoryId })
             .IsUnique()
-            .HasFilter("\"UserId\" IS NULL");
+            .HasFilter("\"UserId\" IS NULL AND \"IsDeleted\" = FALSE");
 
         builder
             .HasOne(p => p.User)
@@ -48,6 +49,9 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
             .WithOne(ee => ee.Exercise)
             .HasForeignKey(ee => ee.ExerciseId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasQueryFilter(e => e.IsDeleted == false);
 
         builder.HasData(GetExercises());
     }

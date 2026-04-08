@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MixxFit.API.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MixxFit.API.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260407184818_AddIsDeletedToExercises")]
+    partial class AddIsDeletedToExercises
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,11 +235,10 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("Name", "ExerciseCategoryId")
                         .IsUnique()
-                        .HasFilter("\"UserId\" IS NULL AND \"IsDeleted\" = FALSE");
+                        .HasFilter("\"UserId\" IS NULL");
 
                     b.HasIndex("Name", "UserId")
-                        .IsUnique()
-                        .HasFilter("\"IsDeleted\" = FALSE");
+                        .IsUnique();
 
                     b.ToTable("Exercises");
 

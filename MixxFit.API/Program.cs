@@ -20,8 +20,11 @@ using MixxFit.API.Infrastructure.Persistence;
 using MixxFit.API.Infrastructure.Security;
 using MixxFit.API.Infrastructure.Storage;
 using Scalar.AspNetCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

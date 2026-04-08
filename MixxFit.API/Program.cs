@@ -170,7 +170,6 @@ app.UseStaticFiles();
 
 app.UseForwardedHeaders();
 
-
 app.UseExceptionHandler();
 if (app.Environment.IsDevelopment())
 {
@@ -186,6 +185,17 @@ else
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseSerilogRequestLogging(options =>
+{
+    options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms (User: {UserId})";
+
+    options.EnrichDiagnosticContext = (context, httpContext) =>
+    {
+        var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Anonymous";
+        context.Set("UserId", userId);
+    };
+});
+
 app.MapEndpoints();
 
 app.MapMethods("api/health", ["GET", "HEAD"], () => new { Status = "Healthy", Date = DateTime.UtcNow });
@@ -193,5 +203,6 @@ app.MapMethods("api/health", ["GET", "HEAD"], () => new { Status = "Healthy", Da
 app.UseRateLimiter();
 
 app.UseHttpsRedirection();
+
 
 app.Run();

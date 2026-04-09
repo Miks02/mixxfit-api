@@ -4,6 +4,8 @@ using System.Text;
 using System.Threading.RateLimiting;
 using CloudinaryDotNet;
 using FluentValidation;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
@@ -163,6 +165,13 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownIPNetworks.Clear();
     options.KnownProxies.Clear();
 });
+
+builder.Services.AddHangfire((sp, config) =>
+{
+    var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("PostgresConnection");
+    config.UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString));
+});
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 

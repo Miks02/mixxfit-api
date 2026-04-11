@@ -30,37 +30,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"));
 });
-builder.Services.AddIdentity<User, IdentityRole>(options =>
-    {
-        options.Password.RequireDigit = false;
-        options.Password.RequiredLength = 6;
-        options.Password.RequireNonAlphanumeric = false;
-        options.User.RequireUniqueEmail = true;
-        options.Password.RequireLowercase = false;
-        options.Password.RequireUppercase = false;
-    })
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ClockSkew = TimeSpan.Zero,
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["JwtConfig:Audience"],
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Token"]!))
-        };
-    });
 
 var cloudinarySettings = builder.Configuration.GetSection("CloudinarySettings").Get<CloudinaryOptions>();
 var account = new Account(
@@ -72,18 +41,15 @@ var cloudinary = new Cloudinary(account);
 
 builder.Services.AddSingleton(cloudinary);
 
+builder.Services.AddScoped<IFileService, CloudinaryFileStorage>();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(filter: descriptor => descriptor.ValidatorType != typeof(SetEntryValidator));
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
 
-builder.Services.AddAuthorization();
-
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<ICookieProvider, CookieProvider>();
-builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
-builder.Services.AddScoped<IFileService, CloudinaryFileStorage>();
+builder.Services.AddSecurity(builder.Configuration);
 
 builder.Services.AddRecurringJobs();
 

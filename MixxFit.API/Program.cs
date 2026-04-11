@@ -13,10 +13,12 @@ using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Domain.Entities;
 using MixxFit.API.Features.Workouts.CreateWorkout;
 using MixxFit.API.Infrastructure.Cloudinary;
+using MixxFit.API.Infrastructure.Cors;
 using MixxFit.API.Infrastructure.Exceptions;
 using MixxFit.API.Infrastructure.Extensions;
 using MixxFit.API.Infrastructure.Hangfire;
 using MixxFit.API.Infrastructure.Persistence;
+using MixxFit.API.Infrastructure.RateLimiting;
 using MixxFit.API.Infrastructure.Security;
 using MixxFit.API.Infrastructure.Storage;
 using Scalar.AspNetCore;
@@ -39,78 +41,11 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddCloudinary(builder.Configuration);
 
-
 builder.Services.InjectHandlers();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowCors", policyBuilder =>
-    {
-        policyBuilder
-            .WithOrigins("https://localhost:4200")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-    });
+builder.Services.AddCorsPolicies();
 
-    options.AddPolicy("ProdCors", policyBuilder =>
-    {
-        policyBuilder
-            .WithOrigins("https://vitalops-web.onrender.com")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-    });
-
-});
-
-builder.Services.AddRateLimiter(options =>
-{
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-
-    options.OnRejected = async (context, token) =>
-    {
-        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-
-        var hasMetadata = context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter);
-
-        var detailMessage = hasMetadata
-            ? $"Request limit reached, try again after {retryAfter.TotalSeconds} seconds"
-            : "Request limit reached, please try again later.";
-
-        var problem = new ProblemDetails()
-        {
-            Title = "Too many requests",
-            Detail = detailMessage,
-            Status = options.RejectionStatusCode,
-            Instance = context.HttpContext.Request.Path
-        };
-
-        if (hasMetadata)
-        {
-            context.HttpContext.Response.Headers.RetryAfter = ((int)retryAfter.TotalSeconds).ToString();
-            problem.Extensions["RetryAfter"] = retryAfter.TotalSeconds;
-        }
-
-        await context.HttpContext.Response.WriteAsJsonAsync(problem, token);
-    };
-
-    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
-    {
-        var partitionKey = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (string.IsNullOrEmpty(partitionKey))
-            partitionKey = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-
-        return RateLimitPartition.GetFixedWindowLimiter(partitionKey, _ => new FixedWindowRateLimiterOptions()
-        {
-            PermitLimit = 100,
-            Window = TimeSpan.FromSeconds(45)
-        });
-
-    });
-
-});
+builder.Services.AddGlobalRateLimiter();
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {

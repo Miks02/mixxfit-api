@@ -6,7 +6,7 @@ using MixxFit.API.Domain.ErrorCatalog;
 
 namespace MixxFit.API.Infrastructure.Storage;
 
-public class CloudinaryFileStorage(Cloudinary cloudinary, ILogger<CloudinaryFileStorage> logger) : IFileService
+public class CloudinaryFileStorage(CloudinaryDotNet.Cloudinary cloudinary, ILogger<CloudinaryFileStorage> logger) : IFileService
 {
     public async Task<Result<string>> UploadFile(IFormFile file, string? uploadedFilePath, string? uploadSubDir)
     {

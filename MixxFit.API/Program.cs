@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Domain.Entities;
 using MixxFit.API.Features.Workouts.CreateWorkout;
-using MixxFit.API.Infrastructure.Configuration;
+using MixxFit.API.Infrastructure.Cloudinary;
 using MixxFit.API.Infrastructure.Exceptions;
 using MixxFit.API.Infrastructure.Extensions;
 using MixxFit.API.Infrastructure.Hangfire;
@@ -27,16 +27,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddPersistence(builder.Configuration);
-
-var cloudinarySettings = builder.Configuration.GetSection("CloudinarySettings").Get<CloudinaryOptions>();
-var account = new Account(
-    cloudinarySettings!.CloudName,
-    cloudinarySettings.ApiKey,
-    cloudinarySettings.ApiSecret
-);
-var cloudinary = new Cloudinary(account);
-
-builder.Services.AddSingleton(cloudinary);
+builder.Services.AddSecurity(builder.Configuration);
 
 builder.Services.AddScoped<IFileService, CloudinaryFileStorage>();
 
@@ -46,9 +37,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>(filter: descriptor
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
 
-builder.Services.AddSecurity(builder.Configuration);
+builder.Services.AddCloudinary(builder.Configuration);
 
-builder.Services.AddRecurringJobs();
 
 builder.Services.InjectHandlers();
 
@@ -130,6 +120,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 builder.Services.AddHangfireSetup(builder.Configuration);
+builder.Services.AddRecurringJobs();
 
 var app = builder.Build();
 

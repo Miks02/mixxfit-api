@@ -1,4 +1,4 @@
-namespace MixxFit.API.Infrastructure.Configuration;
+namespace MixxFit.API.Infrastructure.Cloudinary;
 
 public record CloudinaryOptions
 {

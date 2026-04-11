@@ -31,7 +31,6 @@ builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(conte
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddSecurity(builder.Configuration);
 
-builder.Services.AddScoped<IFileService, CloudinaryFileStorage>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();

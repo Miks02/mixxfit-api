@@ -1,4 +1,6 @@
 ﻿using CloudinaryDotNet;
+using MixxFit.API.Common.Interfaces;
+using MixxFit.API.Infrastructure.Storage;
 
 namespace MixxFit.API.Infrastructure.Cloudinary
 {
@@ -15,6 +17,7 @@ namespace MixxFit.API.Infrastructure.Cloudinary
             var cloudinary = new CloudinaryDotNet.Cloudinary(account);
 
             services.AddSingleton(cloudinary);
+            services.AddScoped<IFileService, CloudinaryFileStorage>();
         }
     }
 }

@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
@@ -16,6 +15,7 @@ using MixxFit.API.Features.Workouts.CreateWorkout;
 using MixxFit.API.Infrastructure.Configuration;
 using MixxFit.API.Infrastructure.Exceptions;
 using MixxFit.API.Infrastructure.Extensions;
+using MixxFit.API.Infrastructure.Hangfire;
 using MixxFit.API.Infrastructure.Persistence;
 using MixxFit.API.Infrastructure.Security;
 using MixxFit.API.Infrastructure.Storage;
@@ -84,6 +84,8 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICookieProvider, CookieProvider>();
 builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 builder.Services.AddScoped<IFileService, CloudinaryFileStorage>();
+
+builder.Services.AddRecurringJobs();
 
 builder.Services.InjectHandlers();
 
@@ -164,7 +166,12 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Clear();
 });
 
+builder.Services.AddHangfireSetup(builder.Configuration);
+
 var app = builder.Build();
+
+app.UseHangfireDashboardWithAuthorization();
+app.UseRecurringJobs();
 
 app.UseStaticFiles();
 

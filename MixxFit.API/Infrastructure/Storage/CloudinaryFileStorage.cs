@@ -85,9 +85,5 @@ public class CloudinaryFileStorage(CloudinaryDotNet.Cloudinary cloudinary, ILogg
         return folder != "upload" ? $"{folder}/{fileName}" : fileName;
     }
 
-    Result IFileService.DeleteFile(string filePath)
-    {
-        DeleteFile(filePath).Wait();
-        return Result.Success();
-    }
+
 }

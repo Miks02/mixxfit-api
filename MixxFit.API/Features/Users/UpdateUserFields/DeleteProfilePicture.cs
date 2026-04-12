@@ -25,7 +25,7 @@ public static class DeleteProfilePicture
             if (string.IsNullOrEmpty(user.ImagePath))
                 return Result.Failure(new Error("Resource.NotFound", "Profile image not found"));
 
-            var deleteResult = fileService.DeleteFile(user.ImagePath);
+            var deleteResult = await fileService.DeleteFile(user.ImagePath);
             
             if (!deleteResult.IsSuccess)
                 return Result.Failure(deleteResult.Errors.ToArray());

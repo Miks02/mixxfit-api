@@ -36,7 +36,7 @@ public class LocalFileStorage(IWebHostEnvironment web, ILogger<LocalFileStorage>
         var filePath = Path.Combine(uploadsDirPath, uniqueFileName);
 
         if (!string.IsNullOrEmpty(uploadedFilePath))
-            DeleteFile(uploadedFilePath);
+            await DeleteFile(uploadedFilePath);
 
         await using var fileStream = new FileStream(filePath, FileMode.Create);
         await file.CopyToAsync(fileStream);
@@ -45,7 +45,7 @@ public class LocalFileStorage(IWebHostEnvironment web, ILogger<LocalFileStorage>
 
     }
 
-    public Result DeleteFile(string filePath)
+    public Task<Result> DeleteFile(string filePath)
     {
         var oldFilePath = Path.Combine(web.WebRootPath,
             filePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
@@ -58,7 +58,7 @@ public class LocalFileStorage(IWebHostEnvironment web, ILogger<LocalFileStorage>
 
         try
         {
-            File.Delete(oldFilePath);
+             File.Delete(oldFilePath);
         }
         catch (IOException ex)
         {
@@ -66,7 +66,7 @@ public class LocalFileStorage(IWebHostEnvironment web, ILogger<LocalFileStorage>
             throw;
         }
 
-        return Result.Success();
+        return Task.FromResult(Result.Success());
     }
 
     private Result IsFileValid(IFormFile file)

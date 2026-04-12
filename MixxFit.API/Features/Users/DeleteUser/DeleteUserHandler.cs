@@ -19,7 +19,7 @@ public class DeleteUserHandler(UserManager<User> userManager, IFileService fileS
         if (user is null)
             return Result.Failure(UserError.NotFound(userId));
 
-        var deleteResult = HandleFileDeletion(user.ImagePath);
+        var deleteResult = await HandleFileDeletion(user.ImagePath);
         
         if(!deleteResult.IsSuccess)
             return deleteResult;
@@ -28,12 +28,12 @@ public class DeleteUserHandler(UserManager<User> userManager, IFileService fileS
         return result.HandleIdentityResult();
     }
     
-    private Result HandleFileDeletion(string? filePath)
+    private async Task<Result> HandleFileDeletion(string? filePath)
     {
         if(string.IsNullOrWhiteSpace(filePath))
             return Result.Success();
         
-        var deleteResult = fileService.DeleteFile(filePath);
+        var deleteResult = await fileService.DeleteFile(filePath);
         
         if(!deleteResult.IsSuccess)
             return Result.Failure(deleteResult.Errors.ToArray());

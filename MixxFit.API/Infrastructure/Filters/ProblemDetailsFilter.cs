@@ -36,6 +36,8 @@ public class ProblemDetailsFilter(ILogger<ProblemDetailsFilter> logger) : IEndpo
                 ["errorCode"] = error.Code
             }
         };
+
+        logger.LogWarning("Error occurred: {code} | {desc}", error.Code, error.Description);
         
         return TypedResults.Problem(problemDetails);
     }

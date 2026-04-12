@@ -40,7 +40,10 @@ public static class UpdateEmail
             if (user is null)
                 return Result<UpdateEmailResponse>.Failure(UserError.NotFound(userId));
 
-            user.Email = request.Email;
+            var emailResult = (await userManager.SetEmailAsync(user, request.Email)).HandleIdentityResult();
+
+            if (!emailResult.IsSuccess)
+                return Result<UpdateEmailResponse>.Failure(emailResult.Errors.ToArray());
 
             var updateResult = await userManager.UpdateAsync(user);
 

@@ -40,7 +40,7 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
     private async Task<bool> IsWorkoutLimitReachedAsync(string userId, CancellationToken cancellationToken)
     {
         var workoutsToday = await context.Workouts
-            .Where(w => w.UserId == userId && w.WorkoutDate.Date == DateTime.Today.ToUniversalTime())
+            .Where(w => w.UserId == userId && w.WorkoutDate.Date == DateTime.UtcNow.Date)
             .Select(w => w.Id)
             .CountAsync(cancellationToken);
         

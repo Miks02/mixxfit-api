@@ -15,7 +15,7 @@ public class CreateWorkoutValidator : AbstractValidator<CreateWorkoutRequest>
             .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("Workout date cannot be in the future");
 
         RuleFor(p => p.Notes)
-            .MaximumLength(500).WithMessage("Notes are too long (500 characters max)")
+            .MaximumLength(150).WithMessage("Notes are too long (150 characters max)")
             .When(p => !string.IsNullOrEmpty(p.Notes));
 
         RuleFor(p => p.ExerciseEntries)

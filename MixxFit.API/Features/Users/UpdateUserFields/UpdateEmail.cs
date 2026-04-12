@@ -44,10 +44,8 @@ public static class UpdateEmail
 
             if (!emailResult.IsSuccess)
                 return Result<UpdateEmailResponse>.Failure(emailResult.Errors.ToArray());
-
-            var updateResult = await userManager.UpdateAsync(user);
-
-            return updateResult.HandleIdentityResult(new UpdateEmailResponse(user.Email!));
+            
+            return Result<UpdateEmailResponse>.Success(new UpdateEmailResponse(user.Email!));
         }
     }
 

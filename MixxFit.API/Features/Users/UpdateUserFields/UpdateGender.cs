@@ -8,6 +8,7 @@ using MixxFit.API.Domain.Entities;
 using MixxFit.API.Domain.Enums;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Common.Extensions;
+using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Features.Users.UpdateUserFields;
 
@@ -27,14 +28,14 @@ public static class UpdateGender
         }
     }
 
-    public class UpdateGenderHandler(UserManager<User> userManager) : IHandler
+    public class UpdateGenderHandler(AppDbContext context) : IHandler
     {
         public async Task<Result<UpdateGenderResponse>> Handle(
             string userId,
             UpdateGenderRequest request, CancellationToken cancellationToken = default)
         {
-            var user = await userManager.Users
-                .Where(u => u.Id == userId)
+            var user = await context.FitnessProfiles
+                .Where(u => u.UserId == userId)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (user is null)
@@ -42,9 +43,9 @@ public static class UpdateGender
 
             user.Gender = request.Gender;
 
-            var updateResult = await userManager.UpdateAsync(user);
+            await context.SaveChangesAsync(cancellationToken);
 
-            return updateResult.HandleIdentityResult(new UpdateGenderResponse(user.Gender));
+            return Result<UpdateGenderResponse>.Success(new UpdateGenderResponse(user.Gender));
         }
     }
 

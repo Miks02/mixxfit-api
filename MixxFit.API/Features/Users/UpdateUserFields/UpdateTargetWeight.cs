@@ -7,6 +7,7 @@ using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Common.Extensions;
+using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Features.Users.UpdateUserFields;
 
@@ -25,24 +26,22 @@ public static class UpdateTargetWeight
         }
     }
 
-    public class UpdateTargetWeightHandler(UserManager<User> userManager) : IHandler
+    public class UpdateTargetWeightHandler(AppDbContext context) : IHandler
     {
         public async Task<Result<UpdateTargetWeightResponse>> Handle(
             string userId,
             UpdateTargetWeightRequest request, CancellationToken cancellationToken = default)
         {
-            var user = await userManager.Users
-                .Where(u => u.Id == userId)
+            var user = await context.FitnessProfiles
+                .Where(u => u.UserId == userId)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (user is null)
                 return Result<UpdateTargetWeightResponse>.Failure(UserError.NotFound(userId));
 
             user.TargetWeight = request.Weight;
-
-            var updateResult = await userManager.UpdateAsync(user);
-
-            return updateResult.HandleIdentityResult(new UpdateTargetWeightResponse(user.TargetWeight));
+            
+            return Result<UpdateTargetWeightResponse>.Success(new UpdateTargetWeightResponse(user.TargetWeight));
         }
     }
 

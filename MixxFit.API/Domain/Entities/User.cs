@@ -12,12 +12,6 @@ public class User : IdentityUser
     
     public string? RefreshToken { get; set; } 
     public DateTime? TokenExpDate { get; set; }
-    
-    public Gender? Gender { get; set; }
-    public double? CurrentWeight { get; set; }
-    public double? TargetWeight { get; set; }
-    public double? HeightCm { get; set; }
-    public double? DailyCalorieGoal { get; set; }
 
     public AccountStatus AccountStatus { get; set; } = AccountStatus.Active;
 

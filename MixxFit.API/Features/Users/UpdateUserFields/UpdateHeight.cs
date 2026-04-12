@@ -7,6 +7,7 @@ using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Common.Extensions;
+using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Features.Users.UpdateUserFields;
 
@@ -25,24 +26,22 @@ public static class UpdateHeight
         }
     }
 
-    public class UpdateHeightHandler(UserManager<User> userManager) : IHandler
+    public class UpdateHeightHandler(AppDbContext context) : IHandler
     {
         public async Task<Result<UpdateHeightResponse>> Handle(
             string userId,
             UpdateHeightRequest request, CancellationToken cancellationToken = default)
         {
-            var user = await userManager.Users
-                .Where(u => u.Id == userId)
+            var user = await context.FitnessProfiles
+                .Where(u => u.UserId == userId)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (user is null)
                 return Result<UpdateHeightResponse>.Failure(UserError.NotFound(userId));
 
-            user.HeightCm = request.Height;
-
-            var updateResult = await userManager.UpdateAsync(user);
-
-            return updateResult.HandleIdentityResult(new UpdateHeightResponse(user.HeightCm));
+            user.Height = request.Height;
+            
+            return Result<UpdateHeightResponse>.Success(new UpdateHeightResponse(user.Height));
         }
     }
 

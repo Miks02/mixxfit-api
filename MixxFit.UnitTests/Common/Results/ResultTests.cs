@@ -1,5 +1,5 @@
 using MixxFit.API.Common.Results;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.AspNetCore.Identity;
 using Xunit;
 

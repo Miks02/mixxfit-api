@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using MixxFit.API.Common.Results;
 
 namespace MixxFit.UnitTests.Common.Results;

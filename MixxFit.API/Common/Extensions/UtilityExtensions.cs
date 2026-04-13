@@ -2,7 +2,15 @@ namespace MixxFit.API.Common.Extensions;
 
 public static class UtilityExtensions
 {
-    public static string ToLowerFirstLetter(this string str) => str.Substring(0, 1).ToLower() + str.Substring(1);
+    public static string ToLowerFirstLetter(this string str)
+    {
+        if(string.IsNullOrWhiteSpace(str)) 
+            throw new ArgumentException("String cannot be null or empty", nameof(str));
+        
+        var trimmedStr = str.Trim();
+
+        return trimmedStr.Substring(0, 1).ToLower() + trimmedStr.Substring(1);
+    }
     
     public static int? ToTotalSeconds(this int? minutes, int? seconds)
     {
@@ -14,8 +22,8 @@ public static class UtilityExtensions
         return seconds / 60;
     }
 
-    public static int? ToSecondsFromRemainderMinutes(this int? seconds)
+    public static int? ToSecondsFromRemainderMinutes(this int? minutes)
     {
-        return seconds % 60;
+        return minutes % 60;
     }
 }

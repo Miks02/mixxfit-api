@@ -3,7 +3,7 @@ using MixxFit.API.Common.Extensions;
 
 namespace MixxFit.UnitTests.Common.Extensions;
 
-public class UtilityExtensionTests
+public class UtilityExtensionsTests
 {
     [Theory]
     [InlineData("TestTest", "testTest")]

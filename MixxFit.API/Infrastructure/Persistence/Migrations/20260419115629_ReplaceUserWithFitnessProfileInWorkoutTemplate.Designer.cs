@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MixxFit.API.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MixxFit.API.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260419115629_ReplaceUserWithFitnessProfileInWorkoutTemplate")]
+    partial class ReplaceUserWithFitnessProfileInWorkoutTemplate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3182,23 +3185,17 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.ToTable("WorkoutTemplates");
                 });
 
-            modelBuilder.Entity("MixxFit.API.Domain.Entities.WorkoutTemplateExercise", b =>
+            modelBuilder.Entity("WorkoutTemplateExercises", b =>
                 {
-                    b.Property<int>("WorkoutTemplateId")
+                    b.Property<int>("ExercisesId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ExerciseId")
+                    b.Property<int>("WorkoutTemplatesId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Order")
-                        .HasColumnType("integer");
+                    b.HasKey("ExercisesId", "WorkoutTemplatesId");
 
-                    b.Property<int>("SetCount")
-                        .HasColumnType("integer");
-
-                    b.HasKey("WorkoutTemplateId", "ExerciseId");
-
-                    b.HasIndex("ExerciseId");
+                    b.HasIndex("WorkoutTemplatesId");
 
                     b.ToTable("WorkoutTemplateExercises");
                 });
@@ -3365,30 +3362,24 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.Navigation("FitnessProfile");
                 });
 
-            modelBuilder.Entity("MixxFit.API.Domain.Entities.WorkoutTemplateExercise", b =>
+            modelBuilder.Entity("WorkoutTemplateExercises", b =>
                 {
-                    b.HasOne("MixxFit.API.Domain.Entities.Exercise", "Exercise")
-                        .WithMany("WorkoutTemplateExercises")
-                        .HasForeignKey("ExerciseId")
+                    b.HasOne("MixxFit.API.Domain.Entities.Exercise", null)
+                        .WithMany()
+                        .HasForeignKey("ExercisesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MixxFit.API.Domain.Entities.WorkoutTemplate", "WorkoutTemplate")
-                        .WithMany("WorkoutTemplateExercises")
-                        .HasForeignKey("WorkoutTemplateId")
+                    b.HasOne("MixxFit.API.Domain.Entities.WorkoutTemplate", null)
+                        .WithMany()
+                        .HasForeignKey("WorkoutTemplatesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Exercise");
-
-                    b.Navigation("WorkoutTemplate");
                 });
 
             modelBuilder.Entity("MixxFit.API.Domain.Entities.Exercise", b =>
                 {
                     b.Navigation("ExerciseEntries");
-
-                    b.Navigation("WorkoutTemplateExercises");
                 });
 
             modelBuilder.Entity("MixxFit.API.Domain.Entities.ExerciseCategory", b =>
@@ -3428,11 +3419,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("MixxFit.API.Domain.Entities.Workout", b =>
                 {
                     b.Navigation("ExerciseEntries");
-                });
-
-            modelBuilder.Entity("MixxFit.API.Domain.Entities.WorkoutTemplate", b =>
-                {
-                    b.Navigation("WorkoutTemplateExercises");
                 });
 #pragma warning restore 612, 618
         }

@@ -23,5 +23,5 @@ public class Exercise
     
     public bool IsDeleted { get; set; }
     
-    public ICollection<WorkoutTemplate> WorkoutTemplates { get; set; } = [];
+    public ICollection<WorkoutTemplateExercise> WorkoutTemplateExercises { get; set; } = [];
 }

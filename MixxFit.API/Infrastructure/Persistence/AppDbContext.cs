@@ -17,6 +17,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Exercise> Exercises { get; set; }
     public DbSet<ExerciseCategory> ExerciseCategories { get; set; }
     public DbSet<MuscleGroup> MuscleGroups { get; set; }
+    public DbSet<WorkoutTemplate> WorkoutTemplates { get; set; }
     
     protected override void OnModelCreating(ModelBuilder builder)
     {

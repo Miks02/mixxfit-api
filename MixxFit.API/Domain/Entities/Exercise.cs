@@ -22,4 +22,6 @@ public class Exercise
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public bool IsDeleted { get; set; }
+    
+    public ICollection<WorkoutTemplate> WorkoutTemplates { get; set; } = [];
 }

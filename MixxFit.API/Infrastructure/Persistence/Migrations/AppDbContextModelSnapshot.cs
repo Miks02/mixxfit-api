@@ -2822,9 +2822,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<double?>("BMI")
-                        .HasColumnType("double precision");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -3157,6 +3154,49 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.ToTable("Workouts");
                 });
 
+            modelBuilder.Entity("MixxFit.API.Domain.Entities.WorkoutTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FitnessProfileId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FitnessProfileId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("WorkoutTemplates");
+                });
+
+            modelBuilder.Entity("WorkoutTemplateExercises", b =>
+                {
+                    b.Property<int>("ExercisesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WorkoutTemplatesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ExercisesId", "WorkoutTemplatesId");
+
+                    b.HasIndex("WorkoutTemplatesId");
+
+                    b.ToTable("WorkoutTemplateExercises");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -3308,6 +3348,32 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MixxFit.API.Domain.Entities.WorkoutTemplate", b =>
+                {
+                    b.HasOne("MixxFit.API.Domain.Entities.FitnessProfile", "FitnessProfile")
+                        .WithMany("WorkoutTemplates")
+                        .HasForeignKey("FitnessProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FitnessProfile");
+                });
+
+            modelBuilder.Entity("WorkoutTemplateExercises", b =>
+                {
+                    b.HasOne("MixxFit.API.Domain.Entities.Exercise", null)
+                        .WithMany()
+                        .HasForeignKey("ExercisesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MixxFit.API.Domain.Entities.WorkoutTemplate", null)
+                        .WithMany()
+                        .HasForeignKey("WorkoutTemplatesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MixxFit.API.Domain.Entities.Exercise", b =>
                 {
                     b.Navigation("ExerciseEntries");
@@ -3321,6 +3387,11 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("MixxFit.API.Domain.Entities.ExerciseEntry", b =>
                 {
                     b.Navigation("Sets");
+                });
+
+            modelBuilder.Entity("MixxFit.API.Domain.Entities.FitnessProfile", b =>
+                {
+                    b.Navigation("WorkoutTemplates");
                 });
 
             modelBuilder.Entity("MixxFit.API.Domain.Entities.MuscleGroup", b =>

@@ -4,8 +4,8 @@ public class WorkoutTemplate
 {
     public int Id { get; set; }
 
-    public int FitnessProfileId { get; set; }
-    public FitnessProfile FitnessProfile { get; set; } = null!;
+    public int? FitnessProfileId { get; set; }
+    public FitnessProfile? FitnessProfile { get; set; }
     
     public string Name { get; set; } = null!;
     public string? Notes { get; set; }

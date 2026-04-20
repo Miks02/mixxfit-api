@@ -4,6 +4,7 @@ using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Features.Exercises.Shared;
+using MixxFit.API.Features.WorkoutTemplates.Common;
 using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Features.WorkoutTemplates.CreateTemplate;

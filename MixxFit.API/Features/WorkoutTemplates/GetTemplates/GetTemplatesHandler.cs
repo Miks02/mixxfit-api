@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Common.Interfaces;
+using MixxFit.API.Features.WorkoutTemplates.Common;
 using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Features.WorkoutTemplates.GetTemplates;

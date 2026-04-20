@@ -1,3 +1,5 @@
+using MixxFit.API.Features.WorkoutTemplates.Common;
+
 namespace MixxFit.API.Features.WorkoutTemplates.CreateTemplate;
 
 public record CreateTemplateResponse

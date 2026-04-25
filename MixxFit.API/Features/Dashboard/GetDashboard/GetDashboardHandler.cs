@@ -17,7 +17,8 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
         return new GetDashboardResponse
         {
             LastWorkoutDate = lastWorkoutDate,
-            RecentWorkouts = recentWorkouts
+            RecentWorkouts = recentWorkouts,
+            WorkoutStreak = await CalculateWorkoutStreakAsync(userId, cancellationToken)
         };
     }
     
@@ -41,7 +42,7 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
             .Where(w => w.UserId == userId)
             .OrderByDescending(w => w.WorkoutDate)
             .Take(itemsToTake)
-            .Select(w => new RecentWorkoutDto()
+            .Select(w => new RecentWorkoutDto
             {
                 Id = w.Id,
                 Name = w.Name,
@@ -54,4 +55,41 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
             })
             .ToListAsync(cancellationToken);
     }
+    
+    private async Task<int> CalculateWorkoutStreakAsync(string userId, CancellationToken cancellationToken = default)
+    {
+        var workoutDates = await context.Workouts
+            .Where(u => u.UserId == userId)
+            .Select(w => w.WorkoutDate)
+            .OrderByDescending(d => d)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        if (workoutDates.Count == 0)
+            return 0;
+        
+        var today = DateTime.UtcNow;
+        var startDate = workoutDates[0] == today 
+            ? today 
+            : today.AddDays(-1);
+        
+        if(startDate > workoutDates[0])
+            return 0;
+        
+        var streakDays = 0;
+
+        foreach (var workout in workoutDates.Take(5))
+        {
+            if (workout == startDate.AddDays(-streakDays))
+            {
+                streakDays++;
+                continue;
+            }
+
+            break;
+        }
+
+        return streakDays;
+    }
+    
 }

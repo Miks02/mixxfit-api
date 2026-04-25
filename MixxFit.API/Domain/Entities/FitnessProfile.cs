@@ -13,7 +13,8 @@ public class FitnessProfile
     public double? Weight { get; set; }
     public double? DailyCalorieGoal { get; set; }
     public double? TargetWeight { get; set; }
-    public double? BMI { get; set; }
     public DateTime? DateOfBirth { get; set; }
     public DateTime CreatedAt { get; set; }
+    
+    public ICollection<WorkoutTemplate> WorkoutTemplates { get; set; } = [];
 }

@@ -62,13 +62,12 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
             .Where(u => u.UserId == userId)
             .Select(w => w.WorkoutDate)
             .OrderByDescending(d => d)
-            .Distinct()
             .ToListAsync(cancellationToken);
 
         if (workoutDates.Count == 0)
             return 0;
         
-        var today = DateTime.UtcNow;
+        var today = DateTime.UtcNow.Date;
         var startDate = workoutDates[0] == today 
             ? today 
             : today.AddDays(-1);
@@ -77,7 +76,7 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
             return 0;
         
         var streakDays = 0;
-
+        
         foreach (var workout in workoutDates.Take(5))
         {
             if (workout == startDate.AddDays(-streakDays))
@@ -87,6 +86,7 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
             }
 
             break;
+
         }
 
         return streakDays;

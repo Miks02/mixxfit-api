@@ -60,7 +60,8 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
     {
         var workoutDates = await context.Workouts
             .Where(u => u.UserId == userId)
-            .Select(w => w.WorkoutDate)
+            .Select(w => w.WorkoutDate.Date)
+            .Distinct()
             .OrderByDescending(d => d)
             .ToListAsync(cancellationToken);
 
@@ -77,16 +78,16 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
         
         var streakDays = 0;
         
-        foreach (var workout in workoutDates.Take(5))
+        foreach (var workout in workoutDates.Take(10))
         {
+            
             if (workout == startDate.AddDays(-streakDays))
             {
                 streakDays++;
                 continue;
             }
-
+            
             break;
-
         }
 
         return streakDays;

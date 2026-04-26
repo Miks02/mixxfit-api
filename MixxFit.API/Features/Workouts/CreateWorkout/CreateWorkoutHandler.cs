@@ -88,7 +88,7 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
             Name = request.Name,
             Notes = request.Notes,
             UserId = userId,
-            WorkoutDate = request.WorkoutDate.ToUniversalTime(),
+            WorkoutDate = DateTime.SpecifyKind(request.WorkoutDate.Date, DateTimeKind.Utc),
             ExerciseEntries = request.ExerciseEntries.Select(e => new ExerciseEntry
             {
                 ExerciseId = e.ExerciseId,

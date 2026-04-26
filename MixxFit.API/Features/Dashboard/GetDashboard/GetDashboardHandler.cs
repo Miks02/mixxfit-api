@@ -9,15 +9,10 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
 {
     public async Task<GetDashboardResponse> Handle(string userId, CancellationToken cancellationToken = default)
     {
-
-        var lastWorkoutDate = await GetLastWorkoutAsync(userId, cancellationToken);
-        var recentWorkouts = await GetRecentWorkoutsAsync(userId, 10, cancellationToken);
-
-
         return new GetDashboardResponse
         {
-            LastWorkoutDate = lastWorkoutDate,
-            RecentWorkouts = recentWorkouts,
+            LastWorkoutDate = await GetLastWorkoutAsync(userId, cancellationToken),
+            RecentWorkouts = await GetRecentWorkoutsAsync(userId, 10, cancellationToken),
             WorkoutStreak = await CalculateWorkoutStreakAsync(userId, cancellationToken)
         };
     }

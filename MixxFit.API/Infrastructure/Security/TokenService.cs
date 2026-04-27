@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
-using MixxFit.API.Domain.Entities;
 using MixxFit.API.Common.Extensions;
+using MixxFit.API.Domain.Entities.Users;
 
 namespace MixxFit.API.Infrastructure.Security;
 

@@ -8,6 +8,7 @@ using MixxFit.API.Domain.Enums;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Infrastructure.Persistence;
 using MixxFit.API.Common.Extensions;
+using MixxFit.API.Domain.Entities.Users;
 
 namespace MixxFit.API.Features.Profile.UpdateFitnessProfile;
 

@@ -2,6 +2,7 @@ using System.Net;
 using Microsoft.AspNetCore.Identity;
 using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.ErrorCatalog;
+using MixxFit.API.Domain.Entities.Users;
 
 namespace MixxFit.API.Common.Extensions;
 

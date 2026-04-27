@@ -1,4 +1,6 @@
-namespace MixxFit.API.Domain.Entities;
+using MixxFit.API.Domain.Entities.ExerciseEntries;
+
+namespace MixxFit.API.Domain.Entities.SetEntries;
 
 public class SetEntry
 {

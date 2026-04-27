@@ -1,4 +1,7 @@
-namespace MixxFit.API.Domain.Entities;
+using MixxFit.API.Domain.Entities.ExerciseEntries;
+using MixxFit.API.Domain.Entities.Users;
+
+namespace MixxFit.API.Domain.Entities.Workouts;
 
 public class Workout
 {

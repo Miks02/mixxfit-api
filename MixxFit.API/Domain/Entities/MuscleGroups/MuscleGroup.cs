@@ -1,4 +1,6 @@
-namespace MixxFit.API.Domain.Entities;
+using MixxFit.API.Domain.Entities.Exercises;
+
+namespace MixxFit.API.Domain.Entities.MuscleGroups;
 
 public class MuscleGroup
 {

@@ -6,6 +6,8 @@ using MixxFit.API.Domain.Entities;
 using MixxFit.API.Features.Common;
 using MixxFit.API.Infrastructure.Persistence;
 using MixxFit.API.Common.Extensions;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
+using MixxFit.API.Domain.Entities.Users;
 
 namespace MixxFit.API.Features.Auth.Register;
 

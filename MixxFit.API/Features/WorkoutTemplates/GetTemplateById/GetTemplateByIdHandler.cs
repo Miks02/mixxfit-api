@@ -4,6 +4,7 @@ using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Features.WorkoutTemplates.Common;
 using MixxFit.API.Infrastructure.Persistence;
+using MixxFit.API.Domain.Entities.WorkoutTemplates;
 
 namespace MixxFit.API.Features.WorkoutTemplates.GetTemplateById;
 
@@ -28,7 +29,7 @@ public class GetTemplateByIdHandler(AppDbContext context) : IHandler
             .FirstOrDefaultAsync(cancellationToken);
         
         if(template is null)
-            return Result<GetTemplateByIdResponse>.Failure(GeneralError.NotFound($"Workout template with id {templateId} was not found for user {userId}"));
+            return Result<GetTemplateByIdResponse>.Failure(WorkoutTemplateError.NotFound($"Workout template with id '{templateId}' was not found for user '{userId}'"));
         
         return Result<GetTemplateByIdResponse>.Success(template);
     }

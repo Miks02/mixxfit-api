@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MixxFit.API.Domain.Entities;
+using MixxFit.API.Domain.Entities.Workouts;
 
 namespace MixxFit.API.Infrastructure.Persistence.Configurations;
 

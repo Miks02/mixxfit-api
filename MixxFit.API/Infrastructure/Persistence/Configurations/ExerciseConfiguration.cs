@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MixxFit.API.Domain.Entities;
+using MixxFit.API.Domain.Entities.Exercises;
 using MixxFit.API.Domain.Enums;
 
 namespace MixxFit.API.Infrastructure.Persistence.Configurations;

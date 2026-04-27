@@ -2,9 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities;
+using MixxFit.API.Domain.Entities.WorkoutTemplateExercises;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Features.WorkoutTemplates.Common;
 using MixxFit.API.Infrastructure.Persistence;
+using MixxFit.API.Domain.Entities.WorkoutTemplates;
 
 namespace MixxFit.API.Features.WorkoutTemplates.EditTemplate;
 
@@ -18,7 +20,7 @@ public class EditTemplateHandler(AppDbContext context) : IHandler
             .FirstOrDefaultAsync(ct);
         
         if(templateToUpdate is null)
-            return Result<EditTemplateResponse>.Failure(GeneralError.NotFound($"Workout template with id {request.Id} was not found for user {userId}"));
+            return Result<EditTemplateResponse>.Failure(WorkoutTemplateError.NotFound($"Workout template with id '{request.Id}' was not found for user '{userId}'"));
         
         templateToUpdate.Name = request.Name;
         templateToUpdate.Notes = request.Notes;

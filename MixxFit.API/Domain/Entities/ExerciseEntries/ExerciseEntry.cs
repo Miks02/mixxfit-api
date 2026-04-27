@@ -1,6 +1,9 @@
+using MixxFit.API.Domain.Entities.Exercises;
+using MixxFit.API.Domain.Entities.SetEntries;
+using MixxFit.API.Domain.Entities.Workouts;
 using MixxFit.API.Domain.Enums;
 
-namespace MixxFit.API.Domain.Entities;
+namespace MixxFit.API.Domain.Entities.ExerciseEntries;
 
 public class ExerciseEntry
 {

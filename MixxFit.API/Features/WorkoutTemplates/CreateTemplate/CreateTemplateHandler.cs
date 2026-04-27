@@ -3,9 +3,12 @@ using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities;
 using MixxFit.API.Domain.ErrorCatalog;
-using MixxFit.API.Features.Exercises.Shared;
 using MixxFit.API.Features.WorkoutTemplates.Common;
 using MixxFit.API.Infrastructure.Persistence;
+using MixxFit.API.Domain.Entities.Exercises;
+using MixxFit.API.Domain.Entities.WorkoutTemplates;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
+using MixxFit.API.Domain.Entities.WorkoutTemplateExercises;
 
 namespace MixxFit.API.Features.WorkoutTemplates.CreateTemplate;
 
@@ -19,7 +22,7 @@ public class CreateTemplateHandler(AppDbContext context) : IHandler
             .FirstOrDefaultAsync(ct);
         
         if(fitnessProfileId is null)
-            return Result<CreateTemplateResponse>.Failure(UserError.NotFound(userId));
+            return Result<CreateTemplateResponse>.Failure(FitnessProfileError.NotFound($"Fitness profile for user '{userId}' was not found"));
         
         var validationResult = await ValidateData(fitnessProfileId.Value, request, ct);
         
@@ -65,7 +68,7 @@ public class CreateTemplateHandler(AppDbContext context) : IHandler
             .CountAsync(ct);
         
         if(numberOfTemplates == 20)
-            return Result.Failure(GeneralError.LimitReached("Limit reached for new templates. Maximum allowed number of templates per user is 20"));
+            return Result.Failure(WorkoutTemplateError.LimitReached("Maximum allowed number of workout templates per user is 20"));
         
         var normalizedTemplateName = request.Name.ToLower().Trim();
 
@@ -74,12 +77,12 @@ public class CreateTemplateHandler(AppDbContext context) : IHandler
                             && wt.Name.ToLower() == normalizedTemplateName, ct);
         
         if(duplicateTemplate)
-            return Result.Failure(GeneralError.Conflict("Workout template with the same name already exists."));
+            return Result.Failure(WorkoutTemplateError.AlreadyExists("Workout template with the same name already exists"));
         
         var invalidExerciseIds = await GetInvalidExerciseIds(request.Exercises.Select(e => e.ExerciseId).ToList(), ct);
         
         if(invalidExerciseIds.Count > 0)
-            return Result.Failure(ExerciseError.NotFound("One or more requested exercises do not exist. Invalid exercises: " + string.Join(", ", invalidExerciseIds)));
+            return Result.Failure(ExerciseError.NotFound("One or more requested exercises do not exist. Invalid exercise ids: " + string.Join(", ", invalidExerciseIds)));
 
         return Result.Success();
     }

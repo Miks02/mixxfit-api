@@ -1,4 +1,7 @@
-namespace MixxFit.API.Domain.Entities;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
+using MixxFit.API.Domain.Entities.WorkoutTemplateExercises;
+
+namespace MixxFit.API.Domain.Entities.WorkoutTemplates;
 
 public class WorkoutTemplate
 {

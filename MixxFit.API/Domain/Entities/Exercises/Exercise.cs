@@ -1,6 +1,11 @@
+using MixxFit.API.Domain.Entities.ExerciseCategories;
+using MixxFit.API.Domain.Entities.ExerciseEntries;
+using MixxFit.API.Domain.Entities.MuscleGroups;
+using MixxFit.API.Domain.Entities.Users;
+using MixxFit.API.Domain.Entities.WorkoutTemplateExercises;
 using MixxFit.API.Domain.Enums;
 
-namespace MixxFit.API.Domain.Entities;
+namespace MixxFit.API.Domain.Entities.Exercises;
 
 public class Exercise
 {

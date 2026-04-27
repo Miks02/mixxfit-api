@@ -1,6 +1,8 @@
+using MixxFit.API.Domain.Entities.Users;
+using MixxFit.API.Domain.Entities.WorkoutTemplates;
 using MixxFit.API.Domain.Enums;
 
-namespace MixxFit.API.Domain.Entities;
+namespace MixxFit.API.Domain.Entities.FitnessProfiles;
 
 public class FitnessProfile
 {

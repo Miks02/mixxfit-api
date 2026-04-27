@@ -4,6 +4,8 @@ using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Infrastructure.Persistence;
+using MixxFit.API.Domain.Entities.WeightEntries;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
 
 namespace MixxFit.API.Features.WeightEntries.LogWeight;
 
@@ -17,9 +19,9 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
                 .AnyAsync(cancellationToken);
 
             if (hasLoggedWeightToday)
-                return Result<LogWeightResponse>.Failure(GeneralError.LimitReached());
+                return Result<LogWeightResponse>.Failure(WeightEntryError.LimitReached("Only one weight entry can be logged per day"));
 
-            var newEntry = new WeightEntry()
+            var newEntry = new WeightEntry
             {
                 Weight = request.Weight,
                 Time = request.Time,
@@ -39,7 +41,7 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
                 if (profile is null)
                 {
                     await transaction.RollbackAsync(cancellationToken);
-                    return Result<LogWeightResponse>.Failure(UserError.NotFound(userId));
+                    return Result<LogWeightResponse>.Failure(FitnessProfileError.NotFound($"Fitness profile for user '{userId}' was not found"));
                 }
 
                 profile.Weight = newEntry.Weight;

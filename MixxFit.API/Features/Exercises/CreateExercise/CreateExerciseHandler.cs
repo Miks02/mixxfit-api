@@ -6,6 +6,7 @@ using MixxFit.API.Domain.Enums;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Features.Exercises.Shared;
 using MixxFit.API.Infrastructure.Persistence;
+using MixxFit.API.Domain.Entities.Exercises;
 
 namespace MixxFit.API.Features.Exercises.CreateExercise;
 

@@ -2,7 +2,17 @@ using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MixxFit.API.Domain.Entities;
+using MixxFit.API.Domain.Entities.ExerciseCategories;
+using MixxFit.API.Domain.Entities.ExerciseEntries;
+using MixxFit.API.Domain.Entities.Exercises;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
+using MixxFit.API.Domain.Entities.MuscleGroups;
+using MixxFit.API.Domain.Entities.SetEntries;
+using MixxFit.API.Domain.Entities.Users;
+using MixxFit.API.Domain.Entities.WeightEntries;
+using MixxFit.API.Domain.Entities.Workouts;
+using MixxFit.API.Domain.Entities.WorkoutTemplateExercises;
+using MixxFit.API.Domain.Entities.WorkoutTemplates;
 
 namespace MixxFit.API.Infrastructure.Persistence;
 
@@ -13,7 +23,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<ExerciseEntry> ExerciseEntries { get; set; }
     public DbSet<SetEntry> SetEntries { get; set; }
     public DbSet<WeightEntry> WeightEntries { get; set; }
-    public DbSet<CalorieEntry> CalorieEntries { get; set; }
     public DbSet<Exercise> Exercises { get; set; }
     public DbSet<ExerciseCategory> ExerciseCategories { get; set; }
     public DbSet<MuscleGroup> MuscleGroups { get; set; }

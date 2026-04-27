@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using MixxFit.API.Common.Interfaces;
-using MixxFit.API.Domain.Entities;
+using MixxFit.API.Domain.Entities.Users;
 using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Infrastructure.Security

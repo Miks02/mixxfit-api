@@ -1,4 +1,6 @@
-﻿namespace MixxFit.API.Domain.Entities
+﻿using MixxFit.API.Domain.Entities.Users;
+
+namespace MixxFit.API.Domain.Entities.WeightEntries
 {
     public class WeightEntry
     {

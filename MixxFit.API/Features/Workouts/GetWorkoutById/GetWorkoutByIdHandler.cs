@@ -6,6 +6,7 @@ using MixxFit.API.Domain.Entities;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Infrastructure.Persistence;
 using MixxFit.API.Common.Extensions;
+using MixxFit.API.Domain.Entities.Workouts;
 
 namespace MixxFit.API.Features.Workouts.GetWorkoutById;
 
@@ -20,7 +21,7 @@ public class GetWorkoutByIdHandler(AppDbContext context) : IHandler
             .FirstOrDefaultAsync(cancellationToken);
 
         if (workout is null)
-            return Result<GetWorkoutByIdResponse>.Failure(GeneralError.NotFound("Requested workout was not found"));
+            return Result<GetWorkoutByIdResponse>.Failure(WorkoutError.NotFound($"Workout with id '{workoutId}' was not found for user '{userId}'"));
         
         return Result<GetWorkoutByIdResponse>.Success(workout);
     }

@@ -3,6 +3,8 @@ using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Infrastructure.Persistence;
+using MixxFit.API.Domain.Entities.WorkoutTemplates;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
 
 namespace MixxFit.API.Features.WorkoutTemplates.DeleteTemplate;
 
@@ -16,14 +18,14 @@ public class DeleteTemplateHandler(AppDbContext context) : IHandler
             .FirstOrDefaultAsync(ct);
         
         if(fitnessProfileId is null)
-            return Result.Failure(UserError.NotFound(userId));
+            return Result.Failure(FitnessProfileError.NotFound($"Fitness profile for user '{userId}' was not found"));
         
         var templateToDelete = await context.WorkoutTemplates
             .Where(wt => wt.Id == templateId && wt.FitnessProfileId == fitnessProfileId)
             .FirstOrDefaultAsync(ct);
         
         if(templateToDelete is null)
-            return Result.Failure(GeneralError.NotFound($"Workout template with id {templateId} was not found for user {userId}"));
+            return Result.Failure(WorkoutTemplateError.NotFound($"Workout template with id '{templateId}' was not found for user '{userId}'"));
 
         context.WorkoutTemplates.Remove(templateToDelete);
         await context.SaveChangesAsync(ct);

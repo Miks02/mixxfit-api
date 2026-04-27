@@ -4,6 +4,7 @@ using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Features.Exercises.Shared;
+using MixxFit.API.Domain.Entities.Exercises;
 
 namespace MixxFit.API.Features.Exercises.DeleteExercise;
 

@@ -1,6 +1,7 @@
 using MixxFit.API.Common.Results;
+using MixxFit.API.Domain.Entities.Users;
 
-namespace MixxFit.API.Domain.ErrorCatalog;
+namespace MixxFit.API.Domain.Entities.Users;
 
 public class UserError
 {
@@ -17,7 +18,7 @@ public class UserError
     {
         string message = string.IsNullOrWhiteSpace(username)
             ? "Username is taken"
-            : $"Email is {username}";
+            : $"Username '{username}' is taken";
 
         return new Error("User.UsernameAlreadyExists", message);
     }

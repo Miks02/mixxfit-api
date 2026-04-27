@@ -1,11 +1,11 @@
-using CloudinaryDotNet.Core;
 using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Common.Extensions;
 using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
-using MixxFit.API.Domain.Entities;
-using MixxFit.API.Domain.ErrorCatalog;
-using MixxFit.API.Features.Exercises.Shared;
+using MixxFit.API.Domain.Entities.ExerciseEntries;
+using MixxFit.API.Domain.Entities.Exercises;
+using MixxFit.API.Domain.Entities.SetEntries;
+using MixxFit.API.Domain.Entities.Workouts;
 using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Features.Workouts.CreateWorkout;
@@ -18,7 +18,7 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
         CancellationToken cancellationToken)
     {
         if (await IsWorkoutLimitReachedAsync(userId, cancellationToken))
-            return Result<CreateWorkoutResponse>.Failure(GeneralError.LimitReached($"Workout limit has been reached for {userId}"));
+            return Result<CreateWorkoutResponse>.Failure(WorkoutError.LimitReached($"Workout limit has been reached for user '{userId}'"));
 
         var inputIds = request.ExerciseEntries
             .Select(e => e.ExerciseId)

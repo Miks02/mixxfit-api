@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MixxFit.API.Domain.Entities;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
+using MixxFit.API.Domain.Entities.Users;
 
 namespace MixxFit.API.Infrastructure.Persistence.Configurations;
 
@@ -51,12 +52,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMany(u => u.Workouts)
             .WithOne(w => w.User)
             .HasForeignKey(w => w.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder
-            .HasMany(u => u.CalorieEntries)
-            .WithOne(c => c.User)
-            .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder

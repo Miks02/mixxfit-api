@@ -19,6 +19,7 @@ public class GetTemplateByIdHandler(AppDbContext context) : IHandler
                 Id = wt.Id,
                 Name = wt.Name,
                 Notes = wt.Notes,
+                IsSystem = wt.FitnessProfileId == null,
                 Exercises = wt.WorkoutTemplateExercises.Select(wte => new TemplateExerciseDto
                 {
                     ExerciseId = wte.ExerciseId,

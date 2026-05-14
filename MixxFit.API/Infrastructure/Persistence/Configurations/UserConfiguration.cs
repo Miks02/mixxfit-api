@@ -49,12 +49,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
-            .HasMany(u => u.Workouts)
-            .WithOne(w => w.User)
-            .HasForeignKey(w => w.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder
             .HasMany(w => w.WeightEntries)
             .WithOne(w => w.User)
             .HasForeignKey(w => w.UserId)

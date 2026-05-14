@@ -10,9 +10,6 @@ public class Workout
     public string Name { get; set; } = null!;
 
     public string? Notes { get; set; }
-
-    public string UserId { get; set; } = null!;
-    public virtual User User { get; set; } = null!;
     
     public FitnessProfile FitnessProfile { get; set; }
     public int FitnessProfileId { get; set; }

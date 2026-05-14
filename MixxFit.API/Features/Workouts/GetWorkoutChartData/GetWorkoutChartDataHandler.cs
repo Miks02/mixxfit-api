@@ -12,7 +12,7 @@ public class GetWorkoutChartDataHandler(AppDbContext context) : IHandler
         CancellationToken cancellationToken)
     {
         var years = await context.Workouts
-            .Where(w => w.UserId == userId)
+            .Where(w => w.FitnessProfile.UserId == userId)
             .Select(w => w.WorkoutDate.Year)
             .Distinct()
             .OrderByDescending(w => w)
@@ -21,7 +21,7 @@ public class GetWorkoutChartDataHandler(AppDbContext context) : IHandler
         var selectedYear = request.Year ?? await GetLastWorkoutYearAsync(userId, cancellationToken);
         
         var stats = await context.Workouts
-            .Where(w => w.UserId == userId && w.WorkoutDate.Year == selectedYear)
+            .Where(w => w.FitnessProfile.UserId == userId && w.WorkoutDate.Year == selectedYear)
             .GroupBy(w => w.WorkoutDate.Month)
             .Select(g => new { Month = g.Key, Count = g.Count() })
             .ToListAsync(cancellationToken);
@@ -47,7 +47,7 @@ public class GetWorkoutChartDataHandler(AppDbContext context) : IHandler
     private async Task<int?> GetLastWorkoutYearAsync(string userId, CancellationToken cancellationToken)
     {
         return await context.Workouts
-            .Where(w => w.UserId == userId)
+            .Where(w => w.FitnessProfile.UserId == userId)
             .Select(w => (int?)w.WorkoutDate.Year) 
             .MaxAsync(cancellationToken);
     }

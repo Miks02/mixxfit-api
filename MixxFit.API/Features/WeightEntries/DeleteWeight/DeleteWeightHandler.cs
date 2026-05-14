@@ -13,7 +13,7 @@ public class DeleteWeightHandler(AppDbContext context, ILogger<DeleteWeightHandl
     public async Task<Result> Handle(string userId, int id, CancellationToken cancellationToken)
     {
         var entry = await context.WeightEntries
-            .Where(w => w.Id == id && w.UserId == userId)
+            .Where(w => w.Id == id && w.FitnessProfile.UserId == userId)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (entry is null)

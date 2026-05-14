@@ -17,7 +17,7 @@ public static class DeleteWorkout
         public async Task<Result> Handle(string userId, int workoutId, CancellationToken cancellationToken)
         {
             var deleted = await context.Workouts
-                .Where(w => w.Id == workoutId && w.UserId == userId)
+                .Where(w => w.Id == workoutId && w.FitnessProfile.UserId == userId)
                 .ExecuteDeleteAsync(cancellationToken);
 
             if (deleted == 0)

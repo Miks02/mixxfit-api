@@ -10,8 +10,8 @@ public class Workout
     public string Name { get; set; } = null!;
 
     public string? Notes { get; set; }
-    
-    public FitnessProfile FitnessProfile { get; set; }
+
+    public FitnessProfile FitnessProfile { get; set; } = null!;
     public int FitnessProfileId { get; set; }
 
     public DateTime WorkoutDate { get; set; } = DateTime.UtcNow;

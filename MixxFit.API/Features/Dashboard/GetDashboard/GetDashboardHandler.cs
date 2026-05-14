@@ -21,7 +21,7 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
     {
         return await context.Workouts
             .OrderByDescending(w => w.WorkoutDate)
-            .Where(w => w.FitnessProfile.UserId == userId)
+            .Where(w => w.FitnessProfile!.UserId == userId)
             .Select(w => (DateTime?)w.WorkoutDate)
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -34,7 +34,7 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
         }
 
         return await context.Workouts
-            .Where(w => w.FitnessProfile.UserId == userId)
+            .Where(w => w.FitnessProfile!.UserId == userId)
             .OrderByDescending(w => w.WorkoutDate)
             .Take(itemsToTake)
             .Select(w => new RecentWorkoutDto
@@ -54,7 +54,7 @@ public class GetDashboardHandler(AppDbContext context) : IHandler
     private async Task<int> CalculateWorkoutStreakAsync(string userId, CancellationToken cancellationToken = default)
     {
         var workoutDates = await context.Workouts
-            .Where(u => u.FitnessProfile.UserId == userId)
+            .Where(u => u.FitnessProfile!.UserId == userId)
             .Select(w => w.WorkoutDate.Date)
             .Distinct()
             .OrderByDescending(d => d)

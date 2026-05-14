@@ -1,4 +1,7 @@
+using MixxFit.API.Domain.Entities.Exercises;
 using MixxFit.API.Domain.Entities.Users;
+using MixxFit.API.Domain.Entities.WeightEntries;
+using MixxFit.API.Domain.Entities.Workouts;
 using MixxFit.API.Domain.Entities.WorkoutTemplates;
 using MixxFit.API.Domain.Enums;
 
@@ -19,4 +22,7 @@ public class FitnessProfile
     public DateTime CreatedAt { get; set; }
     
     public ICollection<WorkoutTemplate> WorkoutTemplates { get; set; } = [];
+    public ICollection<WeightEntry> WeightEntries { get; set; } = [];
+    public ICollection<Workout> Workouts { get; set; } = [];
+    public ICollection<Exercise> Exercises { get; set; } = [];
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MixxFit.API.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MixxFit.API.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260514174720_MoveSpecificUserPropertiesToFitnessProfile")]
+    partial class MoveSpecificUserPropertiesToFitnessProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2965,7 +2968,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -2976,7 +2978,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -3455,7 +3456,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int>("FitnessProfileId")
+                    b.Property<int?>("FitnessProfileId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -3567,10 +3568,9 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MixxFit.API.Domain.Entities.FitnessProfiles.FitnessProfile", "FitnessProfile")
+                    b.HasOne("MixxFit.API.Domain.Entities.FitnessProfiles.FitnessProfile", null)
                         .WithMany("Exercises")
-                        .HasForeignKey("FitnessProfileId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("FitnessProfileId");
 
                     b.HasOne("MixxFit.API.Domain.Entities.MuscleGroups.MuscleGroup", "MuscleGroup")
                         .WithMany("Exercises")
@@ -3584,8 +3584,6 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ExerciseCategory");
-
-                    b.Navigation("FitnessProfile");
 
                     b.Navigation("MuscleGroup");
 
@@ -3664,19 +3662,15 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MixxFit.API.Domain.Entities.Workouts.Workout", b =>
                 {
-                    b.HasOne("MixxFit.API.Domain.Entities.FitnessProfiles.FitnessProfile", "FitnessProfile")
+                    b.HasOne("MixxFit.API.Domain.Entities.FitnessProfiles.FitnessProfile", null)
                         .WithMany("Workouts")
-                        .HasForeignKey("FitnessProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FitnessProfileId");
 
                     b.HasOne("MixxFit.API.Domain.Entities.Users.User", "User")
                         .WithMany("Workouts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("FitnessProfile");
 
                     b.Navigation("User");
                 });

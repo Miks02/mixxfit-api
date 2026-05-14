@@ -1,5 +1,6 @@
 using MixxFit.API.Domain.Entities.ExerciseCategories;
 using MixxFit.API.Domain.Entities.ExerciseEntries;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
 using MixxFit.API.Domain.Entities.MuscleGroups;
 using MixxFit.API.Domain.Entities.Users;
 using MixxFit.API.Domain.Entities.WorkoutTemplateExercises;
@@ -15,6 +16,9 @@ public class Exercise
     
     public string? UserId { get; set; } 
     public User? User { get; set; }
+    
+    public FitnessProfile? FitnessProfile { get; set; }
+    public int? FitnessProfileId { get; set; }
     
     public ICollection<ExerciseEntry> ExerciseEntries { get; set; } = [];
     

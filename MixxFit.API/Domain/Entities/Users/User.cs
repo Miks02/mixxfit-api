@@ -20,7 +20,6 @@ public class User : IdentityUser
     public AccountStatus AccountStatus { get; set; } = AccountStatus.Active;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime? DateOfBirth { get; set; }
 
     public FitnessProfile FitnessProfile { get; set; } = null!;
     public int FitnessProfileId { get; set; }

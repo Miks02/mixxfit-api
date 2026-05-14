@@ -25,6 +25,5 @@ public class User : IdentityUser
     public int FitnessProfileId { get; set; }
 
     public ICollection<WeightEntry> WeightEntries { get; set; } = [];
-    public ICollection<Exercise> Exercises { get; set; } = [];
     
 }

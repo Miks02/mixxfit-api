@@ -14,9 +14,6 @@ public class Exercise
     public string Name { get; set; } = null!;
     public ExerciseType ExerciseType { get; set; }
     
-    public string? UserId { get; set; } 
-    public User? User { get; set; }
-    
     public FitnessProfile? FitnessProfile { get; set; }
     public int? FitnessProfileId { get; set; }
     

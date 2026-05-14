@@ -13,8 +13,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         CancellationToken cancellationToken)
     {
         var hasEntries = await context.WeightEntries
-            .AsNoTracking()
-            .Where(w => w.UserId == userId)
+            .Where(w => w.FitnessProfile!.UserId == userId)
             .AnyAsync(cancellationToken);
 
         if (!hasEntries)
@@ -33,7 +32,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         }
 
         var firstWeightEntry = await context.WeightEntries
-            .Where(w => w.UserId == userId)
+            .Where(w => w.FitnessProfile!.UserId == userId)
             .Select(w => new WeightRecordDto()
             {
                 Weight = w.Weight,
@@ -42,7 +41,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
             .FirstOrDefaultAsync(cancellationToken);
         
         var lastWeightEntry = await context.WeightEntries
-            .Where(w => w.UserId == userId)
+            .Where(w => w.FitnessProfile!.UserId == userId)
             .OrderByDescending(w => w.CreatedAt)
             .Select(w => new WeightRecordDto()
             {
@@ -81,15 +80,14 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         CancellationToken cancellationToken)
     {
         return await context.WeightEntries
-            .AsNoTracking()
-            .Where(w => w.UserId == userId)
+            .Where(w => w.FitnessProfile!.UserId == userId)
             .Select(w => w.CreatedAt.Year)
             .Distinct()
             .OrderByDescending(w => w)
             .ToListAsync(cancellationToken);
     }
     
-    public async Task<WeightListDetails> GetWeightLogsAsync(
+    private async Task<WeightListDetails> GetWeightLogsAsync(
         string userId,
         int? month = null,
         int? year = null,
@@ -103,7 +101,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         };
     }
     
-    public async Task<WeightChartDto> GetWeightChartAsync(
+    private async Task<WeightChartDto> GetWeightChartAsync(
         string userId,
         double? targetWeight,
         CancellationToken cancellationToken = default)
@@ -111,7 +109,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
 
         var entries = await context.WeightEntries
             .AsNoTracking()
-            .Where(w => w.UserId == userId)
+            .Where(w => w.FitnessProfile!.UserId == userId)
             .OrderByDescending(w => w.CreatedAt)
             .Select(w => new WeightRecordDto()
             {
@@ -138,7 +136,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
     {
         return await context.WeightEntries
             .AsNoTracking()
-            .Where(w => w.UserId == userId && w.CreatedAt.Year == year)
+            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Year == year)
             .Select(w => w.CreatedAt.Month)
             .Distinct()
             .OrderByDescending(w => w)
@@ -149,7 +147,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
     {
         return await context.WeightEntries
             .AsNoTracking()
-            .Where(w => w.UserId == userId && w.CreatedAt.Year == year)
+            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Year == year)
             .MaxAsync(w => (int?)w.CreatedAt.Month, cancellationToken);
     }
     
@@ -162,7 +160,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         var query = context.WeightEntries
             .AsNoTracking()
             .OrderByDescending(w => w.CreatedAt)
-            .Where(w => w.UserId == userId)
+            .Where(w => w.FitnessProfile!.UserId == userId)
             .Select(w => new WeightRecordDto()
             {
                 Id = w.Id,

@@ -1,5 +1,4 @@
 ﻿using MixxFit.API.Domain.Entities.FitnessProfiles;
-using MixxFit.API.Domain.Entities.Users;
 
 namespace MixxFit.API.Domain.Entities.WeightEntries
 {
@@ -7,8 +6,8 @@ namespace MixxFit.API.Domain.Entities.WeightEntries
     {
         public int Id { get; set; }
 
-        public string UserId { get; set; } = null!;
-        public User User { get; set; } = null!;
+        public int FitnessProfileId { get; set; }
+        public FitnessProfile? FitnessProfile { get; set; }
 
         public double Weight { get; set; }
         public TimeSpan Time { get; set; }
@@ -16,8 +15,5 @@ namespace MixxFit.API.Domain.Entities.WeightEntries
         public string? Notes { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        
-        public int FitnessProfileId { get; set; }
-        public FitnessProfile? FitnessProfile { get; set; }
     }
 }

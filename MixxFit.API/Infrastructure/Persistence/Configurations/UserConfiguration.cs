@@ -47,12 +47,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .WithOne(f => f.User)
             .HasForeignKey<FitnessProfile>(f => f.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder
-            .HasMany(w => w.WeightEntries)
-            .WithOne(w => w.User)
-            .HasForeignKey(w => w.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
         
     }
 }

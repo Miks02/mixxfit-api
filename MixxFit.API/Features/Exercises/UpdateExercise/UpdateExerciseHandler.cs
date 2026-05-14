@@ -6,6 +6,7 @@ using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Features.Exercises.Shared;
 using MixxFit.API.Infrastructure.Persistence;
 using MixxFit.API.Domain.Entities.Exercises;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
 
 namespace MixxFit.API.Features.Exercises.UpdateExercise;
 
@@ -16,14 +17,23 @@ public class UpdateExerciseHandler(AppDbContext context) : IHandler
         UpdateExerciseRequest request, 
         CancellationToken cancellationToken)
     {
+        var fitnessProfile = await context.FitnessProfiles
+            .AsNoTracking()
+            .FirstOrDefaultAsync(fp => fp.UserId == userId, cancellationToken);
+
+        if (fitnessProfile is null)
+        {
+            return Result<ExerciseDto>.Failure(FitnessProfileError.NotFound());
+        }
+        
         var exerciseToUpdate = await context.Exercises
-            .FirstOrDefaultAsync(e => e.Id == request.Id && e.UserId == userId, cancellationToken);
+            .FirstOrDefaultAsync(e => e.Id == request.Id && e.FitnessProfileId == fitnessProfile.Id, cancellationToken);
         
         if (exerciseToUpdate is null)
             return Result<ExerciseDto>.Failure(ExerciseError.NotFound($"Exercise with id: {request.Id} has not been found"));
         
         var exerciseExists = await context.Exercises
-            .Where(e => e.Name == request.Name && e.UserId == userId && e.Id != request.Id)
+            .Where(e => e.Name == request.Name && e.FitnessProfileId == fitnessProfile.Id && e.Id != request.Id)
             .AnyAsync(cancellationToken);
         
         if(exerciseExists)

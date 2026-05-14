@@ -7,6 +7,7 @@ using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Features.Exercises.Shared;
 using MixxFit.API.Infrastructure.Persistence;
 using MixxFit.API.Domain.Entities.Exercises;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
 
 namespace MixxFit.API.Features.Exercises.CreateExercise;
 
@@ -17,8 +18,17 @@ public class CreateExerciseHandler(AppDbContext context) : IHandler
         CreateExerciseRequest request,
         CancellationToken cancellationToken)
     {
+        var fitnessProfile = await context.FitnessProfiles
+            .AsNoTracking()
+            .FirstOrDefaultAsync(fp => fp.UserId == userId, cancellationToken);
+
+        if (fitnessProfile is null)
+        {
+            return Result<ExerciseDto>.Failure(FitnessProfileError.NotFound());
+        }
+        
         var exerciseExists = await context.Exercises
-            .Where(e => e.Name == request.Name && e.UserId == userId)
+            .Where(e => e.Name == request.Name && e.FitnessProfileId == fitnessProfile.Id)
             .AnyAsync(cancellationToken);
 
         if(exerciseExists)
@@ -45,7 +55,7 @@ public class CreateExerciseHandler(AppDbContext context) : IHandler
             Name = request.Name,
             ExerciseCategoryId = request.CategoryId,
             MuscleGroupId = request.MuscleGroupId,
-            UserId = userId,
+            FitnessProfileId = fitnessProfile.Id,
             ExerciseType = await GetExerciseType(request.CategoryId)
         };
 

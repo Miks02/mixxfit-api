@@ -20,8 +20,8 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 var app = builder.Build();
 
-app.UseHangfireDashboardWithAuthorization();
-app.UseRecurringJobs();
+// app.UseHangfireDashboardWithAuthorization();
+// app.UseRecurringJobs();
 
 app.UseStaticFiles();
 

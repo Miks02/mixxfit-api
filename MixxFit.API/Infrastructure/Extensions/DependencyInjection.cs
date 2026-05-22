@@ -19,8 +19,8 @@ public static class DependencyInjection
         services.AddSecurity(configuration);
         services.AddHttpContextAccessor();
         services.AddCloudinary(configuration);
-        services.AddHangfireSetup(configuration);
-        services.AddRecurringJobs();
+        //services.AddHangfireSetup(configuration);
+        //services.AddRecurringJobs();
         services.AddProblemDetails();
         services.AddValidatorsFromAssemblyContaining<Program>(filter: descriptor => descriptor.ValidatorType != typeof(SetEntryValidator));
         services.AddExceptionHandler<GlobalExceptionHandler>();

@@ -12,9 +12,16 @@ namespace MixxFit.API.Infrastructure.Hangfire
         {
             services.AddHangfire((sp, config) =>
             {
-                config.UsePostgreSqlStorage(options => options.UseNpgsqlConnection(configuration.GetConnectionString("PostgresConnection")));
+                config.UsePostgreSqlStorage(options =>
+                {
+                    options.UseNpgsqlConnection(configuration.GetConnectionString("PostgresConnection"));
+                }, 
+                    new PostgreSqlStorageOptions
+                    {
+                        QueuePollInterval = TimeSpan.FromMinutes(configuration.GetValue<double>("Hangfire:QueuePollIntervalMinutes"))
+                    });
             });
-            services.AddHangfireServer();
+            services.AddHangfireServer(options => options.SchedulePollingInterval = TimeSpan.FromMinutes(configuration.GetValue<double>("Hangfire:SchedulePollingIntervalMinutes")));
         }
 
         public static void AddRecurringJobs(this IServiceCollection services)

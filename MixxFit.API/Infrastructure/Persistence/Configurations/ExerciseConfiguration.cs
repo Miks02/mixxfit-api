@@ -1,7 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MixxFit.API.Domain.Entities;
 using MixxFit.API.Domain.Entities.Exercises;
 using MixxFit.API.Domain.Enums;
 
@@ -18,7 +17,7 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
             .UseCollation("my_case_insensitive");
 
         builder
-            .HasIndex(p => new { p.Name, p.UserId })
+            .HasIndex(p => new { p.Name, p.FitnessProfileId })
             .IsUnique()
             .HasFilter("\"IsDeleted\" = FALSE");
 
@@ -28,9 +27,9 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
             .HasFilter("\"UserId\" IS NULL AND \"IsDeleted\" = FALSE");
 
         builder
-            .HasOne(p => p.User)
+            .HasOne(p => p.FitnessProfile)
             .WithMany(u => u.Exercises)
-            .HasForeignKey(p => p.UserId)
+            .HasForeignKey(p => p.FitnessProfileId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder

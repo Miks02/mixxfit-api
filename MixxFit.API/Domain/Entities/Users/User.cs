@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using MixxFit.API.Domain.Entities.Exercises;
 using MixxFit.API.Domain.Entities.FitnessProfiles;
-using MixxFit.API.Domain.Entities.WeightEntries;
-using MixxFit.API.Domain.Entities.Workouts;
 using MixxFit.API.Domain.Enums;
 
 namespace MixxFit.API.Domain.Entities.Users;
@@ -20,14 +17,7 @@ public class User : IdentityUser
     public AccountStatus AccountStatus { get; set; } = AccountStatus.Active;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime? DateOfBirth { get; set; }
 
     public FitnessProfile FitnessProfile { get; set; } = null!;
     public int FitnessProfileId { get; set; }
-
-    public ICollection<WeightEntry> WeightEntries { get; set; } = [];
-    public ICollection<Workout> Workouts { get; set; } = [];
-    
-    public ICollection<Exercise> Exercises { get; set; } = [];
-    
 }

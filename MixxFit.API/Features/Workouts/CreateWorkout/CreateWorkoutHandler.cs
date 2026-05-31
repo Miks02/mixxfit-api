@@ -4,6 +4,7 @@ using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities.ExerciseEntries;
 using MixxFit.API.Domain.Entities.Exercises;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
 using MixxFit.API.Domain.Entities.SetEntries;
 using MixxFit.API.Domain.Entities.Workouts;
 using MixxFit.API.Infrastructure.Persistence;
@@ -15,32 +16,42 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
     public async Task<Result<CreateWorkoutResponse>> Handle(
         string userId,
         CreateWorkoutRequest request, 
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        if (await IsWorkoutLimitReachedAsync(userId, cancellationToken))
+        var nullableFitnessProfileId = await context.FitnessProfiles
+            .Where(fp => fp.UserId == userId)
+            .Select(fp => (int?)fp.Id)
+            .FirstOrDefaultAsync(ct);
+        
+        if(nullableFitnessProfileId is null)
+            return Result<CreateWorkoutResponse>.Failure(FitnessProfileError.NotFound($"Fitness profile for user '{userId}' was not found"));
+        
+        int fitnessProfileId = (int)nullableFitnessProfileId;
+        
+        if (await IsWorkoutLimitReachedAsync(fitnessProfileId, ct))
             return Result<CreateWorkoutResponse>.Failure(WorkoutError.LimitReached($"Workout limit has been reached for user '{userId}'"));
 
         var inputIds = request.ExerciseEntries
             .Select(e => e.ExerciseId)
             .ToHashSet();
         
-        if (!await AreExercisesValidAsync(inputIds, cancellationToken))
+        if (!await AreExercisesValidAsync(inputIds, ct))
             return Result<CreateWorkoutResponse>.Failure(ExerciseError.NotFound());
         
-        var newWorkout = BuildWorkout(request, userId);
+        var newWorkout = BuildWorkout(request, fitnessProfileId);
         
         context.Add(newWorkout);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(ct);
         
         var workoutDto = ToWorkoutResponse(newWorkout);
         
         return Result<CreateWorkoutResponse>.Success(workoutDto);
     }
     
-    private async Task<bool> IsWorkoutLimitReachedAsync(string userId, CancellationToken cancellationToken)
+    private async Task<bool> IsWorkoutLimitReachedAsync(int fitnessProfileId, CancellationToken cancellationToken)
     {
         var workoutsToday = await context.Workouts
-            .Where(w => w.UserId == userId && w.WorkoutDate.Date == DateTime.UtcNow.Date)
+            .Where(w => w.FitnessProfileId == fitnessProfileId && w.WorkoutDate.Date == DateTime.UtcNow.Date)
             .Select(w => w.Id)
             .CountAsync(cancellationToken);
         
@@ -81,13 +92,13 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
         return true;
     }
 
-    private static Workout BuildWorkout(CreateWorkoutRequest request, string userId)
+    private static Workout BuildWorkout(CreateWorkoutRequest request, int fitnessProfileId)
     {
         return new Workout
         {
             Name = request.Name,
             Notes = request.Notes,
-            UserId = userId,
+            FitnessProfileId = fitnessProfileId,
             WorkoutDate = DateTime.SpecifyKind(request.WorkoutDate.Date, DateTimeKind.Utc),
             ExerciseEntries = request.ExerciseEntries.Select(e => new ExerciseEntry
             {
@@ -112,7 +123,6 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
             Id = workout.Id,
             Name = workout.Name,
             Notes = workout.Notes,
-            UserId = workout.UserId,
             CreatedAt = workout.CreatedAt,
             WorkoutDate = workout.WorkoutDate,
             Exercises = workout.ExerciseEntries.Select(e => new ExerciseEntryDto

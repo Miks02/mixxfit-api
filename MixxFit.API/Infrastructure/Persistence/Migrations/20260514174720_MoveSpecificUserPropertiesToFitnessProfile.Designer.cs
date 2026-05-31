@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MixxFit.API.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MixxFit.API.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260514174720_MoveSpecificUserPropertiesToFitnessProfile")]
+    partial class MoveSpecificUserPropertiesToFitnessProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -298,6 +301,9 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(50)")
                         .UseCollation("my_case_insensitive");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExerciseCategoryId");
@@ -306,11 +312,13 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("MuscleGroupId");
 
+                    b.HasIndex("UserId");
+
                     b.HasIndex("Name", "ExerciseCategoryId")
                         .IsUnique()
                         .HasFilter("\"UserId\" IS NULL AND \"IsDeleted\" = FALSE");
 
-                    b.HasIndex("Name", "FitnessProfileId")
+                    b.HasIndex("Name", "UserId")
                         .IsUnique()
                         .HasFilter("\"IsDeleted\" = FALSE");
 
@@ -2949,6 +2957,9 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -3052,6 +3063,10 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("interval");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<double>("Weight")
                         .HasColumnType("double precision");
 
@@ -3060,6 +3075,8 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("FitnessProfileId");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("Weight");
 
@@ -3439,7 +3456,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int>("FitnessProfileId")
+                    b.Property<int?>("FitnessProfileId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -3451,6 +3468,10 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("WorkoutDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -3461,6 +3482,8 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.HasIndex("FitnessProfileId");
 
                     b.HasIndex("Name");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("WorkoutDate");
 
@@ -3545,10 +3568,9 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MixxFit.API.Domain.Entities.FitnessProfiles.FitnessProfile", "FitnessProfile")
+                    b.HasOne("MixxFit.API.Domain.Entities.FitnessProfiles.FitnessProfile", null)
                         .WithMany("Exercises")
-                        .HasForeignKey("FitnessProfileId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("FitnessProfileId");
 
                     b.HasOne("MixxFit.API.Domain.Entities.MuscleGroups.MuscleGroup", "MuscleGroup")
                         .WithMany("Exercises")
@@ -3556,11 +3578,16 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MixxFit.API.Domain.Entities.Users.User", "User")
+                        .WithMany("Exercises")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.Navigation("ExerciseCategory");
 
-                    b.Navigation("FitnessProfile");
-
                     b.Navigation("MuscleGroup");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MixxFit.API.Domain.Entities.FitnessProfiles.FitnessProfile", b =>
@@ -3590,10 +3617,18 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.HasOne("MixxFit.API.Domain.Entities.FitnessProfiles.FitnessProfile", "FitnessProfile")
                         .WithMany("WeightEntries")
                         .HasForeignKey("FitnessProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MixxFit.API.Domain.Entities.Users.User", "User")
+                        .WithMany("WeightEntries")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("FitnessProfile");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MixxFit.API.Domain.Entities.WorkoutTemplateExercises.WorkoutTemplateExercise", b =>
@@ -3627,13 +3662,17 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MixxFit.API.Domain.Entities.Workouts.Workout", b =>
                 {
-                    b.HasOne("MixxFit.API.Domain.Entities.FitnessProfiles.FitnessProfile", "FitnessProfile")
+                    b.HasOne("MixxFit.API.Domain.Entities.FitnessProfiles.FitnessProfile", null)
                         .WithMany("Workouts")
-                        .HasForeignKey("FitnessProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FitnessProfileId");
+
+                    b.HasOne("MixxFit.API.Domain.Entities.Users.User", "User")
+                        .WithMany("Workouts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("FitnessProfile");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MixxFit.API.Domain.Entities.ExerciseCategories.ExerciseCategory", b =>
@@ -3671,8 +3710,14 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MixxFit.API.Domain.Entities.Users.User", b =>
                 {
+                    b.Navigation("Exercises");
+
                     b.Navigation("FitnessProfile")
                         .IsRequired();
+
+                    b.Navigation("WeightEntries");
+
+                    b.Navigation("Workouts");
                 });
 
             modelBuilder.Entity("MixxFit.API.Domain.Entities.WorkoutTemplates.WorkoutTemplate", b =>

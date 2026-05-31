@@ -12,6 +12,7 @@ public class GetWeightLogsHandler(AppDbContext context) : IHandler
         GetWeightLogsRequest request,
         CancellationToken cancellationToken = default)
     {
+        
         return new GetWeightLogsResponse
         {
             WeightLogs = await (await BuildWeightEntriesQuery(userId, request.Month, request.Year, cancellationToken)).ToListAsync(cancellationToken),
@@ -27,8 +28,8 @@ public class GetWeightLogsHandler(AppDbContext context) : IHandler
     {
         var query = context.WeightEntries
             .OrderByDescending(w => w.CreatedAt)
-            .Where(w => w.UserId == userId)
-            .Select(w => new WeightRecordDto()
+            .Where(w => w.FitnessProfile!.UserId == userId)
+            .Select(w => new WeightRecordDto
             {
                 Id = w.Id,
                 Weight = w.Weight,
@@ -51,7 +52,7 @@ public class GetWeightLogsHandler(AppDbContext context) : IHandler
         CancellationToken cancellationToken)
     {
         return await context.WeightEntries
-            .Where(w => w.UserId == userId && w.CreatedAt.Year == year)
+            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Year == year)
             .Select(w => w.CreatedAt.Month)
             .Distinct()
             .OrderByDescending(w => w)
@@ -61,8 +62,7 @@ public class GetWeightLogsHandler(AppDbContext context) : IHandler
     private async Task<int?> GetLastAvailableMonthByYear(string userId, int year, CancellationToken cancellationToken)
     {
         return await context.WeightEntries
-            .AsNoTracking()
-            .Where(w => w.UserId == userId && w.CreatedAt.Year == year)
+            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Year == year)
             .MaxAsync(w => (int?)w.CreatedAt.Month, cancellationToken);
     }
 }

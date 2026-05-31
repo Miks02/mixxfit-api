@@ -19,7 +19,7 @@ public class GetWorkoutsHandler(AppDbContext context) : IHandler
         if (targetYear.HasValue)
             targetMonth = request.Month.HasValue
                 ? (int)request.Month.Value
-                : (availableMonths.Count > 0 ? availableMonths[0] : null);
+                : availableMonths.Count > 0 ? availableMonths[0] : null;
 
         var workouts = await GetWorkoutListByParams(userId, request, targetYear, targetMonth, cancellationToken);
 
@@ -42,7 +42,7 @@ public class GetWorkoutsHandler(AppDbContext context) : IHandler
     {
         var query = context.Workouts
             .AsNoTracking()
-            .Where(w => w.UserId == userId);
+            .Where(w => w.FitnessProfile!.UserId == userId);
         
         if (!string.IsNullOrWhiteSpace(request.Search))
             query = query.Where(w => w.Name.Contains(request.Search));
@@ -82,7 +82,7 @@ public class GetWorkoutsHandler(AppDbContext context) : IHandler
     private async Task<IReadOnlyList<int>> GetAvailableYearsAsync(string userId, CancellationToken cancellationToken)
     {
         return await context.Workouts
-            .Where(w => w.UserId == userId)
+            .Where(w => w.FitnessProfile!.UserId == userId)
             .Select(w => w.WorkoutDate.Year)
             .Distinct()
             .OrderBy(y => y)
@@ -95,7 +95,7 @@ public class GetWorkoutsHandler(AppDbContext context) : IHandler
             return [];
 
         return await context.Workouts
-            .Where(w => w.UserId == userId && w.WorkoutDate.Year == year.Value)
+            .Where(w => w.FitnessProfile!.UserId == userId && w.WorkoutDate.Year == year.Value)
             .Select(w => w.WorkoutDate.Month)
             .Distinct()
             .OrderBy(m => m)

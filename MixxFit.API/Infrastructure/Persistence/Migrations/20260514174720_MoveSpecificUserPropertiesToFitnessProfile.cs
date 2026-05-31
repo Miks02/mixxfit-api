@@ -20,7 +20,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                 name: "FitnessProfileId",
                 table: "WeightEntries",
                 type: "integer",
-                nullable: false,
+                nullable: true,
                 defaultValue: 0);
 
             migrationBuilder.AlterColumn<string>(
@@ -1785,6 +1785,20 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                 name: "IX_Exercises_FitnessProfileId",
                 table: "Exercises",
                 column: "FitnessProfileId");
+
+            migrationBuilder.Sql(@"
+                UPDATE ""WeightEntries"" we
+                SET ""FitnessProfileId"" = fp.""Id""
+                FROM ""FitnessProfiles"" fp
+                WHERE fp.""UserId"" = we.""UserId"";
+            ");
+
+            migrationBuilder.Sql(@"
+                UPDATE ""Workouts"" w
+                SET ""FitnessProfileId"" = fp.""Id""
+                FROM ""FitnessProfiles"" fp
+                WHERE fp.""UserId"" = w.""UserId"";
+            ");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Exercises_FitnessProfiles_FitnessProfileId",

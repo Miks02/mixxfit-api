@@ -6,7 +6,7 @@ namespace MixxFit.API.Domain.Entities.WeightEntries
     {
         public int Id { get; set; }
 
-        public int FitnessProfileId { get; set; }
+        public int? FitnessProfileId { get; set; }
         public FitnessProfile? FitnessProfile { get; set; }
 
         public double Weight { get; set; }

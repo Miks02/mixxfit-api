@@ -17,12 +17,12 @@ public class WeightEntryConfiguration : IEntityTypeConfiguration<WeightEntry>
 
         builder.Property(x => x.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
-        
+
         builder
             .HasOne(w => w.FitnessProfile)
             .WithMany(u => u.WeightEntries)
             .HasForeignKey(w => w.FitnessProfileId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.ToTable(entries => entries.HasCheckConstraint($"CK_{nameof(WeightEntry)}s_{nameof(WeightEntry.Weight)}_Positive", "\"Weight\" > 25"));
         builder.ToTable(entries => entries.HasCheckConstraint($"CK_{nameof(WeightEntry)}s_{nameof(WeightEntry.Weight)}_LessThan400", "\"Weight\" < 400"));
@@ -30,4 +30,3 @@ public class WeightEntryConfiguration : IEntityTypeConfiguration<WeightEntry>
 
     }
 }
-

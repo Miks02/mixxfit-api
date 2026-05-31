@@ -21,4 +21,7 @@ public class GeneralError
     
     public static Error Conflict(string message = "Conflict occurred")
         => new("General.Conflict", message);
+        
+    public static Error Forbidden(string message = "You are not allowed to perform this action")
+        => new("General.Forbidden", message);
 }

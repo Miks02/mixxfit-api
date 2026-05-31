@@ -8,6 +8,7 @@ using MixxFit.API.Domain.Entities;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Common.Extensions;
 using MixxFit.API.Domain.Entities.Users;
+using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Features.Users.UpdateUserFields;
 
@@ -32,14 +33,14 @@ public static class UpdateDateOfBirth
         }
     }
 
-    public class UpdateDateOfBirthHandler(UserManager<User> userManager) : IHandler
+    public class UpdateDateOfBirthHandler(AppDbContext context) : IHandler
     {
         public async Task<Result<UpdateDateOfBirthResponse>> Handle(
             string userId,
             UpdateDateOfBirthRequest request, CancellationToken cancellationToken = default)
         {
-            var user = await userManager.Users
-                .Where(u => u.Id == userId)
+            var user = await context.FitnessProfiles
+                .Where(w => w.UserId == userId)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (user is null)
@@ -47,9 +48,9 @@ public static class UpdateDateOfBirth
 
             user.DateOfBirth = request.DateOfBirth.ToUniversalTime();
 
-            var updateResult = await userManager.UpdateAsync(user);
+            await context.SaveChangesAsync(cancellationToken);
 
-            return updateResult.HandleIdentityResult(new UpdateDateOfBirthResponse(user.DateOfBirth));
+            return Result<UpdateDateOfBirthResponse>.Success(new UpdateDateOfBirthResponse(user.DateOfBirth));
         }
     }
 

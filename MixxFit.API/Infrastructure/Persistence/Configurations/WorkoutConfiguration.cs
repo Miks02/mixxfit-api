@@ -19,17 +19,16 @@ public class WorkoutConfiguration : IEntityTypeConfiguration<Workout>
         builder.HasIndex(p => p.Name);
 
         builder.HasIndex(p => p.WorkoutDate);
-        builder.HasIndex(p => p.UserId);
         builder.HasIndex(p => p.CreatedAt);
-        
+
         builder.Property(p => p.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder
-            .HasOne(w => w.User)
+            .HasOne(w => w.FitnessProfile)
             .WithMany(u => u.Workouts)
-            .HasForeignKey(w => w.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasForeignKey(w => w.FitnessProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
 
     }
 }

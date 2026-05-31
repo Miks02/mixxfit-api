@@ -7,8 +7,6 @@ namespace MixxFit.API.Features.WeightEntries.GetWeightChart;
 
 public static class GetWeightChart
 {
-    public record Request(double? TargetWeight);
-    
     public class Handler(AppDbContext context) : IHandler
     {
         public async Task<GetWeightChartResponse> Handle(
@@ -16,11 +14,12 @@ public static class GetWeightChart
             double? targetWeight,
             CancellationToken cancellationToken)
         {
+            
             var entries = await context.WeightEntries
                 .AsNoTracking()
-                .Where(w => w.UserId == userId)
+                .Where(w => w.FitnessProfile!.UserId == userId)
                 .OrderByDescending(w => w.CreatedAt)
-                .Select(w => new WeightRecordDto()
+                .Select(w => new WeightRecordDto
                 {
                     Id = w.Id,
                     Weight = w.Weight,
@@ -30,7 +29,7 @@ public static class GetWeightChart
                 .ToListAsync(cancellationToken);
 
 
-            return new GetWeightChartResponse()
+            return new GetWeightChartResponse
             {
                 Entries = entries,
                 TargetWeight = targetWeight
@@ -44,10 +43,8 @@ public static class GetWeightChart
                     double? targetWeight,
                     Handler handler,
                     ICurrentUserProvider userProvider,
-                    CancellationToken cancellationToken = default) =>
-            {
-                return await handler.Handle(userProvider.GetCurrentUserId(), targetWeight, cancellationToken);
-            })
+                    CancellationToken cancellationToken = default) 
+                    => await handler.Handle(userProvider.GetCurrentUserId(), targetWeight, cancellationToken))
             .WithTags("WeightEntries")
             .RequireAuthorization();
         }

@@ -9,7 +9,7 @@ public class GetExerciseByIdHandler(AppDbContext context) : IHandler
     public async Task<GetExerciseByIdResponse?> Handle(string userId, int id, CancellationToken cancellationToken)
     {
         var exercise = await context.Exercises
-            .Where(e => e.Id == id && e.UserId == userId)
+            .Where(e => e.Id == id && e.FitnessProfile!.UserId == userId)
             .Select(e => new GetExerciseByIdResponse
             {
                 Name = e.Name,

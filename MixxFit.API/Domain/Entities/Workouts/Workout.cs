@@ -1,4 +1,5 @@
 using MixxFit.API.Domain.Entities.ExerciseEntries;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
 using MixxFit.API.Domain.Entities.Users;
 
 namespace MixxFit.API.Domain.Entities.Workouts;
@@ -10,8 +11,8 @@ public class Workout
 
     public string? Notes { get; set; }
 
-    public string UserId { get; set; } = null!;
-    public virtual User User { get; set; } = null!;
+    public FitnessProfile FitnessProfile { get; set; } = null!;
+    public int FitnessProfileId { get; set; }
 
     public DateTime WorkoutDate { get; set; } = DateTime.UtcNow;
 

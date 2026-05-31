@@ -16,7 +16,7 @@ public class GetWorkoutByIdHandler(AppDbContext context) : IHandler
     {
         var workout = await context.Workouts
             .AsNoTracking()
-            .Where(w => w.UserId == userId && w.Id == workoutId)
+            .Where(w => w.FitnessProfile.UserId == userId && w.Id == workoutId)
             .Select(ProjectToWorkoutResponse())
             .FirstOrDefaultAsync(cancellationToken);
 
@@ -33,7 +33,7 @@ public class GetWorkoutByIdHandler(AppDbContext context) : IHandler
             Id = w.Id,
             Name = w.Name,
             Notes = w.Notes,
-            UserId = w.UserId,
+            FitnessProfileId = w.FitnessProfileId,
             CreatedAt = w.CreatedAt,
             WorkoutDate = w.WorkoutDate,
             Exercises = w.ExerciseEntries.Select(e => new ExerciseEntryDto

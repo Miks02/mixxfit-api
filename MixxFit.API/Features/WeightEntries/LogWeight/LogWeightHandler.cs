@@ -1,11 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
-using MixxFit.API.Domain.Entities;
-using MixxFit.API.Domain.ErrorCatalog;
-using MixxFit.API.Infrastructure.Persistence;
+using MixxFit.API.Domain.Entities.Users;
 using MixxFit.API.Domain.Entities.WeightEntries;
-using MixxFit.API.Domain.Entities.FitnessProfiles;
+using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Features.WeightEntries.LogWeight;
 
@@ -14,18 +12,20 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
     public async Task<Result<LogWeightResponse>> Handle(string userId, LogWeightRequest request, CancellationToken cancellationToken)
     {
         var hasLoggedWeightToday = await context.WeightEntries
-                .Where(w => w.UserId == userId && w.CreatedAt.Date == DateTime.UtcNow.Date)
-                .Select(w => w.Id)
+                .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Date == DateTime.UtcNow.Date)
                 .AnyAsync(cancellationToken);
 
             if (hasLoggedWeightToday)
                 return Result<LogWeightResponse>.Failure(WeightEntryError.LimitReached("Only one weight entry can be logged per day"));
 
+            var fitnessProfile = await context.FitnessProfiles
+                .FirstAsync(fp => fp.UserId == userId, cancellationToken);
+
             var newEntry = new WeightEntry
             {
                 Weight = request.Weight,
                 Time = request.Time,
-                UserId = userId,
+                FitnessProfileId = fitnessProfile.Id,
                 Notes = request.Notes
             };
 
@@ -34,17 +34,8 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
             try
             {
                 await context.WeightEntries.AddAsync(newEntry, cancellationToken);
-
-                var profile = await context.FitnessProfiles
-                    .FirstOrDefaultAsync(u => u.UserId == newEntry.UserId, cancellationToken);
-
-                if (profile is null)
-                {
-                    await transaction.RollbackAsync(cancellationToken);
-                    return Result<LogWeightResponse>.Failure(FitnessProfileError.NotFound($"Fitness profile for user '{userId}' was not found"));
-                }
-
-                profile.Weight = newEntry.Weight;
+                
+                fitnessProfile.Weight = newEntry.Weight;
 
                 await context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);

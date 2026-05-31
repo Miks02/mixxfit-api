@@ -20,7 +20,7 @@ public class WorkoutConfiguration : IEntityTypeConfiguration<Workout>
 
         builder.HasIndex(p => p.WorkoutDate);
         builder.HasIndex(p => p.CreatedAt);
-        
+
         builder.Property(p => p.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
@@ -28,7 +28,7 @@ public class WorkoutConfiguration : IEntityTypeConfiguration<Workout>
             .HasOne(w => w.FitnessProfile)
             .WithMany(u => u.Workouts)
             .HasForeignKey(w => w.FitnessProfileId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
     }
 }

@@ -13,13 +13,13 @@ public class GetWorkoutsHandler(AppDbContext context) : IHandler
         CancellationToken cancellationToken)
     {
         var availableYears = await GetAvailableYearsAsync(userId, cancellationToken);
-        int? targetYear = request.Year ?? (availableYears.Count > 0 ? availableYears[0] : null);
+        int? targetYear = request.Year ?? (availableYears.Count > 0 ? availableYears.OrderByDescending(y => y).First() : null);
         var availableMonths = await GetAvailableMonthsAsync(userId, targetYear, cancellationToken);
         int? targetMonth = null;
         if (targetYear.HasValue)
             targetMonth = request.Month.HasValue
                 ? (int)request.Month.Value
-                : availableMonths.Count > 0 ? availableMonths[0] : null;
+                : availableMonths.Count > 0 ? availableMonths.OrderByDescending(m => m).First()   : null;
 
         var workouts = await GetWorkoutListByParams(userId, request, targetYear, targetMonth, cancellationToken);
 

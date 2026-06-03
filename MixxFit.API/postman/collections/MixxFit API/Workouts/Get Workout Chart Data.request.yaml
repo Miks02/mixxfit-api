@@ -1,0 +1,13 @@
+$kind: http-request
+name: Get Workout Chart Data
+method: GET
+url: '{{baseUrl}}/workouts/workout-chart'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+queryParams:
+  - key: year
+    value: ''
+    disabled: true

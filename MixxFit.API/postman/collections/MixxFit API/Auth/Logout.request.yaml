@@ -1,0 +1,9 @@
+$kind: http-request
+name: Logout
+method: POST
+url: '{{baseUrl}}/auth/logout'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'

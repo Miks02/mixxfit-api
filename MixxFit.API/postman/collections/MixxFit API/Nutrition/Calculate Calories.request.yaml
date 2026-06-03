@@ -1,0 +1,17 @@
+$kind: http-request
+name: Calculate Calories
+method: POST
+url: '{{baseUrl}}/nutrition/calorie-goals'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "age": 25,
+      "height": 175.0,
+      "weight": 75.0,
+      "gender": 0,
+      "activityLevel": 1
+    }

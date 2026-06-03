@@ -1,0 +1,19 @@
+$kind: http-request
+name: Update Full Name
+method: PATCH
+url: '{{baseUrl}}/users/fullname'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "firstName": "John",
+      "lastName": "Smith"
+    }

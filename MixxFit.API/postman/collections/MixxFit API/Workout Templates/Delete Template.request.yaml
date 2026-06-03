@@ -1,0 +1,9 @@
+$kind: http-request
+name: Delete Template
+method: DELETE
+url: '{{baseUrl}}/workout-templates/{{templateId}}'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'

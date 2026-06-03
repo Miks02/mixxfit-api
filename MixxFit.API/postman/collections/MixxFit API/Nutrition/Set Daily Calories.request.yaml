@@ -1,0 +1,18 @@
+$kind: http-request
+name: Set Daily Calories
+method: POST
+url: '{{baseUrl}}/nutrition/daily-calories'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "calories": 2500.0
+    }

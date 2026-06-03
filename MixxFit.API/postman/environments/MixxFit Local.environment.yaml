@@ -1,0 +1,30 @@
+name: MixxFit Local
+values:
+  - key: baseUrl
+    value: 'http://localhost:5204'
+    enabled: true
+    type: default
+  - key: accessToken
+    value: ''
+    enabled: true
+    type: default
+  - key: refreshToken
+    value: ''
+    enabled: true
+    type: default
+  - key: exerciseId
+    value: '1'
+    enabled: true
+    type: default
+  - key: workoutId
+    value: '1'
+    enabled: true
+    type: default
+  - key: templateId
+    value: '1'
+    enabled: true
+    type: default
+  - key: weightEntryId
+    value: '1'
+    enabled: true
+    type: default

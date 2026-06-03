@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: b04530c2-0444-4304-8b84-887a4a311166
+
+localResources:
+  specs:
+    - ..\obj\Debug\net10.0\EndpointInfo\MixxFit.API.json

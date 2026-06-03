@@ -1,0 +1,18 @@
+$kind: http-request
+name: Update Gender
+method: PATCH
+url: '{{baseUrl}}/users/gender'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "gender": 0
+    }

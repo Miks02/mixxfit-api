@@ -1,0 +1,36 @@
+$kind: http-request
+name: Create Workout
+method: POST
+url: '{{baseUrl}}/workouts'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Morning Workout",
+      "notes": "Felt great today",
+      "workoutDate": "2026-06-01T08:00:00Z",
+      "exerciseEntries": [
+        {
+          "exerciseId": 1,
+          "name": "Bench Press",
+          "exerciseType": 0,
+          "sets": [
+            {
+              "reps": 10,
+              "weight": 80.0,
+              "distance": null,
+              "durationMinutes": null,
+              "durationSeconds": null
+            }
+          ]
+        }
+      ]
+    }

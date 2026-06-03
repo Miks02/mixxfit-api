@@ -1,0 +1,18 @@
+$kind: http-request
+name: Update Date of Birth
+method: PATCH
+url: '{{baseUrl}}/users/date-of-birth'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "dateOfBirth": "1990-01-15T00:00:00Z"
+    }

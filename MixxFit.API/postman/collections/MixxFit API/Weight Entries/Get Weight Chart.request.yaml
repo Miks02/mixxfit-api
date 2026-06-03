@@ -1,0 +1,13 @@
+$kind: http-request
+name: Get Weight Chart
+method: GET
+url: '{{baseUrl}}/weight-entries/weight-chart'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+queryParams:
+  - key: targetWeight
+    value: ''
+    disabled: true

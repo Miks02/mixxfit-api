@@ -1,0 +1,9 @@
+$kind: http-request
+name: Get Exercises Page
+method: GET
+url: '{{baseUrl}}/exercises-page'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'

@@ -1,0 +1,9 @@
+$kind: http-request
+name: Get Exercise by ID
+method: GET
+url: '{{baseUrl}}/exercises/{{exerciseId}}'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'

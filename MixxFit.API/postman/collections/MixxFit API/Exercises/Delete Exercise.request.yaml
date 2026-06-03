@@ -1,0 +1,9 @@
+$kind: http-request
+name: Delete Exercise
+method: DELETE
+url: '{{baseUrl}}/exercises/{{exerciseId}}'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'

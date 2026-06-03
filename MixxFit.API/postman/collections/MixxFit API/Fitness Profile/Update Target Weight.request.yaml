@@ -1,0 +1,18 @@
+$kind: http-request
+name: Update Target Weight
+method: PATCH
+url: '{{baseUrl}}/fitness-profile/target-weight'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "targetWeight": 75.0
+    }

@@ -1,0 +1,22 @@
+$kind: http-request
+name: Get Exercises
+method: GET
+url: '{{baseUrl}}/exercises'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+queryParams:
+  - key: onlyUserDefined
+    value: 'false'
+    disabled: true
+  - key: searchTerm
+    value: ''
+    disabled: true
+  - key: categoryId
+    value: ''
+    disabled: true
+  - key: muscleGroupId
+    value: ''
+    disabled: true

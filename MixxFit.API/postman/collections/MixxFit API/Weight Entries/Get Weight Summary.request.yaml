@@ -1,0 +1,19 @@
+$kind: http-request
+name: Get Weight Summary
+method: GET
+url: '{{baseUrl}}/weight-entries'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+queryParams:
+  - key: month
+    value: ''
+    disabled: true
+  - key: year
+    value: ''
+    disabled: true
+  - key: targetWeight
+    value: ''
+    disabled: true

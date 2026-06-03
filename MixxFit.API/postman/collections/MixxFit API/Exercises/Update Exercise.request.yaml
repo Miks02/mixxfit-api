@@ -1,0 +1,21 @@
+$kind: http-request
+name: Update Exercise
+method: PUT
+url: '{{baseUrl}}/exercises'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "id": 1,
+      "name": "Bench Press Updated",
+      "categoryId": 1,
+      "muscleGroupId": 1
+    }

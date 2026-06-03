@@ -1,0 +1,9 @@
+$kind: http-request
+name: Get Templates
+method: GET
+url: '{{baseUrl}}/workout-templates'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'

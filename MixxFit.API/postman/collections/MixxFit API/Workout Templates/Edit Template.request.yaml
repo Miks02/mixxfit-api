@@ -1,0 +1,26 @@
+$kind: http-request
+name: Edit Template
+method: PUT
+url: '{{baseUrl}}/workout-templates'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "id": 1,
+      "name": "Push Day Updated",
+      "notes": "Updated notes",
+      "exercises": [
+        {
+          "exerciseId": 1,
+          "setCount": 5
+        }
+      ]
+    }

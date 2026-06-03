@@ -1,0 +1,18 @@
+$kind: collection
+name: MixxFit API
+description: Complete API collection for the MixxFit fitness tracking application
+variables:
+  - key: baseUrl
+    value: 'https://localhost:7250'
+  - key: accessToken
+    value: ''
+  - key: refreshToken
+    value: ''
+  - key: exerciseId
+    value: '1'
+  - key: workoutId
+    value: '1'
+  - key: templateId
+    value: '1'
+  - key: weightEntryId
+    value: '1'

@@ -1,0 +1,22 @@
+$kind: http-request
+name: Get Workouts
+method: GET
+url: '{{baseUrl}}/workouts'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+queryParams:
+  - key: sort
+    value: ''
+    disabled: true
+  - key: search
+    value: ''
+    disabled: true
+  - key: year
+    value: ''
+    disabled: true
+  - key: month
+    value: ''
+    disabled: true

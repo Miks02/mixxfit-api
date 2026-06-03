@@ -1,0 +1,15 @@
+$kind: http-request
+name: Update Profile Picture
+method: PATCH
+url: '{{baseUrl}}/users/profile-picture'
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+body:
+  type: formdata
+  content:
+    - key: imageFile
+      type: file
+      src: ''

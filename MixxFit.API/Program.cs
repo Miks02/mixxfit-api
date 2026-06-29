@@ -28,15 +28,26 @@ app.UseStaticFiles();
 app.UseForwardedHeaders();
 
 app.UseExceptionHandler();
-if (app.Environment.IsDevelopment())
+
+switch (app.Environment.EnvironmentName)
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-    app.UseCors("AllowCors");
-}
-else
-{
-    app.UseCors("ProdCors");
+    case "Development":
+    {
+        app.MapOpenApi();
+        app.MapScalarApiReference();
+        app.UseCors("DevCors");
+        break;
+    }
+    case "Staging":
+    {
+        app.UseCors("StagingCors");
+        break;
+    }
+    case "Production":
+    {
+        app.UseCors("ProductionCors");
+        break;
+    }
 }
 
 app.UseAuthentication();

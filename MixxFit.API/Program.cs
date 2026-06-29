@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.HttpOverrides;
 using MixxFit.API.Infrastructure.Extensions;
-using MixxFit.API.Infrastructure.Hangfire;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -20,8 +19,6 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 var app = builder.Build();
 
-app.UseHangfireDashboardWithAuthorization();
-app.UseRecurringJobs();
 
 app.UseStaticFiles();
 

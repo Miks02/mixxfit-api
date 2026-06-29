@@ -4,7 +4,6 @@ using MixxFit.API.Features.Workouts.CreateWorkout;
 using MixxFit.API.Infrastructure.Cloudinary;
 using MixxFit.API.Infrastructure.Cors;
 using MixxFit.API.Infrastructure.Exceptions;
-using MixxFit.API.Infrastructure.Hangfire;
 using MixxFit.API.Infrastructure.Persistence;
 using MixxFit.API.Infrastructure.RateLimiting;
 using MixxFit.API.Infrastructure.Security;
@@ -19,8 +18,6 @@ public static class DependencyInjection
         services.AddSecurity(configuration);
         services.AddHttpContextAccessor();
         services.AddCloudinary(configuration);
-        services.AddHangfireSetup(configuration);
-        services.AddRecurringJobs();
         services.AddProblemDetails();
         services.AddValidatorsFromAssemblyContaining<Program>(filter: descriptor => descriptor.ValidatorType != typeof(SetEntryValidator));
         services.AddExceptionHandler<GlobalExceptionHandler>();

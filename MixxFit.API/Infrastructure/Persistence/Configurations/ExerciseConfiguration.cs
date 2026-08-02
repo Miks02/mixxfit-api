@@ -53,6 +53,10 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
         builder
             .HasQueryFilter(e => e.IsDeleted == false);
 
+        builder
+            .Property(p => p.ExerciseType)
+            .HasConversion<string>();
+
         builder.HasData(GetExercises());
     }
 

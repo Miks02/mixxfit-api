@@ -15,7 +15,7 @@ public class User : IdentityUser
     public DateTime? TokenExpDate { get; set; }
 
     public AccountStatus AccountStatus { get; set; } = AccountStatus.Active;
-
+ 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public FitnessProfile FitnessProfile { get; set; } = null!;

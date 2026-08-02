@@ -26,5 +26,8 @@ public class ExerciseEntryConfiguration : IEntityTypeConfiguration<ExerciseEntry
             .HasForeignKey(ee => ee.ExerciseId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.Property(p => p.ExerciseType)
+            .HasConversion<string>();
+
     }
 }

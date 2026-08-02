@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MixxFit.API.Infrastructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MixxFit.API.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260802071704_ConvertIntEnumToStringInExerciseEntries")]
+    partial class ConvertIntEnumToStringInExerciseEntries
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,9 +284,8 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.Property<int>("ExerciseCategoryId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ExerciseType")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("ExerciseType")
+                        .HasColumnType("integer");
 
                     b.Property<int?>("FitnessProfileId")
                         .HasColumnType("integer");
@@ -324,7 +326,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 1,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Bench Press"
@@ -334,7 +336,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 2,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Incline Bench Press"
@@ -344,7 +346,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 3,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Decline Bench Press"
@@ -354,7 +356,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 4,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Close Grip Bench Press"
@@ -364,7 +366,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 5,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Floor Press"
@@ -374,7 +376,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 6,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Guillotine Press"
@@ -384,7 +386,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 7,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Bent Over Row"
@@ -394,7 +396,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 8,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Pendlay Row"
@@ -404,7 +406,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 9,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "T-Bar Row"
@@ -414,7 +416,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 10,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Deadlift"
@@ -424,7 +426,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 11,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Rack Pull"
@@ -434,7 +436,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 12,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Seal Row"
@@ -444,7 +446,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 13,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Overhead Press"
@@ -454,7 +456,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 14,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Behind Neck Press"
@@ -464,7 +466,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 15,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Upright Row"
@@ -474,7 +476,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 16,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Front Raise"
@@ -484,7 +486,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 17,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Bradford Press"
@@ -494,7 +496,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 18,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Curl"
@@ -504,7 +506,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 19,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Preacher Curl"
@@ -514,7 +516,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 20,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Reverse Curl"
@@ -524,7 +526,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 21,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Skull Crusher"
@@ -534,7 +536,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 22,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Spider Curl"
@@ -544,7 +546,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 23,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "EZ Bar Curl"
@@ -554,7 +556,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 24,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "EZ Bar Skull Crusher"
@@ -564,7 +566,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 25,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Squat"
@@ -574,7 +576,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 26,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Front Squat"
@@ -584,7 +586,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 27,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Lunge"
@@ -594,7 +596,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 28,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Romanian Deadlift"
@@ -604,7 +606,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 29,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Stiff Leg Deadlift"
@@ -614,7 +616,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 30,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Calf Raise"
@@ -624,7 +626,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 31,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Good Morning"
@@ -634,7 +636,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 32,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Zercher Squat"
@@ -644,7 +646,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 33,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Hack Squat"
@@ -654,7 +656,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 34,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Rollout"
@@ -664,7 +666,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 35,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Landmine Rotation"
@@ -674,7 +676,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 36,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Hip Thrust"
@@ -684,7 +686,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 37,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Glute Bridge"
@@ -694,7 +696,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 38,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 2,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Sumo Deadlift"
@@ -704,7 +706,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 39,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Bench Press"
@@ -714,7 +716,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 40,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Incline Bench Press"
@@ -724,7 +726,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 41,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Decline Bench Press"
@@ -734,7 +736,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 42,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Fly"
@@ -744,7 +746,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 43,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Incline Fly"
@@ -754,7 +756,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 44,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Pullover"
@@ -764,7 +766,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 45,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Squeeze Press"
@@ -774,7 +776,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 46,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Row"
@@ -784,7 +786,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 47,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Bent Over Row"
@@ -794,7 +796,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 48,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Reverse Fly"
@@ -804,7 +806,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 49,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Pullover Row"
@@ -814,7 +816,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 50,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Renegade Row"
@@ -824,7 +826,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 51,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Shrug"
@@ -834,7 +836,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 52,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Chest Supported Row"
@@ -844,7 +846,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 53,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Shoulder Press"
@@ -854,7 +856,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 54,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Arnold Press"
@@ -864,7 +866,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 55,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Lateral Raise"
@@ -874,7 +876,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 56,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Front Raise"
@@ -884,7 +886,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 57,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Rear Delt Fly"
@@ -894,7 +896,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 58,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Upright Row"
@@ -904,7 +906,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 59,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Y Raise"
@@ -914,7 +916,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 60,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Scott Press"
@@ -924,7 +926,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 61,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Bicep Curl"
@@ -934,7 +936,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 62,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Hammer Curl"
@@ -944,7 +946,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 63,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Concentration Curl"
@@ -954,7 +956,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 64,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Incline Curl"
@@ -964,7 +966,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 65,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Preacher Curl"
@@ -974,7 +976,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 66,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Tricep Extension"
@@ -984,7 +986,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 67,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Overhead Tricep Extension"
@@ -994,7 +996,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 68,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Tricep Kickback"
@@ -1004,7 +1006,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 69,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Zottman Curl"
@@ -1014,7 +1016,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 70,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Wrist Curl"
@@ -1024,7 +1026,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 71,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Squat"
@@ -1034,7 +1036,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 72,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Goblet Squat"
@@ -1044,7 +1046,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 73,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Lunge"
@@ -1054,7 +1056,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 74,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Walking Lunge"
@@ -1064,7 +1066,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 75,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Romanian Deadlift"
@@ -1074,7 +1076,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 76,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Step Up"
@@ -1084,7 +1086,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 77,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Bulgarian Split Squat"
@@ -1094,7 +1096,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 78,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Calf Raise"
@@ -1104,7 +1106,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 79,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Sumo Squat"
@@ -1114,7 +1116,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 80,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Russian Twist"
@@ -1124,7 +1126,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 81,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Side Bend"
@@ -1134,7 +1136,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 82,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Woodchop"
@@ -1144,7 +1146,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 83,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Hip Thrust"
@@ -1154,7 +1156,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 84,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Glute Bridge"
@@ -1164,7 +1166,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 85,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Sumo Deadlift"
@@ -1174,7 +1176,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 86,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 3,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Frog Pump"
@@ -1184,7 +1186,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 87,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Chest Fly"
@@ -1194,7 +1196,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 88,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Low Chest Fly"
@@ -1204,7 +1206,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 89,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "High Chest Fly"
@@ -1214,7 +1216,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 90,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Crossover"
@@ -1224,7 +1226,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 91,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Seated Row"
@@ -1234,7 +1236,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 92,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Lat Pulldown"
@@ -1244,7 +1246,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 93,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Close Grip Pulldown"
@@ -1254,7 +1256,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 94,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Straight Arm Pulldown"
@@ -1264,7 +1266,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 95,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Face Pull"
@@ -1274,7 +1276,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 96,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Single Arm Row"
@@ -1284,7 +1286,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 97,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Wide Grip Pulldown"
@@ -1294,7 +1296,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 98,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Reverse Grip Pulldown"
@@ -1304,7 +1306,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 99,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Lateral Raise"
@@ -1314,7 +1316,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 100,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Front Raise"
@@ -1324,7 +1326,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 101,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Rear Delt Fly"
@@ -1334,7 +1336,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 102,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Upright Row"
@@ -1344,7 +1346,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 103,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "External Rotation"
@@ -1354,7 +1356,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 104,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Bicep Curl"
@@ -1364,7 +1366,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 105,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Hammer Curl"
@@ -1374,7 +1376,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 106,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Overhead Curl"
@@ -1384,7 +1386,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 107,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Tricep Pushdown"
@@ -1394,7 +1396,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 108,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Rope Pushdown"
@@ -1404,7 +1406,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 109,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Overhead Tricep Extension"
@@ -1414,7 +1416,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 110,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Reverse Curl"
@@ -1424,7 +1426,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 111,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Single Arm Curl"
@@ -1434,7 +1436,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 112,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Pull Through"
@@ -1444,7 +1446,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 113,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Leg Extension"
@@ -1454,7 +1456,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 114,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Crunch"
@@ -1464,7 +1466,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 115,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Woodchop"
@@ -1474,7 +1476,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 116,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Pallof Press"
@@ -1484,7 +1486,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 117,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Reverse Crunch"
@@ -1494,7 +1496,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 118,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Kickback"
@@ -1504,7 +1506,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 119,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Hip Abduction"
@@ -1514,7 +1516,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 120,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 11,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Hip Adduction"
@@ -1524,7 +1526,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 121,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Chest Press"
@@ -1534,7 +1536,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 122,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Incline Chest Press"
@@ -1544,7 +1546,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 123,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Pec Deck Fly"
@@ -1554,7 +1556,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 124,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Seated Row"
@@ -1564,7 +1566,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 125,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Lat Pulldown"
@@ -1574,7 +1576,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 126,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Assisted Pull Up"
@@ -1584,7 +1586,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 127,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Reverse Fly"
@@ -1594,7 +1596,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 128,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "T-Bar Row"
@@ -1604,7 +1606,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 129,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Shoulder Press"
@@ -1614,7 +1616,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 130,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Lateral Raise"
@@ -1624,7 +1626,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 131,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Rear Delt Fly"
@@ -1634,7 +1636,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 132,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Bicep Curl"
@@ -1644,7 +1646,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 133,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Tricep Extension"
@@ -1654,7 +1656,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 134,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Preacher Curl"
@@ -1664,7 +1666,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 135,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Tricep Dip"
@@ -1674,7 +1676,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 136,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Leg Press"
@@ -1684,7 +1686,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 137,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Hack Squat"
@@ -1694,7 +1696,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 138,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Leg Extension"
@@ -1704,7 +1706,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 139,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Leg Curl"
@@ -1714,7 +1716,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 140,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Seated Leg Curl"
@@ -1724,7 +1726,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 141,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Standing Calf Raise"
@@ -1734,7 +1736,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 142,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Seated Calf Raise"
@@ -1744,7 +1746,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 143,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Smith Squat"
@@ -1754,7 +1756,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 144,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Pendulum Squat"
@@ -1764,7 +1766,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 145,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "V Squat"
@@ -1774,7 +1776,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 146,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Ab Crunch"
@@ -1784,7 +1786,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 147,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Torso Rotation"
@@ -1794,7 +1796,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 148,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Hip Thrust"
@@ -1804,7 +1806,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 149,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Glute Kickback"
@@ -1814,7 +1816,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 150,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Hip Abduction"
@@ -1824,7 +1826,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 151,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Hip Adduction"
@@ -1834,7 +1836,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 152,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Smith Machine Squat"
@@ -1844,7 +1846,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 153,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 4,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Smith Machine Bench Press"
@@ -1854,7 +1856,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 154,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Push Up"
@@ -1864,7 +1866,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 155,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Diamond Push Up"
@@ -1874,7 +1876,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 156,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Wide Push Up"
@@ -1884,7 +1886,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 157,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Decline Push Up"
@@ -1894,7 +1896,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 158,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Dip"
@@ -1904,7 +1906,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 159,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Pull Up"
@@ -1914,7 +1916,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 160,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Chin Up"
@@ -1924,7 +1926,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 161,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Wide Grip Pull Up"
@@ -1934,7 +1936,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 162,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Inverted Row"
@@ -1944,7 +1946,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 163,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Neutral Grip Pull Up"
@@ -1954,7 +1956,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 164,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Pike Push Up"
@@ -1964,7 +1966,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 165,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Handstand Push Up"
@@ -1974,7 +1976,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 166,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Tricep Dip"
@@ -1984,7 +1986,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 167,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Bench Dip"
@@ -1994,7 +1996,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 168,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Close Grip Push Up"
@@ -2004,7 +2006,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 169,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Squat"
@@ -2014,7 +2016,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 170,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Lunge"
@@ -2024,7 +2026,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 171,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Pistol Squat"
@@ -2034,7 +2036,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 172,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Jump Squat"
@@ -2044,7 +2046,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 173,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Wall Sit"
@@ -2054,7 +2056,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 174,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Calf Raise"
@@ -2064,7 +2066,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 175,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Box Jump"
@@ -2074,7 +2076,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 176,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Crunch"
@@ -2084,7 +2086,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 177,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Sit Up"
@@ -2094,7 +2096,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 178,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Plank"
@@ -2104,7 +2106,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 179,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Side Plank"
@@ -2114,7 +2116,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 180,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Leg Raise"
@@ -2124,7 +2126,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 181,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Hanging Leg Raise"
@@ -2134,7 +2136,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 182,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Hanging Knee Raise"
@@ -2144,7 +2146,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 183,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Mountain Climber"
@@ -2154,7 +2156,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 184,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Bicycle Crunch"
@@ -2164,7 +2166,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 185,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Flutter Kicks"
@@ -2174,7 +2176,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 186,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Russian Twist"
@@ -2184,7 +2186,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 187,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "V Up"
@@ -2194,7 +2196,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 188,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Dead Bug"
@@ -2204,7 +2206,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 189,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Ab Wheel Rollout"
@@ -2214,7 +2216,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 190,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Glute Bridge"
@@ -2224,7 +2226,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 191,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Single Leg Glute Bridge"
@@ -2234,7 +2236,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 192,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Donkey Kick"
@@ -2244,7 +2246,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 193,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Fire Hydrant"
@@ -2254,7 +2256,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 194,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Burpee"
@@ -2264,7 +2266,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 195,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 6,
-                            ExerciseType = "BodyWeight",
+                            ExerciseType = 2,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Bear Crawl"
@@ -2274,7 +2276,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 196,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 8,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Pull Up"
@@ -2284,7 +2286,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 197,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 8,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Chin Up"
@@ -2294,7 +2296,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 198,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 8,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Dip"
@@ -2304,7 +2306,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 199,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 8,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Tricep Dip"
@@ -2314,7 +2316,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 200,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 8,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Pistol Squat"
@@ -2324,7 +2326,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 201,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Clean"
@@ -2334,7 +2336,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 202,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Clean and Jerk"
@@ -2344,7 +2346,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 203,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Snatch"
@@ -2354,7 +2356,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 204,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Power Clean"
@@ -2364,7 +2366,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 205,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Hang Clean"
@@ -2374,7 +2376,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 206,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Push Press"
@@ -2384,7 +2386,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 207,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Clean Pull"
@@ -2394,7 +2396,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 208,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Snatch Pull"
@@ -2404,7 +2406,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 209,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Thruster"
@@ -2414,7 +2416,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 210,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 10,
-                            ExerciseType = "WeightLifting",
+                            ExerciseType = 1,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Overhead Squat"
@@ -2424,7 +2426,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 211,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Running"
@@ -2434,7 +2436,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 212,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Treadmill Running"
@@ -2444,7 +2446,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 213,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Cycling"
@@ -2454,7 +2456,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 214,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Stationary Bike"
@@ -2464,7 +2466,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 215,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Elliptical"
@@ -2474,7 +2476,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 216,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Rowing Machine"
@@ -2484,7 +2486,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 217,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Stair Climber"
@@ -2494,7 +2496,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 218,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Jump Rope"
@@ -2504,7 +2506,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 219,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Swimming"
@@ -2514,7 +2516,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 220,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Walking"
@@ -2524,7 +2526,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 221,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Incline Walking"
@@ -2534,7 +2536,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 222,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Battle Ropes"
@@ -2544,7 +2546,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 223,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Assault Bike"
@@ -2554,7 +2556,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 224,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Ski Erg"
@@ -2564,7 +2566,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 225,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 1,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Sprinting"
@@ -2574,7 +2576,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 226,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Yoga"
@@ -2584,7 +2586,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 227,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Pilates"
@@ -2594,7 +2596,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 228,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Foam Rolling"
@@ -2604,7 +2606,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 229,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Sauna"
@@ -2614,7 +2616,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 230,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Hiking"
@@ -2624,7 +2626,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 231,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 7,
-                            ExerciseType = "Cardio",
+                            ExerciseType = 3,
                             IsDeleted = false,
                             MuscleGroupId = 8,
                             Name = "Active Recovery Walk"
@@ -2634,7 +2636,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 232,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Hamstring Stretch"
@@ -2644,7 +2646,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 233,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Quad Stretch"
@@ -2654,7 +2656,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 234,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Hip Flexor Stretch"
@@ -2664,7 +2666,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 235,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 1,
                             Name = "Chest Stretch"
@@ -2674,7 +2676,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 236,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Shoulder Stretch"
@@ -2684,7 +2686,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 237,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 4,
                             Name = "Tricep Stretch"
@@ -2694,7 +2696,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 238,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Lat Stretch"
@@ -2704,7 +2706,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 239,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Calf Stretch"
@@ -2714,7 +2716,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 240,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Glute Stretch"
@@ -2724,7 +2726,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 241,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 3,
                             Name = "Neck Stretch"
@@ -2734,7 +2736,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 242,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Cat Cow Stretch"
@@ -2744,7 +2746,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 243,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 2,
                             Name = "Child's Pose"
@@ -2754,7 +2756,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 244,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 7,
                             Name = "Pigeon Stretch"
@@ -2764,7 +2766,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 245,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 5,
                             Name = "Seated Forward Fold"
@@ -2774,7 +2776,7 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                             Id = 246,
                             CreatedAt = new DateTime(2026, 3, 16, 13, 3, 37, 171, DateTimeKind.Utc),
                             ExerciseCategoryId = 9,
-                            ExerciseType = "Stretching",
+                            ExerciseType = 4,
                             IsDeleted = false,
                             MuscleGroupId = 6,
                             Name = "Spinal Twist"

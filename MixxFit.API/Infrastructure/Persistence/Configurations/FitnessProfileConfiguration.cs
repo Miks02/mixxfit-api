@@ -37,5 +37,8 @@ public class FitnessProfileConfiguration : IEntityTypeConfiguration<FitnessProfi
             .HasForeignKey(e => e.FitnessProfileId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.Property(p => p.Gender)
+            .HasConversion<string>();
+
     }
 }

@@ -42,6 +42,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(p => p.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+        builder.Property(p => p.AccountStatus)
+            .HasConversion<string>();
+
         builder
             .HasOne(u => u.FitnessProfile)
             .WithOne(f => f.User)

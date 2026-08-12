@@ -14,8 +14,8 @@ namespace MixxFit.API.Features.Profile.UpdateFitnessProfile;
 
 public static class UpdateTargetWeight
 {
-    public record UpdateTargetWeightRequest(double TargetWeight);
-    public record UpdateTargetWeightResponse(double TargetWeight);
+    public record UpdateTargetWeightRequest(double? TargetWeight);
+    public record UpdateTargetWeightResponse(double? TargetWeight);
 
     public class UpdateTargetWeightValidator : AbstractValidator<UpdateTargetWeightRequest>
     {
@@ -44,7 +44,7 @@ public static class UpdateTargetWeight
 
             await context.SaveChangesAsync(cancellationToken);
 
-            return Result<UpdateTargetWeightResponse>.Success(new UpdateTargetWeightResponse((double)profile.TargetWeight));
+            return Result<UpdateTargetWeightResponse>.Success(new UpdateTargetWeightResponse(profile.TargetWeight));
         }
     }
 

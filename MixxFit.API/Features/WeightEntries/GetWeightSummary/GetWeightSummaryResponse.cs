@@ -10,4 +10,5 @@ public record GetWeightSummaryResponse
     public WeightListDetails WeightListDetails { get; set; } = null!;
     public WeightChartDto WeightChart { get; set; } = null!;
     public IReadOnlyList<int> Years { get; set; } = [];
+    public WeightDeltaDto? WeightDelta { get; set; }
 }

@@ -4,11 +4,9 @@ namespace MixxFit.API.Features.WeightEntries.GetWeightSummary;
 
 public record GetWeightSummaryResponse
 {
-    public WeightRecordDto FirstEntry { get; set; } = null!;
-    public CurrentWeightDto CurrentWeight { get; set; } = null!;
-    public double Progress { get; set; }
-    public WeightListDetails WeightListDetails { get; set; } = null!;
-    public WeightChartDto WeightChart { get; set; } = null!;
-    public IReadOnlyList<int> Years { get; set; } = [];
-    public WeightDeltaDto? WeightDelta { get; set; }
+    public CurrentWeightDto CurrentWeight { get; init; } = null!;
+    public WeightListDetails WeightListDetails { get; init; } = null!;
+    public WeightChartDto WeightChart { get; init; } = null!;
+    public WeightDeltaDto? WeightDelta { get; init; }
+    public Dictionary<int, IEnumerable<int>> YearsAndMonthsGroup { get; init; } = [];
 }

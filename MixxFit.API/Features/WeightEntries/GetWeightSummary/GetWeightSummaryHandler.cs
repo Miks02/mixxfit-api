@@ -31,15 +31,6 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
                 }
             };
         }
-
-        var firstWeightEntry = await context.WeightEntries
-            .Where(w => w.FitnessProfile!.UserId == userId)
-            .Select(w => new WeightRecordDto()
-            {
-                Weight = w.Weight,
-                CreatedAt = w.CreatedAt
-            })
-            .FirstOrDefaultAsync(ct);
         
         var lastWeightEntry = await context.WeightEntries
             .Where(w => w.FitnessProfile!.UserId == userId)
@@ -55,40 +46,24 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
             ? await GetWeightDeltaAsync(userId, lastWeightEntry, ct) 
             : null;
         
-        var weightEntryYears = await GetUserWeightEntryYearsAsync(userId, ct);
         var weightListDetails = await GetWeightLogsAsync(userId, request.Month, request.Year, ct);
-        var progress = lastWeightEntry!.Weight - firstWeightEntry!.Weight;
         var weightChart = await GetWeightChartAsync(userId, request.TargetWeight, ct);
         
-        await GetWeightDeltaAsync(userId, lastWeightEntry, ct);
-
+        var yearMonths = await GetAvailableYearsAndMonthsAsync(userId, ct);
+        
         return new GetWeightSummaryResponse
         {
-            FirstEntry = firstWeightEntry,
             CurrentWeight = new CurrentWeightDto
             {
-                Weight = lastWeightEntry.Weight,
-                CreatedAt = lastWeightEntry.CreatedAt
+                Weight = lastWeightEntry?.Weight,
+                CreatedAt = lastWeightEntry?.CreatedAt
             },
-            Progress = progress,
-            Years = weightEntryYears,
             WeightListDetails = weightListDetails,
             WeightChart = weightChart,
-            WeightDelta = weightDelta
+            WeightDelta = weightDelta,
+            YearsAndMonthsGroup = yearMonths,
         };
 
-    }
-    
-    private async Task<IReadOnlyList<int>> GetUserWeightEntryYearsAsync(
-        string userId,
-        CancellationToken cancellationToken)
-    {
-        return await context.WeightEntries
-            .Where(w => w.FitnessProfile!.UserId == userId)
-            .Select(w => w.CreatedAt.Year)
-            .Distinct()
-            .OrderByDescending(w => w)
-            .ToListAsync(cancellationToken);
     }
     
     private async Task<WeightListDetails> GetWeightLogsAsync(
@@ -101,7 +76,6 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         return new WeightListDetails
         {
             WeightLogs = await (await BuildWeightEntriesQuery(userId, month, year, cancellationToken)).ToListAsync(cancellationToken),
-            Months = await GetUserWeightEntryMonthsByYearAsync(userId, year ?? DateTime.UtcNow.Year, cancellationToken)
         };
     }
     
@@ -123,26 +97,12 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
             })
             .ToListAsync(cancellationToken);
 
-
         return new WeightChartDto
         {
             Entries = entries,
             TargetWeight = targetWeight
         };
 
-    }
-    
-    private async Task<IReadOnlyList<int>> GetUserWeightEntryMonthsByYearAsync(
-        string userId, 
-        int year,
-        CancellationToken cancellationToken)
-    {
-        return await context.WeightEntries
-            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Year == year)
-            .Select(w => w.CreatedAt.Month)
-            .Distinct()
-            .OrderByDescending(w => w)
-            .ToListAsync(cancellationToken);
     }
     
     private async Task<int?> GetLastAvailableMonthByYear(string userId, int year, CancellationToken cancellationToken)
@@ -197,5 +157,23 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
             throw new ArgumentException($"Current weight data is older than than previous weight entry. Check the value passed as a parameter for {nameof(currentWeightData)}");
         
         return deltaDto;
+    }
+
+    private async Task<Dictionary<int, IEnumerable<int>>> GetAvailableYearsAndMonthsAsync(string userId,
+        CancellationToken ct)
+    {
+        var yearsMonths = await context.WeightEntries
+            .Where(we => we.FitnessProfile!.UserId == userId)
+            .Select(we => new { we.CreatedAt.Year, we.CreatedAt.Month })
+            .Distinct()
+            .OrderByDescending(w => w.Year)
+            .ThenByDescending(we => we.Month)
+            .ToListAsync(ct);
+
+        return yearsMonths
+            .GroupBy(we => we.Year)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Select(we => we.Month));
     }
 }

@@ -7,7 +7,7 @@ public record UserDetailsDto(
     string UserName,
     string Email,
     string? ImagePath,
-    double? CurrentWeight,
+    decimal? CurrentWeight,
     double? TargetWeight,
     double? Height,
     double? DailyCalorieGoal,

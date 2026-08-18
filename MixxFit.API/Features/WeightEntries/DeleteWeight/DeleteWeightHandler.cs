@@ -47,7 +47,7 @@ public class DeleteWeightHandler(AppDbContext context, ILogger<DeleteWeightHandl
         return Result.Success();
     }
 
-    private async Task<double?> GetLastWeightFromUser(string userId, CancellationToken cancellationToken)
+    private async Task<decimal?> GetLastWeightFromUser(string userId, CancellationToken cancellationToken)
     {
         var lastWeight = await context.WeightEntries
             .Where(w => w.FitnessProfile!.UserId == userId)

@@ -15,7 +15,7 @@ public class FitnessProfile
     
     public Gender? Gender { get; set; }
     public double? Height { get; set; }
-    public double? Weight { get; set; }
+    public decimal? Weight { get; set; }
     public double? DailyCalorieGoal { get; set; }
     public double? TargetWeight { get; set; }
     public DateTime? DateOfBirth { get; set; }

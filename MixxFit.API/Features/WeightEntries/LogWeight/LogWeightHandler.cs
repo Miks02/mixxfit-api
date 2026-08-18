@@ -26,7 +26,7 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
                 Weight = request.Weight,
                 Time = request.Time,
                 FitnessProfileId = fitnessProfile.Id,
-                Notes = request.Notes
+                Notes = request.Notes,
             };
 
             await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);

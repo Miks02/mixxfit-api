@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Common.Interfaces;
-using MixxFit.API.Domain.Enums;
 using MixxFit.API.Features.WeightEntries.Shared;
 using MixxFit.API.Infrastructure.Persistence;
 
@@ -126,7 +125,8 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
                 Id = w.Id,
                 Weight = w.Weight,
                 TimeLogged = w.Time,
-                CreatedAt = w.CreatedAt
+                CreatedAt = w.CreatedAt,
+                Notes = w.Notes
             });
 
         year ??= DateTime.UtcNow.Year;

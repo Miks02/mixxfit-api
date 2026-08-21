@@ -1,7 +1,7 @@
 namespace MixxFit.API.Features.WeightEntries.GetWeightSummary;
 
-public record CurrentWeightDto
+public record WeightDeltaDto
 {
-    public decimal Weight { get; set; }
+    public decimal Delta { get; set; }
     public DateTime CreatedAt { get; set; }
-}
+};

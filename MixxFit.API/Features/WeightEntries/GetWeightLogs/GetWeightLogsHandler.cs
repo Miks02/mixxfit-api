@@ -10,25 +10,37 @@ public class GetWeightLogsHandler(AppDbContext context) : IHandler
     public async Task<GetWeightLogsResponse> Handle(
         string userId,
         GetWeightLogsRequest request,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
     {
+        var month = request.Month ?? await GetLastAvailableMonthByYear(userId, request.Year ?? DateTime.UtcNow.Year, ct);
+
+        if (month is null)
+        {
+            return new GetWeightLogsResponse
+            {
+                WeightLogs = []
+            };
+        }
+        
+        var year = request.Year ?? DateTime.UtcNow.Year;
         
         return new GetWeightLogsResponse
         {
-            WeightLogs = await (await BuildWeightEntriesQuery(userId, request.Month, request.Year, cancellationToken)).ToListAsync(cancellationToken),
-            Months = await GetUserWeightEntryMonthsByYearAsync(userId, request.Year ?? DateTime.UtcNow.Year, cancellationToken)
+            WeightLogs = await BuildWeightEntriesQuery(userId, month.Value, year).ToListAsync(ct)
         };
     }
     
-    private async Task<IQueryable<WeightRecordDto>> BuildWeightEntriesQuery(
+    private IQueryable<WeightRecordDto> BuildWeightEntriesQuery(
         string userId, 
-        int? month = null, 
-        int? year = null,
-        CancellationToken cancellationToken = default)
+        int month, 
+        int year)
     {
+        var startDate = new DateTime(year, month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var endDate = startDate.AddMonths(1);
+        
         var query = context.WeightEntries
             .OrderByDescending(w => w.CreatedAt)
-            .Where(w => w.FitnessProfile!.UserId == userId)
+            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt >= startDate && w.CreatedAt < endDate)
             .Select(w => new WeightRecordDto
             {
                 Id = w.Id,
@@ -36,33 +48,17 @@ public class GetWeightLogsHandler(AppDbContext context) : IHandler
                 TimeLogged = w.Time,
                 CreatedAt = w.CreatedAt
             });
-
-        year ??= DateTime.UtcNow.Year;
-
-        month ??= await GetLastAvailableMonthByYear(userId, (int) year, cancellationToken);
-
-        query = query.Where(w => w.CreatedAt.Year == year && w.CreatedAt.Month == month);
-            
+        
         return query;
-    }
-    
-    private async Task<IReadOnlyList<int>> GetUserWeightEntryMonthsByYearAsync(
-        string userId, 
-        int year,
-        CancellationToken cancellationToken)
-    {
-        return await context.WeightEntries
-            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Year == year)
-            .Select(w => w.CreatedAt.Month)
-            .Distinct()
-            .OrderByDescending(w => w)
-            .ToListAsync(cancellationToken);
     }
     
     private async Task<int?> GetLastAvailableMonthByYear(string userId, int year, CancellationToken cancellationToken)
     {
+        var startDate = new DateTime(year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var endDate = startDate.AddYears(1);
+        
         return await context.WeightEntries
-            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Year == year)
+            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt >= startDate && w.CreatedAt < endDate)
             .MaxAsync(w => (int?)w.CreatedAt.Month, cancellationToken);
     }
 }

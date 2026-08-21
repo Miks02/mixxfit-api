@@ -15,6 +15,9 @@ public class WeightEntryConfiguration : IEntityTypeConfiguration<WeightEntry>
         builder.HasIndex(x => x.Weight);
         builder.HasIndex(x => x.CreatedAt);
 
+        builder.Property(x => x.Weight)
+            .HasPrecision(5, 2);
+
         builder.Property(x => x.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 

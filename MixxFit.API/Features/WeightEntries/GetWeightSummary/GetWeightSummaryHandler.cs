@@ -58,7 +58,6 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
             WeightDelta = weightDelta,
             YearsAndMonthsGroup = yearMonths,
         };
-
     }
     
     private async Task<WeightListDetails> GetWeightLogsAsync(
@@ -67,10 +66,20 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         int? year = null,
         CancellationToken cancellationToken = default)
     {
-
+        var yearParam = year ?? DateTime.UtcNow.Year;
+        var monthParam = month ?? await GetLastAvailableMonthByYear(userId, yearParam, cancellationToken);
+        
+        if (monthParam is null)
+        {
+            return new WeightListDetails
+            {
+                WeightLogs = []
+            };
+        }
+        
         return new WeightListDetails
         {
-            WeightLogs = await (await BuildWeightEntriesQuery(userId, month, year, cancellationToken)).ToListAsync(cancellationToken),
+            WeightLogs = await BuildWeightEntriesQuery(userId, monthParam.Value, yearParam).ToListAsync(cancellationToken),
         };
     }
     
@@ -97,25 +106,26 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
             Entries = entries,
             TargetWeight = targetWeight
         };
-
     }
     
     private async Task<int?> GetLastAvailableMonthByYear(string userId, int year, CancellationToken cancellationToken)
     {
+        var startDate = new DateTime(year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var endDate = startDate.AddYears(1);
+        
         return await context.WeightEntries
-            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Year == year)
+            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt >= startDate && w.CreatedAt < endDate)
             .MaxAsync(w => (int?)w.CreatedAt.Month, cancellationToken);
     }
     
-    private async Task<IQueryable<WeightRecordDto>> BuildWeightEntriesQuery(
+    private IQueryable<WeightRecordDto> BuildWeightEntriesQuery(
         string userId, 
-        int? month = null, 
-        int? year = null,
-        CancellationToken cancellationToken = default)
+        int month, 
+        int year)
     {
         var query = context.WeightEntries
             .OrderByDescending(w => w.CreatedAt)
-            .Where(w => w.FitnessProfile!.UserId == userId)
+            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Year == year && w.CreatedAt.Month == month)
             .Select(w => new WeightRecordDto
             {
                 Id = w.Id,
@@ -124,12 +134,6 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
                 CreatedAt = w.CreatedAt,
                 Notes = w.Notes
             });
-
-        year ??= DateTime.UtcNow.Year;
-
-        month ??= await GetLastAvailableMonthByYear(userId, (int) year, cancellationToken);
-
-        query = query.Where(w => w.CreatedAt.Year == year && w.CreatedAt.Month == month);
             
         return query;
     }

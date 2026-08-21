@@ -4,7 +4,7 @@ namespace MixxFit.API.Features.WeightEntries.GetWeightSummary;
 
 public record GetWeightSummaryResponse
 {
-    public CurrentWeightDto CurrentWeight { get; init; } = null!;
+    public CurrentWeightDto? CurrentWeight { get; init; }
     public WeightListDetails WeightListDetails { get; init; } = null!;
     public WeightChartDto WeightChart { get; init; } = null!;
     public WeightDeltaDto? WeightDelta { get; init; }

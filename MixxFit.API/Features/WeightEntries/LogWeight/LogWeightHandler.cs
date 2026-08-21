@@ -47,7 +47,7 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
                 throw;
             }
 
-            var createdWeightEntry = new LogWeightResponse()
+            var createdWeightEntry = new LogWeightResponse
             {
                 Id = newEntry.Id,
                 Weight = newEntry.Weight,

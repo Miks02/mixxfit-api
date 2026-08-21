@@ -31,18 +31,18 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
             };
         }
         
-        var lastWeightEntry = await context.WeightEntries
+        var currentWeight = await context.WeightEntries
             .Where(w => w.FitnessProfile!.UserId == userId)
             .OrderByDescending(w => w.CreatedAt)
-            .Select(w => new WeightRecordDto
+            .Select(w => new CurrentWeightDto
             {
                 Weight = w.Weight,
                 CreatedAt = w.CreatedAt
             })
             .FirstOrDefaultAsync(ct);
 
-        var weightDelta = lastWeightEntry is not null 
-            ? await GetWeightDeltaAsync(userId, lastWeightEntry, ct) 
+        var weightDelta = currentWeight is not null 
+            ? await GetWeightDeltaAsync(userId, currentWeight, ct) 
             : null;
         
         var weightListDetails = await GetWeightLogsAsync(userId, request.Month, request.Year, ct);
@@ -52,11 +52,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         
         return new GetWeightSummaryResponse
         {
-            CurrentWeight = new CurrentWeightDto
-            {
-                Weight = lastWeightEntry?.Weight,
-                CreatedAt = lastWeightEntry?.CreatedAt
-            },
+            CurrentWeight = currentWeight,
             WeightListDetails = weightListDetails,
             WeightChart = weightChart,
             WeightDelta = weightDelta,
@@ -138,7 +134,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         return query;
     }
 
-    private async Task<WeightDeltaDto?> GetWeightDeltaAsync(string userId, WeightRecordDto currentWeightData ,CancellationToken ct)
+    private async Task<WeightDeltaDto?> GetWeightDeltaAsync(string userId, CurrentWeightDto currentWeightData ,CancellationToken ct)
     {
         var deltaDto = await context.WeightEntries
             .Where(we => we.FitnessProfile!.UserId == userId && we.CreatedAt != currentWeightData.CreatedAt)

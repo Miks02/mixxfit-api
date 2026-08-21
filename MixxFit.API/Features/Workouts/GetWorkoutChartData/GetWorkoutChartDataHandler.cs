@@ -19,13 +19,13 @@ public class GetWorkoutChartDataHandler(AppDbContext context) : IHandler
             .ToListAsync(cancellationToken);
         
         var selectedYear = request.Year ?? await GetLastWorkoutYearAsync(userId, cancellationToken);
-        
+
         var stats = await context.Workouts
             .Where(w => w.FitnessProfile!.UserId == userId && w.WorkoutDate.Year == selectedYear)
             .GroupBy(w => w.WorkoutDate.Month)
             .Select(g => new { Month = g.Key, Count = g.Count() })
             .ToListAsync(cancellationToken);
-
+        
         return new GetWorkoutChartDataResponse()
         {
             Years = years,

@@ -3,11 +3,13 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
 using MixxFit.API.Common.Extensions;
 using MixxFit.API.Domain.Entities.Users;
+using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace MixxFit.API.Infrastructure.Security;
 
@@ -27,43 +29,40 @@ public class TokenService(UserManager<User> userManager, IConfiguration configur
     
     private async Task<string> GenerateJwtToken(User user)
     {
+        var secretKey = configuration["JwtConfig:Token"];
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
+
+        var signingCreds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        
         var rolesList = await userManager.GetRolesAsync(user);
 
-        var claims = new List<Claim>()
+        var newClaims = new List<Claim>
         {
-            new (JwtRegisteredClaimNames.Sub, user.Id),
-            new (JwtRegisteredClaimNames.Email, user.Email!),
-            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new (ClaimTypes.NameIdentifier, user.Id),
+            new(JwtRegisteredClaimNames.Sub, user.Id),
+            new(JwtRegisteredClaimNames.Email, user.Email!),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(ClaimTypes.NameIdentifier, user.Id)
+        };
+        
+        newClaims.AddRange(rolesList.Select(role => new Claim(ClaimTypes.Role, role)));
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(newClaims),
+            Expires = DateTime.UtcNow.AddMinutes(configuration.GetValue<double>("JwtConfig:ExpirationInMinutes")),
+            SigningCredentials = signingCreds,
+            Issuer = configuration["JwtConfig:Issuer"],
+            Audience = configuration["JwtConfig:Audience"]
         };
 
-        claims.AddRange(rolesList.Select(role => new Claim(ClaimTypes.Role, role)));
+        var token = new JsonWebTokenHandler().CreateToken(tokenDescriptor);
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtConfig:Token"]!));
-
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken
-        (
-            issuer: configuration["JwtConfig:Issuer"],
-            audience: configuration["JwtConfig:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(configuration.GetValue<double>("JwtConfig:ExpirationInMinutes")),
-            signingCredentials: credentials
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return token;
     }
 
     private static string CreateRefreshToken()
     {
-        var randomBytes = new Byte[32];
-
-        using var rng = RandomNumberGenerator.Create();
-
-        rng.GetBytes(randomBytes);
-
-        return Convert.ToBase64String(randomBytes);
+        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
     }
     
     private async Task<Result<string>> AssignRefreshToken(User user)

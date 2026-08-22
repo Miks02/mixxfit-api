@@ -6,6 +6,9 @@ public class CookieProvider(IHttpContextAccessor contextAccessor) : ICookieProvi
 {
     public string GetRefreshTokenCookie() => contextAccessor.HttpContext?.Request.Cookies["refreshToken"] 
                                              ?? "";
+
+    public string GetUserIp() => contextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
     public void SetRefreshTokenCookie(string refreshToken)
     {
         var cookieOptions = GetCookieOptions();

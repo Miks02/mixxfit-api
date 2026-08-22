@@ -8,14 +8,8 @@ public class User : IdentityUser
 {
     public string? FirstName { get; set; } 
     public string? LastName { get; set; } 
-
     public string? ImagePath { get; set; }
-    
-    public string? RefreshToken { get; set; } 
-    public DateTime? TokenExpDate { get; set; }
-
     public AccountStatus AccountStatus { get; set; } = AccountStatus.Active;
- 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public FitnessProfile FitnessProfile { get; set; } = null!;

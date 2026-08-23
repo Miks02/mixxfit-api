@@ -1,8 +1,9 @@
 using System.Net;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using MixxFit.API.Common.Results;
-using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Domain.Entities.Users;
+using MixxFit.API.Domain.ErrorCatalog;
 
 namespace MixxFit.API.Common.Extensions;
 
@@ -11,7 +12,7 @@ public static class ResultExtensions
     public static IResult ToTypedResult(this Result result, HttpStatusCode statusCode = HttpStatusCode.OK)
     {
         if (!result.IsSuccess)
-            return TypedResults.BadRequest(result.Errors[0]);
+            return ToProblemResult(result.Errors[0]);
 
         IResult successResult = statusCode switch
         {
@@ -27,7 +28,7 @@ public static class ResultExtensions
     public static IResult ToTypedResult<T>(this Result<T> result, HttpStatusCode statusCode = HttpStatusCode.OK, string? location = "" )
     {
         if (!result.IsSuccess)
-            return TypedResults.BadRequest(result.Errors[0]);
+            return ToProblemResult(result.Errors[0]);
 
         IResult successResult = statusCode switch
         {
@@ -38,6 +39,29 @@ public static class ResultExtensions
         };
 
         return successResult;
+    }
+
+    private static IResult ToProblemResult(Error error)
+    {
+        var status = error switch
+        {
+            { Type: ErrorType.NotFound } => StatusCodes.Status404NotFound,
+            { Type: ErrorType.Validation } => StatusCodes.Status400BadRequest,
+            { Type: ErrorType.Unauthorized } => StatusCodes.Status401Unauthorized,
+            { Type: ErrorType.Forbidden } => StatusCodes.Status403Forbidden,
+            { Type: ErrorType.Conflict } => StatusCodes.Status409Conflict,
+            { Type: ErrorType.TooManyRequests} => StatusCodes.Status429TooManyRequests,
+            _ => StatusCodes.Status500InternalServerError
+        };
+        
+        return TypedResults.Problem(new ProblemDetails
+        {
+            Title = $"urn:mixxfit-api:error:{error.Code}",
+            Detail = "An error occurred while processing your request.",
+            Status = status,
+            Instance = $"/errors/{error.Code}",
+            Extensions = { ["errorCode"] = error.Code }
+        });
     }
     
     public static Result HandleResult(this Result result)

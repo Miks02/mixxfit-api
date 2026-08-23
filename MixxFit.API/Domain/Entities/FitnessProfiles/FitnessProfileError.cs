@@ -6,5 +6,5 @@ namespace MixxFit.API.Domain.Entities.FitnessProfiles;
 public class FitnessProfileError
 {
     public static Error NotFound(string message = "Fitness profile was not found")
-        => new("FitnessProfile.NotFound", message);
+        => new("FitnessProfile.NotFound", message, ErrorType.NotFound);
 }

@@ -5,8 +5,8 @@ namespace MixxFit.API.Domain.Entities.Workouts;
 public class WorkoutError
 {
     public static Error NotFound(string message = "Workout was not found")
-        => new("Workout.NotFound", message);
+        => new("Workout.NotFound", message, ErrorType.NotFound);
 
     public static Error LimitReached(string message = "Workout limit has been reached")
-        => new("Workout.LimitReached", message);
+        => new("Workout.LimitReached", message, ErrorType.TooManyRequests);
 }

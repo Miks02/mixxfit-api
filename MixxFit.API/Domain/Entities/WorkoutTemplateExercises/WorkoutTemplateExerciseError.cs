@@ -5,8 +5,8 @@ namespace MixxFit.API.Domain.Entities.WorkoutTemplateExercises;
 public class WorkoutTemplateExerciseError
 {
     public static Error NotFound(string message = "Workout template exercise was not found")
-        => new("WorkoutTemplateExercise.NotFound", message);
+        => new("WorkoutTemplateExercise.NotFound", message, ErrorType.NotFound);
 
     public static Error AlreadyExists(string message = "Workout template exercise already exists")
-        => new("WorkoutTemplateExercise.AlreadyExists", message);
+        => new("WorkoutTemplateExercise.AlreadyExists", message, ErrorType.Conflict);
 }

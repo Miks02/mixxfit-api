@@ -12,15 +12,14 @@ public class LogoutEndpoint : IEndpoint
         app.MapPost("auth/logout",
                 async (LogoutHandler handler, ICookieProvider cookieProvider) =>
                 {
-                    var request = new LogoutRequest(cookieProvider.GetRefreshTokenCookie());
-                    
-                    var result = await handler.Handle(request);
+                    var refreshToken = cookieProvider.GetRefreshTokenCookie();
+
+                    await handler.Handle(refreshToken);
 
                     cookieProvider.DeleteRefreshTokenCookie();
-                    return result.ToTypedResult();
+                    return TypedResults.NoContent();
                 })
             .WithTags("Auth")
-            .Produces(StatusCodes.Status204NoContent)
-            .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized);
+            .Produces(StatusCodes.Status204NoContent);
     }
 }

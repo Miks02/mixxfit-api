@@ -1,18 +1,18 @@
 using MixxFit.API.Common.Interfaces;
-using MixxFit.API.Common.Results;
-using MixxFit.API.Domain.ErrorCatalog;
 
 namespace MixxFit.API.Features.Auth.Logout;
 
-public class LogoutHandler(ITokenService tokenService) : IHandler
+public class LogoutHandler(ITokenService tokenService, ILogger<LogoutHandler> logger) : IHandler
 {
-    public async Task<Result> Handle(LogoutRequest request)
+    public async Task Handle(string refreshToken)
     {
-        if (string.IsNullOrEmpty(request.RefreshToken))
-            return Result.Failure(AuthError.JwtError("Refresh token is missing"));
+        if (string.IsNullOrEmpty(refreshToken))
+        {
+            logger.LogInformation("No refresh token provided for logout.");
+            return;
+        }
 
-        var revokeOldTokenResult = await tokenService.RevokeRefreshToken(request.RefreshToken);
+        await tokenService.RevokeRefreshToken(refreshToken);
         
-        return revokeOldTokenResult;
     }
 }

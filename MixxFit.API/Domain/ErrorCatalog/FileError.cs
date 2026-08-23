@@ -8,12 +8,12 @@ public class FileError
         => new("File.StorageFailed", message);
 
     public static Error Empty(string message = "Uploaded file is empty")
-        => new("File.Empty", message);
+        => new("File.Empty", message, ErrorType.Validation);
 
     public static Error TooLarge(long maxBytes)
     {
         string message = $"Uploaded file exceeds maximum allowed size of {maxBytes} bytes";
-        return new Error("File.TooLarge", message);
+        return new Error("File.TooLarge", message, ErrorType.Validation);
     }
 
     public static Error UnsupportedExtension(string extension = "")
@@ -21,10 +21,10 @@ public class FileError
         string message = string.IsNullOrWhiteSpace(extension)
             ? "Uploaded file extension is not supported"
             : $"Uploaded file extension '{extension}' is not supported";
-        return new Error("File.UnsupportedExtension", message);
+        return new Error("File.UnsupportedExtension", message, ErrorType.Validation);
     }
 
     public static Error ValidationFailed(string message = "Uploaded file failed validation")
-        => new("File.ValidationFailed", message);
+        => new("File.ValidationFailed", message, ErrorType.Validation);
     
 }

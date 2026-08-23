@@ -8,7 +8,7 @@ public class GeneralError
         => new("General.IdentityError", message);
         
     public static Error NotFound(string message = "The requested resource was not found")
-        => new("General.NotFound", message);
+        => new("General.NotFound", message, ErrorType.NotFound);
 
     public static Error InternalServerError(string message = "Internal server error")
         => new("General.InternalServerError", message);
@@ -17,11 +17,11 @@ public class GeneralError
         => new("General.UnknownError", message);
 
     public static Error LimitReached(string message = "Limit for this request has been reached")
-        => new("General.LimitReached", message);
+        => new("General.LimitReached", message, ErrorType.TooManyRequests);
     
     public static Error Conflict(string message = "Conflict occurred")
-        => new("General.Conflict", message);
+        => new("General.Conflict", message, ErrorType.Conflict);
         
     public static Error Forbidden(string message = "You are not allowed to perform this action")
-        => new("General.Forbidden", message);
+        => new("General.Forbidden", message, ErrorType.Forbidden);
 }

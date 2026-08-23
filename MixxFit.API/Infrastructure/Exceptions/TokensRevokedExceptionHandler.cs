@@ -33,7 +33,7 @@ namespace MixxFit.API.Infrastructure.Exceptions
                 Exception = exception,
                 ProblemDetails = new ProblemDetails
                 {
-                    Type = "urn:mixxfit-api:error:tokens-revoked",
+                    Type = "urn:mixxfit-api:error:AuthError.SecurityBreach",
                     Title = "Unauthorized",
                     Detail = "All client sessions have been revoked due to a possible security breach."
                 }

@@ -23,7 +23,7 @@ namespace MixxFit.API.Infrastructure.Exceptions
                 Exception = exception,
                 ProblemDetails = new ProblemDetails
                 {
-                    Type = "urn:mixxfit:api:error:internal-error",
+                    Type = "urn:mixxfit:api:error:General.InternalServerError",
                     Title = "Server error occured",
                     Detail = "An internal server error occurred while trying to process the request."
                 }

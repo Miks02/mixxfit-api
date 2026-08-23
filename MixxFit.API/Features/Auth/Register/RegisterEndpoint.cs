@@ -14,8 +14,8 @@ public class RegisterEndpoint : IEndpoint
         {
             var result = await handler.Handle(request);
 
-            if(!result.IsSuccess)
-                return Results.BadRequest(result.Errors[0]);
+            if (!result.IsSuccess)
+                return result.ToTypedResult();
             
             cookieProvider.SetRefreshTokenCookie(result.Payload!.RefreshToken);
             return Results.Ok(result.Payload);

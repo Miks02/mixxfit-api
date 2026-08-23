@@ -29,7 +29,7 @@ public class SecurityDbUpdateExceptionHandler(
             ProblemDetails = new ProblemDetails
             {
                 Status = StatusCodes.Status500InternalServerError,
-                Type = "urn:mixxfit-api:error:internal-error",
+                Type = "urn:mixxfit-api:error:General.InternalServerError",
                 Title = "Internal Server Error",
                 Detail = "An unexpected error occurred while processing your request. Please try again later.",
                 Instance = httpContext.Request.Path

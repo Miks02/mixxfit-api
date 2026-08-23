@@ -11,7 +11,7 @@ public class UserError
             ? "Email is taken"
             : $"Email '{email}' is taken";
             
-        return new Error("User.EmailAlreadyExists", message);
+        return new Error("User.EmailAlreadyExists", message, ErrorType.Conflict);
     }
 
     public static Error UsernameAlreadyExists(string username = "")
@@ -20,7 +20,7 @@ public class UserError
             ? "Username is taken"
             : $"Username '{username}' is taken";
 
-        return new Error("User.UsernameAlreadyExists", message);
+        return new Error("User.UsernameAlreadyExists", message, ErrorType.Conflict);
     }
 
     public static Error NotFound(string identifier = "")
@@ -29,6 +29,6 @@ public class UserError
             ? "User not found"
             : $"User with identifier '{identifier}' is not found";
 
-        return new Error("User.NotFound", message);
+        return new Error("User.NotFound", message, ErrorType.NotFound);
     }
 }

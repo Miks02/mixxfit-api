@@ -1,6 +1,8 @@
 using FluentValidation;
 using MixxFit.API.Common.Interfaces;
+using MixxFit.API.Features.Exercises.CleanUpExercisesJob;
 using MixxFit.API.Features.Workouts.CreateWorkout;
+using MixxFit.API.Infrastructure.BackgroundServices;
 using MixxFit.API.Infrastructure.Cloudinary;
 using MixxFit.API.Infrastructure.Cors;
 using MixxFit.API.Infrastructure.Exceptions;
@@ -16,6 +18,7 @@ public static class DependencyInjection
     {
         services.AddPersistence(configuration);
         services.AddSecurity(configuration);
+        services.AddHostedService<CleanExpiredTokensJob>();
         services.AddHttpContextAccessor();
         services.AddCloudinary(configuration);
         services.AddProblemDetails();

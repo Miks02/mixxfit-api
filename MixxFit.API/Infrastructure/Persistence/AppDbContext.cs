@@ -7,6 +7,7 @@ using MixxFit.API.Domain.Entities.ExerciseEntries;
 using MixxFit.API.Domain.Entities.Exercises;
 using MixxFit.API.Domain.Entities.FitnessProfiles;
 using MixxFit.API.Domain.Entities.MuscleGroups;
+using MixxFit.API.Domain.Entities.RefreshTokens;
 using MixxFit.API.Domain.Entities.SetEntries;
 using MixxFit.API.Domain.Entities.Users;
 using MixxFit.API.Domain.Entities.WeightEntries;
@@ -18,6 +19,7 @@ namespace MixxFit.API.Infrastructure.Persistence;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
 {
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<FitnessProfile> FitnessProfiles { get; set; }
     public DbSet<Workout> Workouts { get; set; }
     public DbSet<ExerciseEntry> ExerciseEntries { get; set; }

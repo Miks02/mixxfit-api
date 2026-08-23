@@ -14,10 +14,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.LastName)
             .HasMaxLength(50);
-
-        builder.Property(u => u.RefreshToken)
-            .HasMaxLength(500);
-
+        
         builder.Property(u => u.UserName)
             .HasMaxLength(20);
 

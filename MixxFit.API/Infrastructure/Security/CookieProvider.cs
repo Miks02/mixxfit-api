@@ -2,14 +2,15 @@ using MixxFit.API.Common.Interfaces;
 
 namespace MixxFit.API.Infrastructure.Security;
 
-public class CookieProvider(IHttpContextAccessor contextAccessor) : ICookieProvider
+public class CookieProvider(IHttpContextAccessor contextAccessor, IConfiguration configuration) : ICookieProvider
 {
     public string GetRefreshTokenCookie() => contextAccessor.HttpContext?.Request.Cookies["refreshToken"] 
                                              ?? "";
+    
     public void SetRefreshTokenCookie(string refreshToken)
     {
         var cookieOptions = GetCookieOptions();
-        cookieOptions.Expires = DateTime.UtcNow.AddDays(7);
+        cookieOptions.Expires = DateTime.UtcNow.AddDays(configuration.GetValue<int>("RefreshConfig:ExpirationInDays"));
         
         contextAccessor.HttpContext!.Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
     }
@@ -22,7 +23,7 @@ public class CookieProvider(IHttpContextAccessor contextAccessor) : ICookieProvi
 
     private CookieOptions GetCookieOptions()
     {
-        return new CookieOptions()
+        return new CookieOptions
         {
             HttpOnly = true,
             Secure = true,

@@ -37,4 +37,6 @@ public class AuthError
 
     public static Error ExpiredToken(string message = "Refresh token has expired")
         => new("Auth.ExpiredToken", message);
+    public static Error SecurityBreach(string message = "Possible security breach detected")
+        => new("Auth.SecurityBreach", "Possible security breach detected. All tokens have been revoked");
 }

@@ -8,4 +8,8 @@ public class CurrentUserProvider(IHttpContextAccessor contextAccessor) : ICurren
     public string GetCurrentUserId()
         => contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) 
            ?? throw new UnauthorizedAccessException();
+    
+    public string GetCurrentUserIpAddress()
+        => contextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString() 
+           ?? "Unknown IP";
 }

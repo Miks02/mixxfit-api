@@ -8,7 +8,7 @@ using MixxFit.API.Domain.Entities.Users;
 
 namespace MixxFit.API.Features.Auth.ChangePassword;
 
-public class ChangePasswordHandler(UserManager<User> userManager) : IHandler
+public class ChangePasswordHandler(UserManager<User> userManager, ITokenService tokenService) : IHandler
 {
     public async Task<Result> Handle(string userId, ChangePasswordRequest request, CancellationToken cancellationToken)
     {
@@ -23,14 +23,8 @@ public class ChangePasswordHandler(UserManager<User> userManager) : IHandler
 
         if (!changePasswordResult.Succeeded)
             return Result.Failure(changePasswordResult.Errors.ToArray());
-
-        user.RefreshToken = null;
-        user.TokenExpDate = null;
         
-        var logoutResult = await userManager.UpdateAsync(user);
-        
-        if(!logoutResult.Succeeded)
-            return Result.Failure(logoutResult.Errors.ToArray());
+        await tokenService.RevokeAllRefreshTokens(userId);
         
         return Result.Success();
     }

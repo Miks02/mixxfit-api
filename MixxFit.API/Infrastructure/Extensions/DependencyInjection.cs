@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddCloudinary(configuration);
         services.AddProblemDetails();
         services.AddValidatorsFromAssemblyContaining<Program>(filter: descriptor => descriptor.ValidatorType != typeof(SetEntryValidator));
+        services.AddExceptionHandler<TokensRevokedExceptionHandler>();
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddOpenApi();
         services.InjectHandlers();

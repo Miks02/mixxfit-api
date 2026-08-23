@@ -3,35 +3,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MixxFit.API.Infrastructure.Exceptions
 {
-    public sealed class GlobalExceptionHandler : IExceptionHandler
+    public sealed class GlobalExceptionHandler(
+        IProblemDetailsService problemDetailsService,
+        ILogger<GlobalExceptionHandler> logger)
+        : IExceptionHandler
     {
-        private readonly IProblemDetailsService _problemDetailsService;
-        private readonly ILogger<GlobalExceptionHandler> _logger;
-
-        public GlobalExceptionHandler(
-            IProblemDetailsService problemDetailsService,
-            ILogger<GlobalExceptionHandler> logger)
-        {
-            _logger = logger;
-            _problemDetailsService = problemDetailsService;
-        }
-
         public async ValueTask<bool> TryHandleAsync(
             HttpContext httpContext, 
             Exception exception, 
             CancellationToken cancellationToken)
         {
-            _logger.LogError(exception, "An unhandled exception occurred");
+            logger.LogError(exception, "An unhandled exception occurred");
 
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-            return await _problemDetailsService.TryWriteAsync(new ProblemDetailsContext()
+            return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
             {
                 HttpContext = httpContext,
                 Exception = exception,
                 ProblemDetails = new ProblemDetails
                 {
-                    Type = exception.GetType().Name,
+                    Type = "urn:mixxfit:api:error:internal-error",
                     Title = "Server error occured",
                     Detail = "An internal server error occurred while trying to process the request."
                 }

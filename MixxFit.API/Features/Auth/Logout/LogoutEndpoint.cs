@@ -1,7 +1,4 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using MixxFit.API.Common.Interfaces;
-using MixxFit.API.Common.Extensions;
 
 namespace MixxFit.API.Features.Auth.Logout;
 

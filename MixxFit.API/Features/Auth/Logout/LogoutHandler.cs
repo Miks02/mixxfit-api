@@ -6,7 +6,7 @@ public class LogoutHandler(ITokenService tokenService, ILogger<LogoutHandler> lo
 {
     public async Task Handle(string refreshToken)
     {
-        if (string.IsNullOrEmpty(refreshToken))
+        if (string.IsNullOrWhiteSpace(refreshToken))
         {
             logger.LogInformation("No refresh token provided for logout.");
             return;

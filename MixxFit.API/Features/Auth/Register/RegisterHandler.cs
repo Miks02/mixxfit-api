@@ -45,13 +45,7 @@ public class RegisterHandler(
                 return Result<RegisterResponse>.Failure(assignResult.Errors.ToArray());
             }
             
-            var tokenResult = (await tokenService.GenerateAuthTokens(user)).HandleResult();
-        
-            if(!tokenResult.IsSuccess)
-            {
-                await transaction.RollbackAsync();
-                return Result<RegisterResponse>.Failure(tokenResult.Errors.ToArray());
-            }
+            var tokens = await tokenService.GenerateAuthTokens(user);
 
             var fitnessProfile = CreateFitnessProfile(user.Id);
             
@@ -60,21 +54,22 @@ public class RegisterHandler(
             
             user.FitnessProfile = fitnessProfile;
             
-            var userDetails = new UserDetailsDto(
-                FullName: user.FirstName + " " + user.LastName,
-                UserName: user.UserName,
-                Email: user.Email,
-                ImagePath: user.ImagePath,
-                CurrentWeight: user.FitnessProfile.Weight,
-                TargetWeight: user.FitnessProfile.TargetWeight,
-                DailyCalorieGoal: user.FitnessProfile.DailyCalorieGoal,
-                Height: user.FitnessProfile.Height,
-                DateOfBirth: user.FitnessProfile.DateOfBirth,
-                AccountStatus: user.AccountStatus,
-                Gender: user.FitnessProfile.Gender
-            );
+            var userDetails = new UserDetailsDto
+            {
+                FullName = $"{user.FirstName} {user.LastName}",
+                UserName = user.UserName,
+                Email = user.Email,
+                ImagePath = user.ImagePath,
+                CurrentWeight = user.FitnessProfile.Weight,
+                TargetWeight = user.FitnessProfile.TargetWeight,
+                DailyCalorieGoal = user.FitnessProfile.DailyCalorieGoal,
+                Height = user.FitnessProfile.Height,
+                DateOfBirth = user.FitnessProfile.DateOfBirth,
+                AccountStatus = user.AccountStatus,
+                Gender = user.FitnessProfile.Gender
+            };
             
-            var response = new RegisterResponse(tokenResult.Payload!.AccessToken, tokenResult.Payload.RefreshToken, userDetails);
+            var response = new RegisterResponse(tokens.AccessToken, tokens.RefreshToken, userDetails);
             
             return Result<RegisterResponse>.Success(response);
         }

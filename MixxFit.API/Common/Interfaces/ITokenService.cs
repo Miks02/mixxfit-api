@@ -7,7 +7,7 @@ namespace MixxFit.API.Common.Interfaces;
 
 public interface ITokenService
 {
-    Task<Result<TokenResponseDto>> GenerateAuthTokens(User user);
+    Task<TokenResponseDto> GenerateAuthTokens(User user);
     Task<string> GenerateJwtToken(User user);
     Task<Result> RevokeRefreshToken(string oldToken);
     Task RevokeAllRefreshTokens(string userId);

@@ -22,17 +22,14 @@ public class TokenService(
     AppDbContext context,
     ICurrentUserProvider currentUserProvider) : ITokenService
 {
-    public async Task<Result<TokenResponseDto>> GenerateAuthTokens(User user)
+    public async Task<TokenResponseDto> GenerateAuthTokens(User user)
     {
         var userIp = currentUserProvider.GetCurrentUserIpAddress();
-        var assignRefreshToken = await AssignRefreshToken(user, userIp);
+        var refreshToken  = await AssignRefreshToken(user, userIp);
 
-        if (!assignRefreshToken.IsSuccess)
-            return Result<TokenResponseDto>.Failure(assignRefreshToken.Errors.ToArray());
+        var tokenResponse = new TokenResponseDto(await GenerateJwtToken(user), refreshToken);
 
-        var tokenResponse = new TokenResponseDto(await GenerateJwtToken(user), assignRefreshToken.Payload!);
-
-        return Result<TokenResponseDto>.Success(tokenResponse);
+        return tokenResponse;
     }
 
     public async Task<Result> RevokeRefreshToken(string oldToken)
@@ -119,7 +116,7 @@ public class TokenService(
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
     }
     
-    private async Task<Result<string>> AssignRefreshToken(User user, string userIp)
+    private async Task<string> AssignRefreshToken(User user, string userIp)
     {
 
         var token = CreateRefreshToken();
@@ -134,8 +131,8 @@ public class TokenService(
 
         context.Add(newToken);
         await context.SaveChangesAsync();
-        
-        return Result<string>.Success(token);
+
+        return token;
     }
     
     public string HashToken(string rawToken)

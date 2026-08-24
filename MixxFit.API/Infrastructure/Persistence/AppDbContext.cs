@@ -19,17 +19,17 @@ namespace MixxFit.API.Infrastructure.Persistence;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
 {
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
-    public DbSet<FitnessProfile> FitnessProfiles { get; set; }
-    public DbSet<Workout> Workouts { get; set; }
-    public DbSet<ExerciseEntry> ExerciseEntries { get; set; }
-    public DbSet<SetEntry> SetEntries { get; set; }
-    public DbSet<WeightEntry> WeightEntries { get; set; }
-    public DbSet<Exercise> Exercises { get; set; }
-    public DbSet<ExerciseCategory> ExerciseCategories { get; set; }
-    public DbSet<MuscleGroup> MuscleGroups { get; set; }
-    public DbSet<WorkoutTemplate> WorkoutTemplates { get; set; }
-    public DbSet<WorkoutTemplateExercise> WorkoutTemplateExercises { get; set; }
+    public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+    public virtual DbSet<FitnessProfile> FitnessProfiles { get; set; }
+    public virtual DbSet<Workout> Workouts { get; set; }
+    public virtual DbSet<ExerciseEntry> ExerciseEntries { get; set; }
+    public virtual DbSet<SetEntry> SetEntries { get; set; }
+    public virtual DbSet<WeightEntry> WeightEntries { get; set; }
+    public virtual DbSet<Exercise> Exercises { get; set; }
+    public virtual DbSet<ExerciseCategory> ExerciseCategories { get; set; }
+    public virtual DbSet<MuscleGroup> MuscleGroups { get; set; }
+    public virtual DbSet<WorkoutTemplate> WorkoutTemplates { get; set; }
+    public virtual DbSet<WorkoutTemplateExercise> WorkoutTemplateExercises { get; set; }
     
     protected override void OnModelCreating(ModelBuilder builder)
     {

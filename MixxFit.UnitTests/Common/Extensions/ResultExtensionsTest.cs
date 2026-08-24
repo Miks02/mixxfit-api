@@ -1,7 +1,9 @@
 using System.Net;
 using AwesomeAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using MixxFit.API.Common.Extensions;
 using MixxFit.API.Common.Results;
 
@@ -40,13 +42,13 @@ public class ResultExtensionsTest
     }
 
     [Fact]
-    public void ToTypedResult_WithFailedResult_ShouldReturnBadRequest()
+    public void ToTypedResult_WithFailedResult_ShouldReturnProblemHttpResult()
     {
         var result = Result.Failure(new Error("Code", "Description"));
 
         var typedResult = result.ToTypedResult();
 
-        typedResult.Should().BeOfType<BadRequest<Error>>();
+        typedResult.Should().BeOfType<ProblemHttpResult>();
     }
 
     [Fact]
@@ -80,13 +82,13 @@ public class ResultExtensionsTest
     }
 
     [Fact]
-    public void ToTypedResult_Generic_WithFailedResult_ShouldReturnBadRequest()
+    public void ToTypedResult_Generic_WithFailedResult_ShouldReturnProblemHttpResult()
     {
         var result = Result<string>.Failure(new Error("Code", "Description"));
 
         var typedResult = result.ToTypedResult();
 
-        typedResult.Should().BeOfType<BadRequest<Error>>();
+        typedResult.Should().BeOfType<ProblemHttpResult>();
     }
 
     [Fact]

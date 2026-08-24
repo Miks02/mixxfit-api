@@ -23,26 +23,24 @@ public class LoginHandler(UserManager<User> userManager, ITokenService tokenServ
         if(!await userManager.CheckPasswordAsync(user, request.Password))
             return Result<LoginResponse>.Failure(AuthError.LoginFailed("Incorrect email or password"));
         
-        var tokenResult = await tokenService.GenerateAuthTokens(user);
-        
-        if(!tokenResult.IsSuccess)
-            return Result<LoginResponse>.Failure(tokenResult.Errors.ToArray());
+        var tokens = await tokenService.GenerateAuthTokens(user);
 
-        var userDetails = new UserDetailsDto(
-            FullName: user.FirstName + " " + user.LastName,
-            UserName: user.UserName!,
-            Email: user.Email!,
-            ImagePath: user.ImagePath,
-            CurrentWeight: user.FitnessProfile.Weight,
-            TargetWeight: user.FitnessProfile.TargetWeight,
-            Height: user.FitnessProfile.Height,
-            DailyCalorieGoal: user.FitnessProfile.DailyCalorieGoal,
-            DateOfBirth: user.FitnessProfile.DateOfBirth,
-            AccountStatus: user.AccountStatus,
-            Gender: user.FitnessProfile.Gender
-        );
+        var userDetails = new UserDetailsDto
+        {
+            FullName = $"{user.FirstName} {user.LastName}",
+            UserName = user.UserName!,
+            Email = user.Email!,
+            ImagePath = user.ImagePath,
+            CurrentWeight = user.FitnessProfile.Weight,
+            TargetWeight = user.FitnessProfile.TargetWeight,
+            Height = user.FitnessProfile.Height,
+            DailyCalorieGoal = user.FitnessProfile.DailyCalorieGoal,
+            DateOfBirth = user.FitnessProfile.DateOfBirth,
+            AccountStatus = user.AccountStatus,
+            Gender = user.FitnessProfile.Gender
+        };
         
-        var response = new LoginResponse(tokenResult.Payload!.AccessToken, tokenResult.Payload.RefreshToken, userDetails);
+        var response = new LoginResponse(tokens.AccessToken, tokens.RefreshToken, userDetails);
         
         return Result<LoginResponse>.Success(response);
     }

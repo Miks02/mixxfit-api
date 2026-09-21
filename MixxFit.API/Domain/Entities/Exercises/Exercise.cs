@@ -16,6 +16,7 @@ public class Exercise
     
     public FitnessProfile? FitnessProfile { get; set; }
     public int? FitnessProfileId { get; set; }
+    public string? OwnerId { get; set; }
     
     public ICollection<ExerciseEntry> ExerciseEntries { get; set; } = [];
     

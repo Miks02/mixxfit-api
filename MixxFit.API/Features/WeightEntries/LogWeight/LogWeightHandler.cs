@@ -26,6 +26,7 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
                 Weight = request.Weight,
                 Time = request.Time,
                 FitnessProfileId = fitnessProfile.Id,
+                OwnerId = userId,
                 Notes = request.Notes,
             };
 

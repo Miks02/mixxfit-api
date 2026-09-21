@@ -38,7 +38,7 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
         if (!await AreExercisesValidAsync(inputIds, ct))
             return Result<CreateWorkoutResponse>.Failure(ExerciseError.NotFound());
         
-        var newWorkout = BuildWorkout(request, fitnessProfileId);
+        var newWorkout = BuildWorkout(request, fitnessProfileId, userId);
         
         context.Add(newWorkout);
         await context.SaveChangesAsync(ct);
@@ -92,13 +92,14 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
         return true;
     }
 
-    private static Workout BuildWorkout(CreateWorkoutRequest request, int fitnessProfileId)
+    private static Workout BuildWorkout(CreateWorkoutRequest request, int fitnessProfileId, string userId)
     {
         return new Workout
         {
             Name = request.Name,
             Notes = request.Notes,
             FitnessProfileId = fitnessProfileId,
+            OwnerId = userId,
             WorkoutDate = DateTime.SpecifyKind(request.WorkoutDate.Date, DateTimeKind.Utc),
             ExerciseEntries = request.ExerciseEntries.Select(e => new ExerciseEntry
             {

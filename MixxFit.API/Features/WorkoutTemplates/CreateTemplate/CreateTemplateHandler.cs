@@ -34,6 +34,7 @@ public class CreateTemplateHandler(AppDbContext context) : IHandler
             Name = request.Name,
             Notes = request.Notes,
             FitnessProfileId = fitnessProfileId,
+            OwnerId = userId,
             WorkoutTemplateExercises = request.Exercises.Select((e, index) => new WorkoutTemplateExercise
             {
                 ExerciseId = e.ExerciseId,

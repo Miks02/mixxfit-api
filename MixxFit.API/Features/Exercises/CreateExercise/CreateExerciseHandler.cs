@@ -52,6 +52,7 @@ public class CreateExerciseHandler(AppDbContext context) : IHandler
             ExerciseCategoryId = request.CategoryId,
             MuscleGroupId = request.MuscleGroupId,
             FitnessProfileId = fitnessProfileId,
+            OwnerId = userId,
             ExerciseType = await GetExerciseType(request.CategoryId)
         };
 

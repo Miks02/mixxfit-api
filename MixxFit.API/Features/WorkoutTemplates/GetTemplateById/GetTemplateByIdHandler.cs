@@ -13,13 +13,13 @@ public class GetTemplateByIdHandler(AppDbContext context) : IHandler
     public async Task<Result<GetTemplateByIdResponse>> Handle(string userId, int templateId, CancellationToken cancellationToken)
     {
         var template =  await context.WorkoutTemplates
-            .Where(wt => wt.Id == templateId && (wt.FitnessProfileId == null || wt.FitnessProfile!.UserId == userId))
+            .Where(wt => wt.Id == templateId && (wt.OwnerId == null || wt.OwnerId == userId))
             .Select(wt => new GetTemplateByIdResponse
             {
                 Id = wt.Id,
                 Name = wt.Name,
                 Notes = wt.Notes,
-                IsSystem = wt.FitnessProfileId == null,
+                IsSystem = wt.OwnerId == null,
                 Exercises = wt.WorkoutTemplateExercises.Select(wte => new TemplateExerciseDto
                 {
                     ExerciseId = wte.ExerciseId,

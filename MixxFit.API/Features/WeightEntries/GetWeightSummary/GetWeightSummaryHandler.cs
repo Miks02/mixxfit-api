@@ -13,7 +13,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         CancellationToken ct)
     {
         var hasEntries = await context.WeightEntries
-            .Where(w => w.FitnessProfile!.UserId == userId)
+            .Where(w => w.OwnerId == userId)
             .AnyAsync(ct);
 
         if (!hasEntries)
@@ -32,7 +32,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         }
         
         var currentWeight = await context.WeightEntries
-            .Where(w => w.FitnessProfile!.UserId == userId)
+            .Where(w => w.OwnerId == userId)
             .OrderByDescending(w => w.CreatedAt)
             .Select(w => new CurrentWeightDto
             {
@@ -90,7 +90,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
     {
 
         var entries = await context.WeightEntries
-            .Where(w => w.FitnessProfile!.UserId == userId)
+            .Where(w => w.OwnerId == userId)
             .OrderByDescending(w => w.CreatedAt)
             .Select(w => new WeightRecordDto
             {
@@ -114,7 +114,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         var endDate = startDate.AddYears(1);
         
         return await context.WeightEntries
-            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt >= startDate && w.CreatedAt < endDate)
+            .Where(w => w.OwnerId == userId && w.CreatedAt >= startDate && w.CreatedAt < endDate)
             .MaxAsync(w => (int?)w.CreatedAt.Month, cancellationToken);
     }
     
@@ -125,7 +125,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
     {
         var query = context.WeightEntries
             .OrderByDescending(w => w.CreatedAt)
-            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Year == year && w.CreatedAt.Month == month)
+            .Where(w => w.OwnerId == userId && w.CreatedAt.Year == year && w.CreatedAt.Month == month)
             .Select(w => new WeightRecordDto
             {
                 Id = w.Id,
@@ -141,7 +141,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
     private async Task<WeightDeltaDto?> GetWeightDeltaAsync(string userId, CurrentWeightDto currentWeightData ,CancellationToken ct)
     {
         var deltaDto = await context.WeightEntries
-            .Where(we => we.FitnessProfile!.UserId == userId && we.CreatedAt != currentWeightData.CreatedAt)
+            .Where(we => we.OwnerId == userId && we.CreatedAt != currentWeightData.CreatedAt)
             .OrderByDescending(we => we.CreatedAt)
             .Select(we => new WeightDeltaDto
             {
@@ -163,7 +163,7 @@ public class GetWeightSummaryHandler(AppDbContext context) : IHandler
         CancellationToken ct)
     {
         var yearsMonths = await context.WeightEntries
-            .Where(we => we.FitnessProfile!.UserId == userId)
+            .Where(we => we.OwnerId == userId)
             .Select(we => new { we.CreatedAt.Year, we.CreatedAt.Month })
             .Distinct()
             .OrderByDescending(w => w.Year)

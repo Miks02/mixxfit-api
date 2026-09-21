@@ -17,23 +17,22 @@ public class UpdateExerciseHandler(AppDbContext context) : IHandler
         UpdateExerciseRequest request, 
         CancellationToken cancellationToken)
     {
-        var fitnessProfile = await context.FitnessProfiles
-            .AsNoTracking()
-            .FirstOrDefaultAsync(fp => fp.UserId == userId, cancellationToken);
+        var fitnessProfileExists = await context.FitnessProfiles
+            .AnyAsync(fp => fp.UserId == userId, cancellationToken);
 
-        if (fitnessProfile is null)
+        if (!fitnessProfileExists)
         {
             return Result<ExerciseDto>.Failure(FitnessProfileError.NotFound());
         }
         
         var exerciseToUpdate = await context.Exercises
-            .FirstOrDefaultAsync(e => e.Id == request.Id && e.FitnessProfileId == fitnessProfile.Id, cancellationToken);
+            .FirstOrDefaultAsync(e => e.Id == request.Id && e.OwnerId == userId, cancellationToken);
         
         if (exerciseToUpdate is null)
             return Result<ExerciseDto>.Failure(ExerciseError.NotFound($"Exercise with id: {request.Id} has not been found"));
         
         var exerciseExists = await context.Exercises
-            .Where(e => e.Name == request.Name && e.FitnessProfileId == fitnessProfile.Id && e.Id != request.Id)
+            .Where(e => e.Name == request.Name && e.OwnerId == userId && e.Id != request.Id)
             .AnyAsync(cancellationToken);
         
         if(exerciseExists)

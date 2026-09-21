@@ -9,6 +9,8 @@ public class FitnessProfileConfiguration : IEntityTypeConfiguration<FitnessProfi
 {
     public void Configure(EntityTypeBuilder<FitnessProfile> builder)
     {
+        builder.HasKey(p => p.UserId);
+
         builder.Property(p => p.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
@@ -22,19 +24,19 @@ public class FitnessProfileConfiguration : IEntityTypeConfiguration<FitnessProfi
         builder
             .HasMany(u => u.Workouts)
             .WithOne(w => w.FitnessProfile)
-            .HasForeignKey(w => w.FitnessProfileId)
+            .HasForeignKey(w => w.OwnerId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
             .HasMany(f => f.WeightEntries)
             .WithOne(w => w.FitnessProfile)
-            .HasForeignKey(w => w.FitnessProfileId)
+            .HasForeignKey(w => w.OwnerId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
             .HasMany(u => u.Exercises)
             .WithOne(e => e.FitnessProfile)
-            .HasForeignKey(e => e.FitnessProfileId)
+            .HasForeignKey(e => e.OwnerId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(p => p.Gender)

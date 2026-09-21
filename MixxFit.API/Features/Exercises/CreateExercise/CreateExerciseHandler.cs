@@ -19,16 +19,11 @@ public class CreateExerciseHandler(AppDbContext context) : IHandler
         CancellationToken cancellationToken)
     {
         var exerciseExists = await context.Exercises
-            .Where(e => e.Name == request.Name && e.FitnessProfile!.UserId == userId)
+            .Where(e => e.Name == request.Name && e.OwnerId == userId)
             .AnyAsync(cancellationToken);
 
         if(exerciseExists)
             return Result<ExerciseDto>.Failure(ExerciseError.AlreadyExists());
-
-        var fitnessProfileId = await context.FitnessProfiles
-            .Where(fp => fp.UserId == userId)
-            .Select(fp => fp.Id)
-            .FirstOrDefaultAsync(cancellationToken);
 
         var muscleGroupName = await context.MuscleGroups
             .Where(m => m.Id == request.MuscleGroupId)
@@ -51,7 +46,6 @@ public class CreateExerciseHandler(AppDbContext context) : IHandler
             Name = request.Name,
             ExerciseCategoryId = request.CategoryId,
             MuscleGroupId = request.MuscleGroupId,
-            FitnessProfileId = fitnessProfileId,
             OwnerId = userId,
             ExerciseType = await GetExerciseType(request.CategoryId)
         };

@@ -18,17 +18,13 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
         CreateWorkoutRequest request, 
         CancellationToken ct)
     {
-        var nullableFitnessProfileId = await context.FitnessProfiles
-            .Where(fp => fp.UserId == userId)
-            .Select(fp => (int?)fp.Id)
-            .FirstOrDefaultAsync(ct);
+        var fitnessProfileExists = await context.FitnessProfiles
+            .AnyAsync(fp => fp.UserId == userId, ct);
         
-        if(nullableFitnessProfileId is null)
+        if(!fitnessProfileExists)
             return Result<CreateWorkoutResponse>.Failure(FitnessProfileError.NotFound($"Fitness profile for user '{userId}' was not found"));
         
-        int fitnessProfileId = (int)nullableFitnessProfileId;
-        
-        if (await IsWorkoutLimitReachedAsync(fitnessProfileId, ct))
+        if (await IsWorkoutLimitReachedAsync(userId, ct))
             return Result<CreateWorkoutResponse>.Failure(WorkoutError.LimitReached($"Workout limit has been reached for user '{userId}'"));
 
         var inputIds = request.ExerciseEntries
@@ -38,7 +34,7 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
         if (!await AreExercisesValidAsync(inputIds, ct))
             return Result<CreateWorkoutResponse>.Failure(ExerciseError.NotFound());
         
-        var newWorkout = BuildWorkout(request, fitnessProfileId, userId);
+        var newWorkout = BuildWorkout(request, userId);
         
         context.Add(newWorkout);
         await context.SaveChangesAsync(ct);
@@ -48,10 +44,10 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
         return Result<CreateWorkoutResponse>.Success(workoutDto);
     }
     
-    private async Task<bool> IsWorkoutLimitReachedAsync(int fitnessProfileId, CancellationToken cancellationToken)
+    private async Task<bool> IsWorkoutLimitReachedAsync(string userId, CancellationToken cancellationToken)
     {
         var workoutsToday = await context.Workouts
-            .Where(w => w.FitnessProfileId == fitnessProfileId && w.WorkoutDate.Date == DateTime.UtcNow.Date)
+            .Where(w => w.OwnerId == userId && w.WorkoutDate.Date == DateTime.UtcNow.Date)
             .Select(w => w.Id)
             .CountAsync(cancellationToken);
         
@@ -92,13 +88,12 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
         return true;
     }
 
-    private static Workout BuildWorkout(CreateWorkoutRequest request, int fitnessProfileId, string userId)
+    private static Workout BuildWorkout(CreateWorkoutRequest request, string userId)
     {
         return new Workout
         {
             Name = request.Name,
             Notes = request.Notes,
-            FitnessProfileId = fitnessProfileId,
             OwnerId = userId,
             WorkoutDate = DateTime.SpecifyKind(request.WorkoutDate.Date, DateTimeKind.Utc),
             ExerciseEntries = request.ExerciseEntries.Select(e => new ExerciseEntry

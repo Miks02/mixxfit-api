@@ -40,7 +40,7 @@ public class GetWeightLogsHandler(AppDbContext context) : IHandler
         
         var query = context.WeightEntries
             .OrderByDescending(w => w.CreatedAt)
-            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt >= startDate && w.CreatedAt < endDate)
+            .Where(w => w.OwnerId == userId && w.CreatedAt >= startDate && w.CreatedAt < endDate)
             .Select(w => new WeightRecordDto
             {
                 Id = w.Id,
@@ -58,7 +58,7 @@ public class GetWeightLogsHandler(AppDbContext context) : IHandler
         var endDate = startDate.AddYears(1);
         
         return await context.WeightEntries
-            .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt >= startDate && w.CreatedAt < endDate)
+            .Where(w => w.OwnerId == userId && w.CreatedAt >= startDate && w.CreatedAt < endDate)
             .MaxAsync(w => (int?)w.CreatedAt.Month, cancellationToken);
     }
 }

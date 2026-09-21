@@ -11,22 +11,22 @@ public class GetWorkoutsSummaryHandler(AppDbContext context) : IHandler
     {
         DateOnly lastWorkoutDate = await context.Workouts
             .AsNoTracking()
-            .Where(w => w.FitnessProfile.UserId == userId)
+            .Where(w => w.OwnerId == userId)
             .MaxAsync(w => DateOnly.FromDateTime(w.WorkoutDate), ct);
 
         var workoutCount = await context.Workouts
-            .Where(w => w.FitnessProfile.UserId == userId)
+            .Where(w => w.OwnerId == userId)
             .Select(w => w.Id)
             .CountAsync(ct);
 
         var exerciseCount = await context.Workouts
-            .Where(w => w.FitnessProfile.UserId == userId)
+            .Where(w => w.OwnerId == userId)
             .SelectMany(w => w.ExerciseEntries)
             .Select(e => e.Id)
             .CountAsync(ct);
 
         var favoriteExerciseType = await context.Workouts
-            .Where(w => w.FitnessProfile.UserId == userId)
+            .Where(w => w.OwnerId == userId)
             .SelectMany(w => w.ExerciseEntries)
             .GroupBy(e => e.ExerciseType)
             .OrderByDescending(g => g.Count())
@@ -34,7 +34,7 @@ public class GetWorkoutsSummaryHandler(AppDbContext context) : IHandler
             .FirstOrDefaultAsync(ct);
         
         var mostActiveMonths = await context.Workouts
-            .Where(w => w.FitnessProfile.UserId == userId)
+            .Where(w => w.OwnerId == userId)
             .GroupBy(w => new { w.WorkoutDate.Month, w.WorkoutDate.Year })
             .OrderByDescending(g => g.Count())
             .Select(w => new MostActiveMonthDto
@@ -60,7 +60,7 @@ public class GetWorkoutsSummaryHandler(AppDbContext context) : IHandler
     private async Task<int> CalculateWorkoutStreakAsync(string userId, CancellationToken cancellationToken = default)
     {
         var workoutDates = await context.Workouts
-            .Where(u => u.FitnessProfile!.UserId == userId)
+            .Where(u => u.OwnerId == userId)
             .Select(w => w.WorkoutDate.Date)
             .Distinct()
             .OrderByDescending(d => d)

@@ -17,19 +17,19 @@ public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
             .UseCollation("my_case_insensitive");
 
         builder
-            .HasIndex(p => new { p.Name, p.FitnessProfileId })
+            .HasIndex(p => new { p.Name, p.OwnerId })
             .IsUnique()
             .HasFilter("\"IsDeleted\" = FALSE");
 
         builder
             .HasIndex(p => new { p.Name, p.ExerciseCategoryId })
             .IsUnique()
-            .HasFilter("\"UserId\" IS NULL AND \"IsDeleted\" = FALSE");
+            .HasFilter("\"OwnerId\" IS NULL AND \"IsDeleted\" = FALSE");
 
         builder
             .HasOne(p => p.FitnessProfile)
             .WithMany(u => u.Exercises)
-            .HasForeignKey(p => p.FitnessProfileId)
+            .HasForeignKey(p => p.OwnerId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder

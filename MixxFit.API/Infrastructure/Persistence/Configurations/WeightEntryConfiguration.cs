@@ -24,7 +24,7 @@ public class WeightEntryConfiguration : IEntityTypeConfiguration<WeightEntry>
         builder
             .HasOne(w => w.FitnessProfile)
             .WithMany(u => u.WeightEntries)
-            .HasForeignKey(w => w.FitnessProfileId)
+            .HasForeignKey(w => w.OwnerId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.ToTable(entries => entries.HasCheckConstraint($"CK_{nameof(WeightEntry)}s_{nameof(WeightEntry.Weight)}_Positive", "\"Weight\" > 25"));

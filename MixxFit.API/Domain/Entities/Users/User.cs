@@ -13,5 +13,4 @@ public class User : IdentityUser
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public FitnessProfile FitnessProfile { get; set; } = null!;
-    public int FitnessProfileId { get; set; }
 }

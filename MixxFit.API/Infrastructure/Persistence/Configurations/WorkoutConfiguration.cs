@@ -27,7 +27,7 @@ public class WorkoutConfiguration : IEntityTypeConfiguration<Workout>
         builder
             .HasOne(w => w.FitnessProfile)
             .WithMany(u => u.Workouts)
-            .HasForeignKey(w => w.FitnessProfileId)
+            .HasForeignKey(w => w.OwnerId)
             .OnDelete(DeleteBehavior.Cascade);
 
     }

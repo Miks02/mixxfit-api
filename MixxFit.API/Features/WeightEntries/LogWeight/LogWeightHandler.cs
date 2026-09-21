@@ -12,7 +12,7 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
     public async Task<Result<LogWeightResponse>> Handle(string userId, LogWeightRequest request, CancellationToken cancellationToken)
     {
         var hasLoggedWeightToday = await context.WeightEntries
-                .Where(w => w.FitnessProfile!.UserId == userId && w.CreatedAt.Date == DateTime.UtcNow.Date)
+                .Where(w => w.OwnerId == userId && w.CreatedAt.Date == DateTime.UtcNow.Date)
                 .AnyAsync(cancellationToken);
 
             if (hasLoggedWeightToday)
@@ -25,7 +25,6 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
             {
                 Weight = request.Weight,
                 Time = request.Time,
-                FitnessProfileId = fitnessProfile.Id,
                 OwnerId = userId,
                 Notes = request.Notes,
             };

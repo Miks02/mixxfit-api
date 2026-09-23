@@ -38,6 +38,17 @@ using (var scope = app.Services.CreateScope())
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred while initializing the database migrations.");
     }
+
+    try
+    {
+        var seeder = services.GetRequiredService<DatabaseSeeder>();
+        await seeder.SeedRolesAsync();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding roles.");
+    }
 }
 
 app.UseStaticFiles();

@@ -41,6 +41,15 @@ public class UserError
         return new Error("User.AlreadySuspended", message, ErrorType.Conflict);
     }
 
+    public static Error UserAlreadyDeleted(string identifier = "")
+    {
+        string message = string.IsNullOrWhiteSpace(identifier)
+            ? "User is already deleted"
+            : $"User with identifier '{identifier}' is already deleted";
+
+        return new Error("User.AlreadyDeleted", message, ErrorType.Conflict);
+    }
+
     public static Error UserAlreadyActive(string identifier = "")
     {
         string message = string.IsNullOrWhiteSpace(identifier)

@@ -12,6 +12,7 @@ public class User : IdentityUser
     public string? ImagePath { get; set; }
     public AccountStatus AccountStatus { get; set; } = AccountStatus.Active;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? DeletedAt { get; set; }
 
     public FitnessProfile FitnessProfile { get; set; } = null!;
     public Admin? Admin { get; set; }

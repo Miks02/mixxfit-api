@@ -1,10 +1,10 @@
 using FluentValidation;
 using MixxFit.API.Common.Interfaces;
-using MixxFit.API.Features.Exercises.CleanUpExercisesJob;
 using MixxFit.API.Features.Workouts.CreateWorkout;
 using MixxFit.API.Infrastructure.BackgroundServices;
 using MixxFit.API.Infrastructure.Cloudinary;
 using MixxFit.API.Infrastructure.Cors;
+using MixxFit.API.Infrastructure.Emails;
 using MixxFit.API.Infrastructure.Exceptions;
 using MixxFit.API.Infrastructure.Persistence;
 using MixxFit.API.Infrastructure.RateLimiting;
@@ -21,6 +21,7 @@ public static class DependencyInjection
         services.AddHostedService<CleanExpiredTokensJob>();
         services.AddHttpContextAccessor();
         services.AddCloudinary(configuration);
+        services.AddEmailServices(configuration);
         services.AddProblemDetails();
         services.AddValidatorsFromAssemblyContaining<Program>(filter: descriptor => descriptor.ValidatorType != typeof(SetEntryValidator));
         services.AddExceptionHandler<TokensRevokedExceptionHandler>();

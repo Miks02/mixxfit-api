@@ -16,25 +16,29 @@ public class GetMeHandler(UserManager<User> userManager) : IHandler
         var user = await userManager.Users
             .Where(u => u.Id == userId)
             .Include(u => u.FitnessProfile)
-            .Select(u => new UserDetailsDto
-            {
-                FullName = u.FirstName + " " + u.LastName,
-                UserName = u.UserName!,
-                Email = u.Email!,
-                ImagePath = u.ImagePath,
-                CurrentWeight = u.FitnessProfile.Weight,
-                TargetWeight = u.FitnessProfile.TargetWeight,
-                Height = u.FitnessProfile.Height,
-                DailyCalorieGoal = u.FitnessProfile.DailyCalorieGoal,
-                DateOfBirth = u.FitnessProfile.DateOfBirth,
-                AccountStatus = u.AccountStatus,
-                Gender = u.FitnessProfile.Gender
-            })
             .FirstOrDefaultAsync(cancellationToken);
 
         if (user is null)
             return Result<UserDetailsDto>.Failure(UserError.NotFound(userId));
 
-        return Result<UserDetailsDto>.Success(user);
+        var roles = await userManager.GetRolesAsync(user);
+
+        var userDetails = new UserDetailsDto
+        {
+            FullName = user.FirstName + " " + user.LastName,
+            UserName = user.UserName!,
+            Email = user.Email!,
+            ImagePath = user.ImagePath,
+            CurrentWeight = user.FitnessProfile.Weight,
+            TargetWeight = user.FitnessProfile.TargetWeight,
+            Height = user.FitnessProfile.Height,
+            DailyCalorieGoal = user.FitnessProfile.DailyCalorieGoal,
+            DateOfBirth = user.FitnessProfile.DateOfBirth,
+            AccountStatus = user.AccountStatus,
+            Gender = user.FitnessProfile.Gender,
+            Roles = roles.ToList()
+        };
+
+        return Result<UserDetailsDto>.Success(userDetails);
     }
 }

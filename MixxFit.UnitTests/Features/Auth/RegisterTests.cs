@@ -158,6 +158,10 @@ public class RegisterTests
             .Setup(m => m.AddToRoleAsync(It.IsAny<User>(), "User"))
             .ReturnsAsync(IdentityResult.Success);
 
+        _userManagerMock
+            .Setup(m => m.GetRolesAsync(It.IsAny<User>()))
+            .ReturnsAsync(new List<string> { "User" });
+
         var tokens = new TokenResponseDto("access-token", "refresh-token");
         _tokenServiceMock
             .Setup(t => t.GenerateAuthTokens(It.IsAny<User>()))
@@ -172,6 +176,7 @@ public class RegisterTests
         result.Payload.User.FullName.Should().Be($"{_request.FirstName} {_request.LastName}");
         result.Payload.User.Email.Should().Be(_request.Email);
         result.Payload.User.UserName.Should().Be(_request.UserName);
+        result.Payload.User.Roles.Should().BeEquivalentTo(new[] { "User" });
 
         _dbContextMock.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         _transactionMock.Verify(t => t.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);

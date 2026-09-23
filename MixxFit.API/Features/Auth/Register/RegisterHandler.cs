@@ -48,12 +48,14 @@ public class RegisterHandler(
             var tokens = await tokenService.GenerateAuthTokens(user);
 
             var fitnessProfile = CreateFitnessProfile(user.Id);
-            
+
             await context.SaveChangesAsync();
             await transaction.CommitAsync();
-            
+
             user.FitnessProfile = fitnessProfile;
-            
+
+            var roles = await userManager.GetRolesAsync(user);
+
             var userDetails = new UserDetailsDto
             {
                 FullName = $"{user.FirstName} {user.LastName}",
@@ -66,7 +68,8 @@ public class RegisterHandler(
                 Height = user.FitnessProfile.Height,
                 DateOfBirth = user.FitnessProfile.DateOfBirth,
                 AccountStatus = user.AccountStatus,
-                Gender = user.FitnessProfile.Gender
+                Gender = user.FitnessProfile.Gender,
+                Roles = roles.ToList()
             };
             
             var response = new RegisterResponse(tokens.AccessToken, tokens.RefreshToken, userDetails);

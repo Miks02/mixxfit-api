@@ -24,6 +24,7 @@ public class LoginHandler(UserManager<User> userManager, ITokenService tokenServ
             return Result<LoginResponse>.Failure(AuthError.LoginFailed("Incorrect email or password"));
         
         var tokens = await tokenService.GenerateAuthTokens(user);
+        var roles = await userManager.GetRolesAsync(user);
 
         var userDetails = new UserDetailsDto
         {
@@ -37,7 +38,8 @@ public class LoginHandler(UserManager<User> userManager, ITokenService tokenServ
             DailyCalorieGoal = user.FitnessProfile.DailyCalorieGoal,
             DateOfBirth = user.FitnessProfile.DateOfBirth,
             AccountStatus = user.AccountStatus,
-            Gender = user.FitnessProfile.Gender
+            Gender = user.FitnessProfile.Gender,
+            Roles = roles.ToList()
         };
         
         var response = new LoginResponse(tokens.AccessToken, tokens.RefreshToken, userDetails);

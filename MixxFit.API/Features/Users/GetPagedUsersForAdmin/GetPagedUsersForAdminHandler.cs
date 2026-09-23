@@ -46,6 +46,7 @@ public class GetPagedUsersForAdminHandler(AppDbContext context) : IHandler
                 u.AccountStatus,
                 u.CreatedAt,
                 u.FitnessProfile.DateOfBirth,
+                u.DeletedAt,
                 WorkoutCount = u.FitnessProfile.Workouts.Count,
                 WeightEntryCount = u.FitnessProfile.WeightEntries.Count
             })
@@ -61,6 +62,7 @@ public class GetPagedUsersForAdminHandler(AppDbContext context) : IHandler
                 AccountStatus = u.AccountStatus,
                 CreatedAt = u.CreatedAt,
                 WorkoutCount = u.WorkoutCount,
+                DeletedAt = u.DeletedAt,
                 WeightEntryCount = u.WeightEntryCount
             })
             .ToList();

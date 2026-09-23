@@ -10,6 +10,7 @@ public record GetPagedUsersForAdminResponse
     public int? Age { get; init; }
     public AccountStatus AccountStatus { get; init; }
     public DateTime CreatedAt { get; init; }
+    public DateTime? DeletedAt { get; init; }
     public int WorkoutCount { get; init; }
     public int WeightEntryCount { get; init; }
 }

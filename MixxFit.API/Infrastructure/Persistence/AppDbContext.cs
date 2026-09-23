@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MixxFit.API.Domain.Entities.Admins;
 using MixxFit.API.Domain.Entities.ExerciseCategories;
 using MixxFit.API.Domain.Entities.ExerciseEntries;
 using MixxFit.API.Domain.Entities.Exercises;
@@ -21,6 +22,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 {
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
     public virtual DbSet<FitnessProfile> FitnessProfiles { get; set; }
+    public virtual DbSet<Admin> Admins { get; set; }
     public virtual DbSet<Workout> Workouts { get; set; }
     public virtual DbSet<ExerciseEntry> ExerciseEntries { get; set; }
     public virtual DbSet<SetEntry> SetEntries { get; set; }

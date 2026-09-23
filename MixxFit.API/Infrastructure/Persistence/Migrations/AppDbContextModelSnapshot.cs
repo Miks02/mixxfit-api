@@ -155,6 +155,16 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("MixxFit.API.Domain.Entities.Admins.Admin", b =>
+                {
+                    b.Property<string>("AdminId")
+                        .HasColumnType("text");
+
+                    b.HasKey("AdminId");
+
+                    b.ToTable("Admins");
+                });
+
             modelBuilder.Entity("MixxFit.API.Domain.Entities.ExerciseCategories.ExerciseCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -3546,6 +3556,17 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MixxFit.API.Domain.Entities.Admins.Admin", b =>
+                {
+                    b.HasOne("MixxFit.API.Domain.Entities.Users.User", "User")
+                        .WithOne("Admin")
+                        .HasForeignKey("MixxFit.API.Domain.Entities.Admins.Admin", "AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MixxFit.API.Domain.Entities.ExerciseEntries.ExerciseEntry", b =>
                 {
                     b.HasOne("MixxFit.API.Domain.Entities.Exercises.Exercise", "Exercise")
@@ -3709,6 +3730,8 @@ namespace MixxFit.API.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MixxFit.API.Domain.Entities.Users.User", b =>
                 {
+                    b.Navigation("Admin");
+
                     b.Navigation("FitnessProfile")
                         .IsRequired();
                 });

@@ -32,6 +32,9 @@ public class AuthError
     public static Error AccountLocked(string message = "Account is locked")
         => new("Auth.AccountLocked", message, ErrorType.Unauthorized);
 
+    public static Error AccountSuspended(string message = "Your account has been suspended")
+        => new("Auth.AccountSuspended", message, ErrorType.Forbidden);
+
     public static Error JwtError(string message = "Error happened while trying to assign refresh token to the user")
         => new("Auth.JwtError", message, ErrorType.Unauthorized);
 

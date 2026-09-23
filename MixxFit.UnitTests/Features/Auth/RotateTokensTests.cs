@@ -5,6 +5,7 @@ using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities.RefreshTokens;
 using MixxFit.API.Domain.Entities.Users;
+using MixxFit.API.Domain.Enums;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Features.Auth.RotateTokens;
 using MixxFit.API.Infrastructure.Exceptions;
@@ -125,6 +126,20 @@ public class RotateTokensTests : IDisposable
 
         await act.Should().ThrowAsync<AllTokensRevokedException>();
         _tokenServiceMock.Verify(s => s.RevokeAllRefreshTokens(_user.Id), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_WhenAccountIsSuspended_ShouldReturnFailureWithoutTriggeringSecurityBreach()
+    {
+        _user.AccountStatus = AccountStatus.Suspended;
+        SeedRefreshToken(revokedAt: DateTime.UtcNow.AddMinutes(-1));
+
+        var result = await _handler.Handle(new RotateTokensRequest(RawToken));
+
+        result.IsSuccess.Should().BeFalse();
+        result.Errors[0].Should().Be(AuthError.AccountSuspended());
+        _tokenServiceMock.Verify(s => s.RevokeAllRefreshTokens(It.IsAny<string>()), Times.Never);
+        _tokenServiceMock.Verify(s => s.GenerateJwtToken(It.IsAny<User>()), Times.Never);
     }
 
     private RefreshToken SeedRefreshToken(DateTime? expiresAt = null, DateTime? revokedAt = null)

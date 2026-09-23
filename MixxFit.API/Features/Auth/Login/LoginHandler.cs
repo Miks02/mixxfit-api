@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities.Users;
+using MixxFit.API.Domain.Enums;
 using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Features.Common;
 
@@ -22,7 +23,10 @@ public class LoginHandler(UserManager<User> userManager, ITokenService tokenServ
         
         if(!await userManager.CheckPasswordAsync(user, request.Password))
             return Result<LoginResponse>.Failure(AuthError.LoginFailed("Incorrect email or password"));
-        
+
+        if (user.AccountStatus == AccountStatus.Suspended)
+            return Result<LoginResponse>.Failure(AuthError.AccountSuspended());
+
         var tokens = await tokenService.GenerateAuthTokens(user);
         var roles = await userManager.GetRolesAsync(user);
 

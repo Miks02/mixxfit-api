@@ -71,6 +71,34 @@ public class LoginTests
     }
 
     [Fact]
+    public async Task Handle_WhenAccountIsSuspended_ShouldReturnFailure()
+    {
+        var userStoreMock = new Mock<IUserStore<User>>();
+        var userManagerMock = new Mock<UserManager<User>>(
+            userStoreMock.Object, null!, null!, null!, null!, null!, null!, null!, null!
+        );
+
+        var user = new User { Email = "test123@gmail.com", AccountStatus = AccountStatus.Suspended };
+
+        userManagerMock
+            .Setup(m => m.Users)
+            .Returns(new List<User> { user }.BuildMock());
+
+        userManagerMock
+            .Setup(m => m.CheckPasswordAsync(user, "123456"))
+            .ReturnsAsync(true);
+
+        var tokenServiceMock = new Mock<ITokenService>();
+        var handler = new LoginHandler(userManagerMock.Object, tokenServiceMock.Object);
+
+        var result = await handler.Handle(new LoginRequest("test123@gmail.com", "123456"));
+
+        result.IsSuccess.Should().BeFalse();
+        result.Errors[0].Should().Be(AuthError.AccountSuspended());
+        tokenServiceMock.Verify(t => t.GenerateAuthTokens(It.IsAny<User>()), Times.Never);
+    }
+
+    [Fact]
     public async Task Handle_WhenLoginIsSuccessful_ShouldReturnSuccess()
     {
         var userStoreMock = new Mock<IUserStore<User>>();

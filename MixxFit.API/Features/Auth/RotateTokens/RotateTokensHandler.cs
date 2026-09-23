@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities.RefreshTokens;
+using MixxFit.API.Domain.Enums;
+using MixxFit.API.Domain.ErrorCatalog;
 using MixxFit.API.Infrastructure.Exceptions;
 using MixxFit.API.Infrastructure.Persistence;
 
@@ -19,6 +21,9 @@ public class RotateTokensHandler(
             .Include(rt => rt.User)
             .Where(rt => rt.TokenHash == tokenService.HashToken(request.RefreshToken))
             .FirstOrDefaultAsync();
+        
+        if (oldToken?.User.AccountStatus == AccountStatus.Suspended)
+            return Result<RotateTokensResponse>.Failure(AuthError.AccountSuspended());
 
         var validationResult = tokenService.ValidateRefreshToken(oldToken);
 

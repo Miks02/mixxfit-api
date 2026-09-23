@@ -15,6 +15,7 @@ public record UserDetailsDto
     public DateTime? DateOfBirth { get; init; }
     public AccountStatus AccountStatus { get; init; }
     public Gender? Gender { get; init; }
+    public IReadOnlyList<string> Roles { get; init; } = [];
     
     public int? Age => DateOfBirth.HasValue ? CalculateAge(DateOfBirth.Value) : null;
     private int CalculateAge(DateTime birthDate)

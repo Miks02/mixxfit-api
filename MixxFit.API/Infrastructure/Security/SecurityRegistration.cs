@@ -44,7 +44,10 @@ namespace MixxFit.API.Infrastructure.Security
                     };
                 });
 
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+            });
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ICookieProvider, CookieProvider>();

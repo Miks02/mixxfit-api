@@ -107,7 +107,11 @@ public class LoginTests
         userManagerMock
             .Setup(m => m.CheckPasswordAsync(user, "123456"))
             .ReturnsAsync(true);
-        
+
+        userManagerMock
+            .Setup(m => m.GetRolesAsync(user))
+            .ReturnsAsync(new List<string> { "User" });
+
         var expectedTokens = new TokenResponseDto("jwt-token", "refresh-token");
         
         tokenServiceMock
@@ -128,9 +132,10 @@ public class LoginTests
             DailyCalorieGoal = user.FitnessProfile.DailyCalorieGoal,
             DateOfBirth = user.FitnessProfile.DateOfBirth,
             AccountStatus = user.AccountStatus,
-            Gender = user.FitnessProfile.Gender
+            Gender = user.FitnessProfile.Gender,
+            Roles = new List<string> { "User" }
         };
-        
+
         var loginResponse = new LoginResponse("jwt-token", "refresh-token", userDetails);
 
         result.IsSuccess.Should().BeTrue();

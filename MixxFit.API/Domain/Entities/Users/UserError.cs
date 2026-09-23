@@ -31,4 +31,31 @@ public class UserError
 
         return new Error("User.NotFound", message, ErrorType.NotFound);
     }
+
+    public static Error UserAlreadySuspended(string identifier = "")
+    {
+        string message = string.IsNullOrWhiteSpace(identifier)
+            ? "User is already suspended"
+            : $"User with identifier '{identifier}' is already suspended";
+
+        return new Error("User.AlreadySuspended", message, ErrorType.Conflict);
+    }
+
+    public static Error UserAlreadyDeleted(string identifier = "")
+    {
+        string message = string.IsNullOrWhiteSpace(identifier)
+            ? "User is already deleted"
+            : $"User with identifier '{identifier}' is already deleted";
+
+        return new Error("User.AlreadyDeleted", message, ErrorType.Conflict);
+    }
+
+    public static Error UserAlreadyActive(string identifier = "")
+    {
+        string message = string.IsNullOrWhiteSpace(identifier)
+            ? "User is already active"
+            : $"User with identifier '{identifier}' is already active";
+
+        return new Error("User.AlreadyActive", message, ErrorType.Conflict);
+    }
 }

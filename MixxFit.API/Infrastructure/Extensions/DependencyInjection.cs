@@ -30,6 +30,8 @@ public static class DependencyInjection
         services.InjectHandlers();
         services.AddCorsPolicies();
         services.AddGlobalRateLimiter();
+        services.AddAuthRateLimiter();
+        services.AddForgotPasswordRateLimiter();
     }
 
     public static void InjectHandlers(this IServiceCollection services)

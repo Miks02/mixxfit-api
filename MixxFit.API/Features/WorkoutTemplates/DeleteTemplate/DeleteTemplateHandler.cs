@@ -12,16 +12,14 @@ public class DeleteTemplateHandler(AppDbContext context) : IHandler
 {
     public async Task<Result> Handle(string userId, int templateId, CancellationToken ct)
     {
-        var fitnessProfileId = await context.FitnessProfiles
-            .Where(fp => fp.UserId == userId)
-            .Select(fp => (int?)fp.Id)
-            .FirstOrDefaultAsync(ct);
+        var fitnessProfileExists = await context.FitnessProfiles
+            .AnyAsync(fp => fp.UserId == userId, ct);
         
-        if(fitnessProfileId is null)
+        if(!fitnessProfileExists)
             return Result.Failure(FitnessProfileError.NotFound($"Fitness profile for user '{userId}' was not found"));
         
         var templateToDelete = await context.WorkoutTemplates
-            .Where(wt => wt.Id == templateId && wt.FitnessProfileId == fitnessProfileId)
+            .Where(wt => wt.Id == templateId && wt.OwnerId == userId)
             .FirstOrDefaultAsync(ct);
         
         if(templateToDelete is null)

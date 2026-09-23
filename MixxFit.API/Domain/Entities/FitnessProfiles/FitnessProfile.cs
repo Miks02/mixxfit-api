@@ -9,7 +9,6 @@ namespace MixxFit.API.Domain.Entities.FitnessProfiles;
 
 public class FitnessProfile
 {
-    public int Id { get; set; }
     public string UserId { get; set; } = null!;
     public User User { get; set; } = null!;
     

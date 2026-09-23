@@ -7,7 +7,7 @@ public class WorkoutTemplate
 {
     public int Id { get; set; }
 
-    public int? FitnessProfileId { get; set; }
+    public string? OwnerId { get; set; }
     public FitnessProfile? FitnessProfile { get; set; }
     
     public string Name { get; set; } = null!;

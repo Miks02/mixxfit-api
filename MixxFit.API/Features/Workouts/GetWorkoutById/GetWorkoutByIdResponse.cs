@@ -8,8 +8,6 @@ public record GetWorkoutByIdResponse
 
     public string? Notes { get; set; }
     
-    public int FitnessProfileId { get; set; }
-
     public DateTime WorkoutDate { get; set; }
 
     public DateTime CreatedAt { get; set; }

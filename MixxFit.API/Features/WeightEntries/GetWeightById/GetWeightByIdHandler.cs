@@ -10,7 +10,7 @@ public class GetWeightByIdHandler(AppDbContext context) : IHandler
     {
         return await context.WeightEntries
             .AsNoTracking()
-            .Where(w => w.Id == id && w.FitnessProfile!.UserId == userId)
+            .Where(w => w.Id == id && w.OwnerId == userId)
             .Select(w => new GetWeightByIdResponse
             {
                 Id = w.Id,

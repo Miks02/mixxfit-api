@@ -16,7 +16,7 @@ public class EditTemplateHandler(AppDbContext context) : IHandler
     {
         var templateToUpdate = await context.WorkoutTemplates
             .Include(wt => wt.WorkoutTemplateExercises)
-            .Where(wt => wt.Id == request.Id && wt.FitnessProfile!.UserId == userId)
+            .Where(wt => wt.Id == request.Id && wt.OwnerId == userId)
             .FirstOrDefaultAsync(ct);
         
         if(templateToUpdate is null)

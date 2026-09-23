@@ -12,7 +12,7 @@ public class Workout
     public string? Notes { get; set; }
 
     public FitnessProfile FitnessProfile { get; set; } = null!;
-    public int FitnessProfileId { get; set; }
+    public string OwnerId { get; set; } = null!;
 
     public DateTime WorkoutDate { get; set; } = DateTime.UtcNow;
 

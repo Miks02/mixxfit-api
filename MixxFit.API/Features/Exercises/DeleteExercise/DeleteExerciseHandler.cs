@@ -17,13 +17,12 @@ public class DeleteExerciseHandler(AppDbContext context) : IHandler
         CancellationToken cancellationToken)
     {
         var exercise = await context.Exercises
-            .Include(e => e.FitnessProfile)
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
         if (exercise is null)
             return Result.Failure(ExerciseError.NotFound("Exercise"));
         
-        if (exercise.FitnessProfile?.UserId != userId)
+        if (exercise.OwnerId != userId)
             return Result.Failure(GeneralError.Forbidden("You are not allowed to delete this exercise"));
         
         if (await IsExerciseRelated(id))

@@ -10,11 +10,10 @@ public class GetExercisesPageHandler(AppDbContext context) : IHandler
 {
     public async Task<GetExercisesPageResponse> Handle(string userId, CancellationToken cancellationToken)
     {
-        var fitnessProfile = await context.FitnessProfiles
-            .AsNoTracking()
-            .FirstOrDefaultAsync(fp => fp.UserId == userId, cancellationToken);
+        var fitnessProfileExists = await context.FitnessProfiles
+            .AnyAsync(fp => fp.UserId == userId, cancellationToken);
 
-        if (fitnessProfile is null)
+        if (!fitnessProfileExists)
         {
             return new GetExercisesPageResponse
             {
@@ -26,7 +25,7 @@ public class GetExercisesPageHandler(AppDbContext context) : IHandler
         
         var exercises = await context.Exercises
             .OrderBy(e => e.Name)
-            .Where(e => e.FitnessProfileId == fitnessProfile.Id || e.FitnessProfileId == null)
+            .Where(e => e.OwnerId == userId || e.OwnerId == null)
             .Select(e => new ExerciseDto
             {
                 Id = e.Id,
@@ -34,7 +33,7 @@ public class GetExercisesPageHandler(AppDbContext context) : IHandler
                 MuscleGroupName = e.MuscleGroup.Name,
                 ExerciseCategoryName = e.ExerciseCategory.Name,
                 ExerciseType = e.ExerciseType,
-                IsUserDefined = e.FitnessProfileId == fitnessProfile.Id
+                IsUserDefined = e.OwnerId == userId
             })
             .ToListAsync(cancellationToken);
 

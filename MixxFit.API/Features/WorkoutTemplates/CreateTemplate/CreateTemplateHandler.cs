@@ -16,15 +16,13 @@ public class CreateTemplateHandler(AppDbContext context) : IHandler
 {
     public async Task<Result<CreateTemplateResponse>> Handle(string userId, CreateTemplateRequest request, CancellationToken ct)
     {
-        var fitnessProfileId = await context.FitnessProfiles
-            .Where(fp => fp.UserId == userId)
-            .Select(fp => (int?)fp.Id)
-            .FirstOrDefaultAsync(ct);
+        var fitnessProfileExists = await context.FitnessProfiles
+            .AnyAsync(fp => fp.UserId == userId, ct);
         
-        if(fitnessProfileId is null)
+        if(!fitnessProfileExists)
             return Result<CreateTemplateResponse>.Failure(FitnessProfileError.NotFound($"Fitness profile for user '{userId}' was not found"));
         
-        var validationResult = await ValidateData(fitnessProfileId.Value, request, ct);
+        var validationResult = await ValidateData(userId, request, ct);
         
         if(!validationResult.IsSuccess)
             return Result<CreateTemplateResponse>.Failure(validationResult.Errors.ToArray());
@@ -33,7 +31,7 @@ public class CreateTemplateHandler(AppDbContext context) : IHandler
         {
             Name = request.Name,
             Notes = request.Notes,
-            FitnessProfileId = fitnessProfileId,
+            OwnerId = userId,
             WorkoutTemplateExercises = request.Exercises.Select((e, index) => new WorkoutTemplateExercise
             {
                 ExerciseId = e.ExerciseId,
@@ -61,10 +59,10 @@ public class CreateTemplateHandler(AppDbContext context) : IHandler
         return Result<CreateTemplateResponse>.Success(response);
     }
 
-    private async Task<Result> ValidateData(int fitnessProfileId, CreateTemplateRequest request, CancellationToken ct)
+    private async Task<Result> ValidateData(string userId, CreateTemplateRequest request, CancellationToken ct)
     {
         var numberOfTemplates = await context.WorkoutTemplates
-            .Where(wt => wt.FitnessProfileId == fitnessProfileId)
+            .Where(wt => wt.OwnerId == userId)
             .CountAsync(ct);
         
         if(numberOfTemplates == 20)
@@ -73,7 +71,7 @@ public class CreateTemplateHandler(AppDbContext context) : IHandler
         var normalizedTemplateName = request.Name.ToLower().Trim();
 
         var duplicateTemplate = await context.WorkoutTemplates
-            .AnyAsync(wt => wt.FitnessProfileId == fitnessProfileId 
+            .AnyAsync(wt => wt.OwnerId == userId 
                             && wt.Name.ToLower() == normalizedTemplateName, ct);
         
         if(duplicateTemplate)

@@ -10,6 +10,9 @@ namespace MixxFit.API.Infrastructure.Persistence
             {
                 options.UseNpgsql(configuration.GetConnectionString("PostgresConnection"));
             });
+            
+            
+            
         }
     }
 }

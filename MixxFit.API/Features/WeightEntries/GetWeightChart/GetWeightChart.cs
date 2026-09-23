@@ -17,7 +17,7 @@ public static class GetWeightChart
             
             var entries = await context.WeightEntries
                 .AsNoTracking()
-                .Where(w => w.FitnessProfile!.UserId == userId)
+                .Where(w => w.OwnerId == userId)
                 .OrderByDescending(w => w.CreatedAt)
                 .Select(w => new WeightRecordDto
                 {

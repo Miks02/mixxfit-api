@@ -207,7 +207,7 @@ public class DeleteUserAsAdminTests
         user.PhoneNumber.Should().BeNull();
         user.ImagePath.Should().BeNull();
         user.PasswordHash.Should().BeNull();
-        user.AccountStatus.Should().Be(AccountStatus.Suspended);
+        user.AccountStatus.Should().Be(AccountStatus.Deleted);
         user.DeletedAt.Should().NotBeNull();
         user.FitnessProfile.DateOfBirth.Should().BeNull();
         user.FitnessProfile.Height.Should().BeNull();

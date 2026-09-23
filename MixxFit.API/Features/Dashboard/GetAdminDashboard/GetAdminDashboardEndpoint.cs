@@ -7,11 +7,10 @@ public class GetAdminDashboardEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("admin/dashboard", async (
-                [AsParameters] GetAdminDashboardRequest request,
                 GetAdminDashboardHandler handler,
                 CancellationToken cancellationToken = default) =>
             {
-                var dashboard = await handler.Handle(request, cancellationToken);
+                var dashboard = await handler.Handle(cancellationToken);
                 return TypedResults.Ok(dashboard);
             })
             .WithTags("Dashboard")

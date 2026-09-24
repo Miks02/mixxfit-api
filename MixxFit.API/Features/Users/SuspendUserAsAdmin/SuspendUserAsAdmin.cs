@@ -11,7 +11,10 @@ namespace MixxFit.API.Features.Users.SuspendUserAsAdmin;
 
 public static class SuspendUserAsAdmin
 {
-    public class SuspendUserAsAdminHandler(UserManager<User> userManager, ITokenService tokenService) : IHandler
+    public class SuspendUserAsAdminHandler(
+        UserManager<User> userManager,
+        ITokenService tokenService,
+        IAuthEmailSender emailSender) : IHandler
     {
         public async Task<Result> Handle(string userId, CancellationToken cancellationToken = default)
         {
@@ -31,6 +34,8 @@ public static class SuspendUserAsAdmin
 
             if (!updateResult.IsSuccess)
                 return updateResult;
+            
+            await emailSender.SendAccountDeactivatedEmailAsync(user.Email!);
 
             await tokenService.RevokeAllRefreshTokens(user.Id);
 

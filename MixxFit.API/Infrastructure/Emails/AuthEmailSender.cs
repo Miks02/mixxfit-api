@@ -212,8 +212,54 @@ public class AuthEmailSender(IConfiguration configuration, IResend resend) : IAu
             HtmlBody = htmlBody,
             Subject = "Your account has been reactivated"
         };
-        
+
         await resend.EmailSendAsync(message);
     }
-    
+
+    public async Task SendAccountDeletedEmailAsync(string email)
+    {
+        var htmlBody = """
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Account deleted</title>
+                        </head>
+                        <body style="margin: 0; padding: 24px 12px; background-color: #64748b; font-family: 'Inter', Arial, Helvetica, sans-serif; color: #1f2937;">
+                            <div style="max-width: 560px; margin: 0 auto; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);">
+
+                                <div style="background-color: #eab308; background-image: linear-gradient(to bottom right, #eab308, #ca8a04); padding: 28px 32px; text-align: center;">
+                                    <span style="font-size: 32px; font-weight: 700; letter-spacing: 0.5px; color: #111827;">Mixx<span style="color: #1e293b;">Fit</span></span>
+                                </div>
+
+                                <div style="background-color: #d1d5db; padding: 40px 32px; text-align: center;">
+                                    <h1 style="margin: 0 0 16px; font-size: 32px; font-weight: 600; color: #1f2937;">Account deleted</h1>
+                                    <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #4b5563;">
+                                        Your MixxFit account has been deleted and your personal information has been removed. You will no longer be able to log in with this account.
+                                    </p>
+                                </div>
+
+                                <div style="background-color: #e5e7eb; padding: 24px 32px;">
+                                    <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #4b5563;">
+                                        If you did not request this or believe it is a mistake, please contact our support team at <a href="mailto:support@getmixxfit.com" style="color: #ca8a04; font-weight: 600; text-decoration: underline;">support@getmixxfit.com</a>.
+                                    </p>
+                                </div>
+
+                            </div>
+                        </body>
+                        </html>
+                        """;
+
+        var message = new EmailMessage
+        {
+            From = _fromEmail,
+            To = email,
+            HtmlBody = htmlBody,
+            Subject = "Your account has been deleted"
+        };
+
+        await resend.EmailSendAsync(message);
+    }
+
 }

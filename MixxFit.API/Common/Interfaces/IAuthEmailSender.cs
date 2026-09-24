@@ -6,4 +6,5 @@ public interface IAuthEmailSender
     Task SendPasswordChangedEmailAsync(string email);
     Task SendAccountDeactivatedEmailAsync(string email);
     Task SendAccountReactivatedEmail(string email);
+    Task SendAccountDeletedEmailAsync(string email);
 }

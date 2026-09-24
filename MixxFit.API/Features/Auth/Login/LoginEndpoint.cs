@@ -17,6 +17,7 @@ public class LoginEndpoint : IEndpoint
             return Results.Ok(result.Payload);
         })
         .WithTags("Auth")
+        .RequireRateLimiting("AuthLimiter")
         .Produces<LoginResponse>()
         .Produces(StatusCodes.Status401Unauthorized)
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);

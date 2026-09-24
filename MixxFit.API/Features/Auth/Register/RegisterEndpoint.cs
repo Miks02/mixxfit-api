@@ -21,6 +21,7 @@ public class RegisterEndpoint : IEndpoint
             return Results.Ok(result.Payload);
         })
         .WithTags("Auth")
+        .RequireRateLimiting("AuthLimiter")
         .Produces<RegisterResponse>(StatusCodes.Status201Created)
         .Produces<ProblemDetails>(StatusCodes.Status409Conflict)
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);

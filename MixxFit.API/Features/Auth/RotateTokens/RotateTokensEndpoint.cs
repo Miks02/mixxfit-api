@@ -24,6 +24,7 @@ public class RotateTokensEndpoint : IEndpoint
             return Results.Ok(result.Payload);
         })
         .WithTags("Auth")
+        .RequireRateLimiting("AuthLimiter")
         .Produces<RotateTokensResponse>()
         .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized);
     }

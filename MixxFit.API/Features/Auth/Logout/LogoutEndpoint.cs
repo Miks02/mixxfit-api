@@ -17,6 +17,7 @@ public class LogoutEndpoint : IEndpoint
                     return TypedResults.NoContent();
                 })
             .WithTags("Auth")
+            .RequireRateLimiting("AuthLimiter")
             .Produces(StatusCodes.Status204NoContent);
     }
 }

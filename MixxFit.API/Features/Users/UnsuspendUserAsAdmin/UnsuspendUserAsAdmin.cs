@@ -11,7 +11,7 @@ namespace MixxFit.API.Features.Users.UnsuspendUserAsAdmin;
 
 public static class UnsuspendUserAsAdmin
 {
-    public class UnsuspendUserAsAdminHandler(UserManager<User> userManager) : IHandler
+    public class UnsuspendUserAsAdminHandler(UserManager<User> userManager, IAuthEmailSender emailSender) : IHandler
     {
         public async Task<Result> Handle(string userId, CancellationToken cancellationToken = default)
         {
@@ -28,6 +28,8 @@ public static class UnsuspendUserAsAdmin
             user.AccountStatus = AccountStatus.Active;
 
             var updateResult = (await userManager.UpdateAsync(user)).HandleIdentityResult();
+            
+            await emailSender.SendAccountReactivatedEmail(user.Email!);
 
             return updateResult;
         }

@@ -12,6 +12,7 @@ public class ChangePasswordTests
 {
     private readonly Mock<UserManager<User>> _userManagerMock;
     private readonly Mock<ITokenService> _tokenServiceMock;
+    private readonly Mock<IAuthEmailSender> _authEmailSenderMock; 
     private readonly ChangePasswordHandler _handler;
     private readonly ChangePasswordRequest _request = new()
     {
@@ -27,7 +28,8 @@ public class ChangePasswordTests
             userStoreMock.Object, null!, null!, null!, null!, null!, null!, null!, null!
         );
         _tokenServiceMock = new Mock<ITokenService>();
-        _handler = new ChangePasswordHandler(_userManagerMock.Object, _tokenServiceMock.Object);
+        _authEmailSenderMock = new Mock<IAuthEmailSender>();
+        _handler = new ChangePasswordHandler(_userManagerMock.Object, _tokenServiceMock.Object, _authEmailSenderMock.Object);
     }
 
     [Fact]
@@ -41,6 +43,7 @@ public class ChangePasswordTests
         result.IsSuccess.Should().BeFalse();
         result.Errors[0].Should().BeEquivalentTo(UserError.NotFound("user-id-123"));
         _tokenServiceMock.Verify(t => t.RevokeAllRefreshTokens(It.IsAny<string>()), Times.Never);
+        _authEmailSenderMock.Verify(e => e.SendPasswordChangedEmailAsync(It.IsAny<string>()), Times.Never);
     }
 
     [Theory]
@@ -62,6 +65,7 @@ public class ChangePasswordTests
         result.IsSuccess.Should().BeFalse();
         result.Errors.Should().ContainSingle(e => e.Code == errorCode && e.Description == errorDescription);
         _tokenServiceMock.Verify(t => t.RevokeAllRefreshTokens(It.IsAny<string>()), Times.Never);
+        _authEmailSenderMock.Verify(e => e.SendPasswordChangedEmailAsync(It.IsAny<string>()), Times.Never);
     }
 
     [Fact]
@@ -80,5 +84,6 @@ public class ChangePasswordTests
         result.IsSuccess.Should().BeTrue();
         result.Errors.Should().BeEmpty();
         _tokenServiceMock.Verify(t => t.RevokeAllRefreshTokens("user-id-123"), Times.Once);
+        _authEmailSenderMock.Verify(e => e.SendPasswordChangedEmailAsync("test-123@example.com"), Times.Once);
     }
 }

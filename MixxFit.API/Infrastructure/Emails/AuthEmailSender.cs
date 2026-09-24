@@ -55,7 +55,7 @@ public class AuthEmailSender(IConfiguration configuration, IResend resend) : IAu
                                      </p>
                                      <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #6b7280; word-break: break-all;">
                                          Button not working? Copy and paste this link into your browser:<br/>
-                                         <a href="{resetUrl}" style="color: #ca8a04; text-decoration: underline;">{resetUrl}</a>
+                                         <a href="{resetUrl}" style="color: #ca8a04; text-decoration: underline;">Reset password link</a>
                                      </p>
                                  </div>
 

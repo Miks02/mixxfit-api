@@ -19,6 +19,7 @@ public class ChangePasswordEndpoint : IEndpoint
                 return result.ToTypedResult(HttpStatusCode.NoContent);
             })
             .WithTags("Auth")
+            .RequireRateLimiting("AuthLimiter")
             .RequireAuthorization()
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)

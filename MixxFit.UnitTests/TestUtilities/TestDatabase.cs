@@ -1,5 +1,6 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.UnitTests.TestUtilities;
@@ -36,6 +37,7 @@ public sealed class SqliteTestDatabase : IDisposable
 
         _options = new DbContextOptionsBuilder<AppDbContext>()
             .UseSqlite(_connection)
+            .ReplaceService<IModelCustomizer, SqliteModelCustomizer>()
             .Options;
 
         using var context = CreateContext();
@@ -45,4 +47,22 @@ public sealed class SqliteTestDatabase : IDisposable
     public AppDbContext CreateContext() => new(_options);
 
     public void Dispose() => _connection.Dispose();
+}
+
+/// <summary>
+/// Removes check constraints from the model. They are written for Postgres, and SQLite stores decimals as TEXT,
+/// which always compares greater than a number, so constraints like <c>"Weight" &lt; 400</c> reject every row.
+/// </summary>
+internal sealed class SqliteModelCustomizer(ModelCustomizerDependencies dependencies) : RelationalModelCustomizer(dependencies)
+{
+    public override void Customize(ModelBuilder modelBuilder, DbContext context)
+    {
+        base.Customize(modelBuilder, context);
+
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            foreach (var checkConstraint in entityType.GetCheckConstraints().ToList())
+                entityType.RemoveCheckConstraint(checkConstraint.ModelName);
+        }
+    }
 }

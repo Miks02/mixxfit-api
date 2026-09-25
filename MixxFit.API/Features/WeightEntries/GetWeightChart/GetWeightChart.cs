@@ -24,7 +24,8 @@ public static class GetWeightChart
                     Id = w.Id,
                     Weight = w.Weight,
                     TimeLogged = w.Time,
-                    CreatedAt = w.CreatedAt
+                    CreatedAt = w.CreatedAt,
+                    Notes = w.Notes
                 })
                 .ToListAsync(cancellationToken);
 

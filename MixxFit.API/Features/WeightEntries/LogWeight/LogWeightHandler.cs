@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
-using MixxFit.API.Domain.Entities.Users;
+using MixxFit.API.Domain.Entities.FitnessProfiles;
 using MixxFit.API.Domain.Entities.WeightEntries;
 using MixxFit.API.Infrastructure.Persistence;
 
@@ -19,7 +19,10 @@ public class LogWeightHandler(AppDbContext context, ILogger<LogWeightHandler> lo
                 return Result<LogWeightResponse>.Failure(WeightEntryError.LimitReached("Only one weight entry can be logged per day"));
 
             var fitnessProfile = await context.FitnessProfiles
-                .FirstAsync(fp => fp.UserId == userId, cancellationToken);
+                .FirstOrDefaultAsync(fp => fp.UserId == userId, cancellationToken);
+
+            if (fitnessProfile is null)
+                return Result<LogWeightResponse>.Failure(FitnessProfileError.NotFound($"Fitness profile for user '{userId}' was not found"));
 
             var newEntry = new WeightEntry
             {

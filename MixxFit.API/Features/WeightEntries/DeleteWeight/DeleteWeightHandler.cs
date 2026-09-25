@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Common.Results;
 using MixxFit.API.Domain.Entities.FitnessProfiles;
-using MixxFit.API.Domain.ErrorCatalog;
+using MixxFit.API.Domain.Entities.WeightEntries;
 using MixxFit.API.Infrastructure.Persistence;
 
 namespace MixxFit.API.Features.WeightEntries.DeleteWeight;
@@ -17,13 +17,13 @@ public class DeleteWeightHandler(AppDbContext context, ILogger<DeleteWeightHandl
             .FirstOrDefaultAsync(cancellationToken);
 
         if (entry is null)
-            return Result.Failure(GeneralError.NotFound("Weight entry"));
+            return Result.Failure(WeightEntryError.NotFound());
 
         var fitnessProfile = await context.FitnessProfiles
             .FirstOrDefaultAsync(fp => fp.UserId == userId, cancellationToken);
         
         if(fitnessProfile is null) 
-            return Result.Failure(FitnessProfileError.NotFound(userId));
+            return Result.Failure(FitnessProfileError.NotFound($"Fitness profile for user '{userId}' was not found"));
 
         await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
 

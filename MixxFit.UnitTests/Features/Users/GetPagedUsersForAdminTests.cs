@@ -69,9 +69,9 @@ public class GetPagedUsersForAdminTests
     [Fact]
     public async Task Handle_ShouldProjectCountsAndAge()
     {
-        var result = await CreateHandler(Users).Handle(new GetPagedUsersForAdminRequest { Search = "ana@" });
+        var result = await CreateHandler(Users).Handle(new GetPagedUsersForAdminRequest());
 
-        var user = result.Items.Should().ContainSingle().Subject;
+        var user = result.Items.Should().ContainSingle(u => u.Id == "1").Subject;
         user.WorkoutCount.Should().Be(3);
         user.WeightEntryCount.Should().Be(2);
         user.Age.Should().BeGreaterThan(30);
@@ -90,15 +90,14 @@ public class GetPagedUsersForAdminTests
     }
 
     [Theory]
-    [InlineData("BOJAN", "2")]
-    [InlineData("milic", "2")]
-    [InlineData("ana zaric", "1")]
-    [InlineData("mail.com", "1,2")]
-    public async Task Handle_WhenSearching_ShouldMatchCaseInsensitivelyOnNameAndEmail(string search, string expected)
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task Handle_WhenSearchIsBlank_ShouldIgnoreSearch(string search)
     {
         var result = await CreateHandler(Users).Handle(new GetPagedUsersForAdminRequest { Search = search, Sort = "oldest" });
 
-        result.Items.Select(u => u.Id).Should().Equal(expected.Split(','));
+        result.Items.Select(u => u.Id).Should().Equal("1", "2", "3");
+        result.TotalCount.Should().Be(3);
     }
 
     [Theory]

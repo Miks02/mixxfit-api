@@ -1,5 +1,6 @@
 using AwesomeAssertions;
 using Microsoft.AspNetCore.Identity;
+using MixxFit.API.Common.Interfaces;
 using MixxFit.API.Domain.Entities.Users;
 using MixxFit.API.Domain.Enums;
 using MixxFit.API.Features.Users.UnsuspendUserAsAdmin;
@@ -22,12 +23,14 @@ public class UnsuspendUserAsAdminTests
             .Setup(m => m.Users)
             .Returns(new List<User>().BuildMock());
 
-        var handler = new UnsuspendUserAsAdmin.UnsuspendUserAsAdminHandler(userManagerMock.Object);
+        var emailSenderMock = new Mock<IAuthEmailSender>();
+        var handler = new UnsuspendUserAsAdmin.UnsuspendUserAsAdminHandler(userManagerMock.Object, emailSenderMock.Object);
 
         var result = await handler.Handle("missing-user-id");
 
         result.IsSuccess.Should().BeFalse();
         result.Errors[0].Should().Be(UserError.NotFound("missing-user-id"));
+        emailSenderMock.Verify(e => e.SendAccountReactivatedEmail(It.IsAny<string>()), Times.Never);
     }
 
     [Fact]
@@ -38,13 +41,14 @@ public class UnsuspendUserAsAdminTests
             userStoreMock.Object, null!, null!, null!, null!, null!, null!, null!, null!
         );
 
-        var user = new User { Id = "user-id-123", AccountStatus = AccountStatus.Active };
+        var user = new User { Id = "user-id-123", Email = "test@example.com", AccountStatus = AccountStatus.Active };
 
         userManagerMock
             .Setup(m => m.Users)
             .Returns(new List<User> { user }.BuildMock());
 
-        var handler = new UnsuspendUserAsAdmin.UnsuspendUserAsAdminHandler(userManagerMock.Object);
+        var emailSenderMock = new Mock<IAuthEmailSender>();
+        var handler = new UnsuspendUserAsAdmin.UnsuspendUserAsAdminHandler(userManagerMock.Object, emailSenderMock.Object);
 
         var result = await handler.Handle("user-id-123");
 
@@ -52,17 +56,18 @@ public class UnsuspendUserAsAdminTests
         result.Errors[0].Should().Be(UserError.UserAlreadyActive("user-id-123"));
 
         userManagerMock.Verify(m => m.UpdateAsync(It.IsAny<User>()), Times.Never);
+        emailSenderMock.Verify(e => e.SendAccountReactivatedEmail(It.IsAny<string>()), Times.Never);
     }
 
     [Fact]
-    public async Task Handle_WhenUserIsSuspended_ShouldReactivateUser()
+    public async Task Handle_WhenUserIsSuspended_ShouldReactivateUserAndSendEmail()
     {
         var userStoreMock = new Mock<IUserStore<User>>();
         var userManagerMock = new Mock<UserManager<User>>(
             userStoreMock.Object, null!, null!, null!, null!, null!, null!, null!, null!
         );
 
-        var user = new User { Id = "user-id-123", AccountStatus = AccountStatus.Suspended };
+        var user = new User { Id = "user-id-123", Email = "test@example.com", AccountStatus = AccountStatus.Suspended };
 
         userManagerMock
             .Setup(m => m.Users)
@@ -72,7 +77,8 @@ public class UnsuspendUserAsAdminTests
             .Setup(m => m.UpdateAsync(user))
             .ReturnsAsync(IdentityResult.Success);
 
-        var handler = new UnsuspendUserAsAdmin.UnsuspendUserAsAdminHandler(userManagerMock.Object);
+        var emailSenderMock = new Mock<IAuthEmailSender>();
+        var handler = new UnsuspendUserAsAdmin.UnsuspendUserAsAdminHandler(userManagerMock.Object, emailSenderMock.Object);
 
         var result = await handler.Handle("user-id-123");
 
@@ -80,6 +86,7 @@ public class UnsuspendUserAsAdminTests
         user.AccountStatus.Should().Be(AccountStatus.Active);
 
         userManagerMock.Verify(m => m.UpdateAsync(user), Times.Once);
+        emailSenderMock.Verify(e => e.SendAccountReactivatedEmail("test@example.com"), Times.Once);
     }
 
     [Fact]
@@ -90,7 +97,7 @@ public class UnsuspendUserAsAdminTests
             userStoreMock.Object, null!, null!, null!, null!, null!, null!, null!, null!
         );
 
-        var user = new User { Id = "user-id-123", AccountStatus = AccountStatus.Suspended };
+        var user = new User { Id = "user-id-123", Email = "test@example.com", AccountStatus = AccountStatus.Suspended };
 
         userManagerMock
             .Setup(m => m.Users)
@@ -100,7 +107,8 @@ public class UnsuspendUserAsAdminTests
             .Setup(m => m.UpdateAsync(user))
             .ReturnsAsync(IdentityResult.Failed(new IdentityError { Code = "ConcurrencyFailure", Description = "boom" }));
 
-        var handler = new UnsuspendUserAsAdmin.UnsuspendUserAsAdminHandler(userManagerMock.Object);
+        var emailSenderMock = new Mock<IAuthEmailSender>();
+        var handler = new UnsuspendUserAsAdmin.UnsuspendUserAsAdminHandler(userManagerMock.Object, emailSenderMock.Object);
 
         var result = await handler.Handle("user-id-123");
 

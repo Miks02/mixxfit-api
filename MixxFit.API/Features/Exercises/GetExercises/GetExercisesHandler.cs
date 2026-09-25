@@ -18,10 +18,9 @@ public class GetExercisesHandler(AppDbContext context) : IHandler
         if(request.MuscleGroupId is not null)
             query = query.Where(e => e.MuscleGroupId == request.MuscleGroupId);
 
-        if(request.OnlyUserDefined is not null)
-            query = request.OnlyUserDefined.Value
-                ? query.Where(e => e.OwnerId == userId)
-                : query.Where(e => e.OwnerId == userId || e.OwnerId == null);
+        query = request.OnlyUserDefined == true
+            ? query.Where(e => e.OwnerId == userId)
+            : query.Where(e => e.OwnerId == userId || e.OwnerId == null);
 
         if(!string.IsNullOrWhiteSpace(request.SearchTerm))
             query = query.Where(e => e.Name.Contains(request.SearchTerm));
@@ -33,6 +32,7 @@ public class GetExercisesHandler(AppDbContext context) : IHandler
                 Id = e.Id,
                 Name = e.Name + $" ({e.ExerciseCategory.Name})",
                 MuscleGroupName = e.MuscleGroup.Name,
+                ExerciseCategoryName = e.ExerciseCategory.Name,
                 ExerciseType = e.ExerciseType,
                 IsUserDefined = e.OwnerId == userId
             })

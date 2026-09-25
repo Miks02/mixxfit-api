@@ -9,10 +9,14 @@ public class GetWorkoutsSummaryHandler(AppDbContext context) : IHandler
 {
     public async Task<GetWorkoutsSummaryResponse> Handle(string userId, CancellationToken ct)
     {
-        DateOnly lastWorkoutDate = await context.Workouts
+        DateTime? lastWorkoutDateTime = await context.Workouts
             .AsNoTracking()
             .Where(w => w.OwnerId == userId)
-            .MaxAsync(w => DateOnly.FromDateTime(w.WorkoutDate), ct);
+            .MaxAsync(w => (DateTime?)w.WorkoutDate, ct);
+
+        DateOnly? lastWorkoutDate = lastWorkoutDateTime.HasValue
+            ? DateOnly.FromDateTime(lastWorkoutDateTime.Value)
+            : null;
 
         var workoutCount = await context.Workouts
             .Where(w => w.OwnerId == userId)

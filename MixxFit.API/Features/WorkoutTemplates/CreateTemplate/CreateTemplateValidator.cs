@@ -18,12 +18,13 @@ public class CreateTemplateValidator : AbstractValidator<CreateTemplateRequest>
             .WithMessage("Notes cannot exceed 200 characters");
         
         RuleFor(x => x.Exercises)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty()
-            .WithMessage("Template must contain at least one exercise");
-        
-        RuleFor(x => x.Exercises)
+            .WithMessage("Template must contain at least one exercise")
             .Must(x => x.Count <= 50)
-            .WithMessage("Template cannot contain more than 50 exercises");
+            .WithMessage("Template cannot contain more than 50 exercises")
+            .Must(x => x.Select(e => e.ExerciseId).Distinct().Count() == x.Count)
+            .WithMessage("Template cannot contain the same exercise more than once");
         
         RuleForEach(x => x.Exercises)
             .SetValidator(new ExerciseItemValidator());  

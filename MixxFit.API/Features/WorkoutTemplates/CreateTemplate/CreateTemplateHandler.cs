@@ -77,7 +77,7 @@ public class CreateTemplateHandler(AppDbContext context) : IHandler
         if(duplicateTemplate)
             return Result.Failure(WorkoutTemplateError.AlreadyExists("Workout template with the same name already exists"));
         
-        var invalidExerciseIds = await GetInvalidExerciseIds(request.Exercises.Select(e => e.ExerciseId).ToList(), ct);
+        var invalidExerciseIds = await GetInvalidExerciseIds(userId, request.Exercises.Select(e => e.ExerciseId).ToList(), ct);
         
         if(invalidExerciseIds.Count > 0)
             return Result.Failure(ExerciseError.NotFound("One or more requested exercises do not exist. Invalid exercise ids: " + string.Join(", ", invalidExerciseIds)));
@@ -85,10 +85,10 @@ public class CreateTemplateHandler(AppDbContext context) : IHandler
         return Result.Success();
     }
 
-    private async Task<IReadOnlyList<int>> GetInvalidExerciseIds(IReadOnlyList<int> exerciseIds, CancellationToken ct)
+    private async Task<IReadOnlyList<int>> GetInvalidExerciseIds(string userId, IReadOnlyList<int> exerciseIds, CancellationToken ct)
     {
         var validIds = await context.Exercises
-            .Where(e => exerciseIds.Contains(e.Id))
+            .Where(e => exerciseIds.Contains(e.Id) && (e.OwnerId == null || e.OwnerId == userId))
             .Select(e => e.Id)
             .ToListAsync(ct);
 

@@ -20,7 +20,7 @@ public class DeleteExerciseHandler(AppDbContext context) : IHandler
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
         if (exercise is null)
-            return Result.Failure(ExerciseError.NotFound("Exercise"));
+            return Result.Failure(ExerciseError.NotFound($"Exercise with id '{id}' was not found"));
         
         if (exercise.OwnerId != userId)
             return Result.Failure(GeneralError.Forbidden("You are not allowed to delete this exercise"));

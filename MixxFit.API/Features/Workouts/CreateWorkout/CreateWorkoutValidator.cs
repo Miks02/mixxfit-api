@@ -8,7 +8,7 @@ public class CreateWorkoutValidator : AbstractValidator<CreateWorkoutRequest>
     {
         RuleFor(p => p.Name)
             .NotEmpty().WithMessage("Workout name is required")
-            .MaximumLength(200).WithMessage("Name is too long (200 characters max)");
+            .MaximumLength(100).WithMessage("Name is too long (100 characters max)");
 
         RuleFor(p => p.WorkoutDate)
             .NotEmpty().WithMessage("Workout date is required")

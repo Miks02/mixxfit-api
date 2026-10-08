@@ -51,7 +51,7 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
             .Select(w => w.Id)
             .CountAsync(cancellationToken);
         
-        return workoutsToday == 5;
+        return workoutsToday >= 5;
     }
 
     private async Task<bool> AreExercisesValidAsync(HashSet<int> inputIds, CancellationToken cancellationToken)
@@ -119,6 +119,7 @@ public class CreateWorkoutHandler(AppDbContext context, ILogger<CreateWorkoutHan
             Id = workout.Id,
             Name = workout.Name,
             Notes = workout.Notes,
+            UserId = workout.OwnerId,
             CreatedAt = workout.CreatedAt,
             WorkoutDate = workout.WorkoutDate,
             Exercises = workout.ExerciseEntries.Select(e => new ExerciseEntryDto

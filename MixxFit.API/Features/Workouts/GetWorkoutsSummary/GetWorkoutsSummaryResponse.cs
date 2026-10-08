@@ -6,7 +6,7 @@ public record GetWorkoutsSummaryResponse
 {
     public int WorkoutCount { get; set; }
     public int ExerciseCount { get; set; }
-    public DateOnly LastWorkoutDate { get; set; }
+    public DateOnly? LastWorkoutDate { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ExerciseType FavoriteExerciseType { get; set; }
     public int WorkoutStreak { get; set; }

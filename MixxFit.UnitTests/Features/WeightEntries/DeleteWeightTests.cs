@@ -10,7 +10,6 @@ using static MixxFit.UnitTests.Features.WeightEntries.WeightEntryTestData;
 
 namespace MixxFit.UnitTests.Features.WeightEntries;
 
-// The handler opens a transaction, which the EF InMemory provider does not support, so these tests run against in-memory SQLite.
 public class DeleteWeightTests : IDisposable
 {
     private readonly SqliteTestDatabase _database = new();
@@ -128,7 +127,6 @@ public class DeleteWeightTests : IDisposable
     [Fact]
     public async Task Handle_WhenFitnessProfileDoesNotExist_ShouldReturnFitnessProfileNotFoundAndKeepEntry()
     {
-        // An entry without a profile violates the FK in SQLite; the handler returns before opening a transaction, so InMemory is enough.
         await using var context = InMemoryTestDatabase.CreateContext();
         var entry = Entry(80m, Utc(2026, 1, 1));
         context.WeightEntries.Add(entry);

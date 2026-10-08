@@ -17,10 +17,6 @@ public static class InMemoryTestDatabase
     }
 }
 
-/// <summary>
-/// In-memory SQLite database for handlers that rely on relational-only features
-/// (ExecuteDelete/ExecuteUpdate, cascade deletes, FK constraints), which the EF InMemory provider does not support.
-/// </summary>
 public sealed class SqliteTestDatabase : IDisposable
 {
     private readonly SqliteConnection _connection;
@@ -31,7 +27,6 @@ public sealed class SqliteTestDatabase : IDisposable
         _connection = new SqliteConnection("DataSource=:memory:");
         _connection.Open();
 
-        // Postgres ICU collation used by the Exercise.Name column; SQLite needs an equivalent registered by name.
         _connection.CreateCollation("my_case_insensitive",
             (x, y) => string.Compare(x, y, StringComparison.OrdinalIgnoreCase));
 
@@ -49,10 +44,6 @@ public sealed class SqliteTestDatabase : IDisposable
     public void Dispose() => _connection.Dispose();
 }
 
-/// <summary>
-/// Removes check constraints from the model. They are written for Postgres, and SQLite stores decimals as TEXT,
-/// which always compares greater than a number, so constraints like <c>"Weight" &lt; 400</c> reject every row.
-/// </summary>
 internal sealed class SqliteModelCustomizer(ModelCustomizerDependencies dependencies) : RelationalModelCustomizer(dependencies)
 {
     public override void Customize(ModelBuilder modelBuilder, DbContext context)

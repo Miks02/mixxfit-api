@@ -10,7 +10,6 @@ using static MixxFit.UnitTests.Features.Workouts.WorkoutTestData;
 
 namespace MixxFit.UnitTests.Features.Workouts;
 
-// ExecuteDeleteAsync is not supported by the EF InMemory provider, so these tests run against in-memory SQLite.
 public class DeleteWorkoutTests : IDisposable
 {
     private readonly SqliteTestDatabase _database = new();

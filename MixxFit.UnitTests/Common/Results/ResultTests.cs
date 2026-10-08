@@ -8,9 +8,6 @@ namespace MixxFit.UnitTests.Common.Results;
 
 public class ResultTests
 {
-    
-    // Non-Generic
-    
     [Fact]
     public void Success_ShouldReturnSuccessResult()
     {
@@ -37,8 +34,6 @@ public class ResultTests
         act.Should().Throw<ArgumentException>()
             .WithMessage("At least one error must be provided within a failure");
     }
-    
-    // Generic - Result<T>
 
     [Fact]
     public void Success_WithPayload_ShouldReturnSuccessResult()

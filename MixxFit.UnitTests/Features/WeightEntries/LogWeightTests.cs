@@ -117,7 +117,6 @@ public class LogWeightTests : IDisposable
     [Fact]
     public async Task Handle_WhenFitnessProfileDoesNotExist_ShouldReturnFitnessProfileNotFoundAndNotCreateEntry()
     {
-        // The handler returns before opening a transaction, so InMemory is enough and avoids seeding a user without a profile.
         await using var context = InMemoryTestDatabase.CreateContext();
 
         var result = await CreateHandler(context).Handle(UserId, Request(), CancellationToken.None);

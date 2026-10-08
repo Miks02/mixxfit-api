@@ -8,8 +8,6 @@ using static MixxFit.UnitTests.Features.WorkoutTemplates.WorkoutTemplateTestData
 
 namespace MixxFit.UnitTests.Features.WorkoutTemplates;
 
-// The handler relies on the database cascade to remove template exercises, which the EF InMemory provider does not
-// perform, so these tests run against in-memory SQLite. SQLite also seeds the system exercises and templates.
 public class DeleteTemplateTests : IDisposable
 {
     private const int SystemTemplateId = 1;

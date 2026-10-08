@@ -9,8 +9,6 @@ using static MixxFit.UnitTests.Features.WorkoutTemplates.WorkoutTemplateTestData
 
 namespace MixxFit.UnitTests.Features.WorkoutTemplates;
 
-// Replacing template exercises deletes and re-inserts rows with the same composite key, so these tests run against
-// in-memory SQLite to exercise real change tracking and FK behaviour. SQLite also seeds the system exercises and templates.
 public class EditTemplateTests : IDisposable
 {
     private const int SystemTemplateId = 1;
